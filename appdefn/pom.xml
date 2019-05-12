@@ -101,11 +101,13 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
-
+		
+		<!-- TODO: REMOVEME
         <dependency>
             <groupId>org.isisaddons.module.fakedata</groupId>
             <artifactId>isis-module-fakedata-dom</artifactId>
         </dependency>
+		 -->
 
         <dependency>
             <groupId>org.togglz</groupId>
@@ -283,6 +285,7 @@
                 </dependency>
             </dependencies>
         </profile>
+		<!-- TODO: REMOVEME
         <profile>
             <id>wicket-gmap3</id>
             <activation>
@@ -297,6 +300,7 @@
                 </dependency>
             </dependencies>
         </profile>
+         -->
         <profile>
             <id>wicket-summernote</id>
             <activation>

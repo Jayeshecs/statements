@@ -17,6 +17,9 @@
     <description>Domain application leveraging the Incode Platform.</description>
 
     <properties>
+    
+    	<maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
 
         <isis.version>1.16.2</isis.version>
         <incode-platform.version>${project.parent.version}</incode-platform.version>

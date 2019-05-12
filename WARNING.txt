@@ -1,0 +1,29 @@
+When project generated using below command -
+
+mvn archetype:generate  \
+    -DarchetypeGroupId=org.incode.platform.archetype \
+    -DarchetypeArtifactId=quickstart-archetype \
+    -DarchetypeVersion=1.16.2 \
+    -DgroupId=outil.fin \
+    -DartifactId=statements \
+    -Dversion=1.0-SNAPSHOT \
+    -B
+
+... Below warnings were generated -
+
+[WARNING] Don't override file /opt/work/github/statements/statements/webapp/src/main/resources/activemq-config.xml
+[WARNING] Don't override file /opt/work/github/statements/statements/webapp/src/main/resources/domainapp/webapp/quartz/quartz-config.xml
+[WARNING] Don't override file /opt/work/github/statements/statements/webapp/src/main/resources/propertyPlaceholderConfigurer-config.xml
+[WARNING] Don't override file /opt/work/github/statements/statements/webapp/src/main/webapp/WEB-INF/web.xml
+[WARNING] Don't override file /opt/work/github/statements/statements/appdefn/src/main/resources/domainapp/appdefn/authentication_shiro.properties
+[WARNING] Don't override file /opt/work/github/statements/statements/appdefn/src/main/resources/domainapp/appdefn/isis.properties
+[WARNING] Don't override file /opt/work/github/statements/statements/appdefn/src/main/resources/domainapp/appdefn/persistor-hsqldb.properties
+[WARNING] Don't override file /opt/work/github/statements/statements/appdefn/src/main/resources/domainapp/appdefn/persistor-sqlserver-quickstart_db.properties
+[WARNING] Don't override file /opt/work/github/statements/statements/appdefn/src/main/resources/domainapp/appdefn/persistor_datanucleus.properties
+[WARNING] Don't override file /opt/work/github/statements/statements/appdefn/src/main/resources/domainapp/appdefn/viewer_restfulobjects.properties
+[WARNING] Don't override file /opt/work/github/statements/statements/appdefn/src/main/resources/domainapp/appdefn/viewer_wicket.properties
+[WARNING] Don't override file /opt/work/github/statements/statements/module-simple/.gradle/2.13/taskArtifacts/cache.properties
+[WARNING] Don't override file /opt/work/github/statements/statements/module-simple/src/main/java/domainapp/modules/simple/dom/SimpleObject.layout.xml
+[WARNING] Don't override file /opt/work/github/statements/statements/module-simple/src/main/java/META-INF/persistence.xml
+[WARNING] CP Don't override file /opt/work/github/statements/statements/webapp/lib/.gitignore
+

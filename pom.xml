@@ -74,6 +74,34 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>statements-module-static</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>statements-module-static</artifactId>
+                <scope>test</scope>
+                <type>test-jar</type>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>statements-module-transaction</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>statements-module-transaction</artifactId>
+                <scope>test</scope>
+                <type>test-jar</type>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>statements-webapp</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
@@ -124,6 +152,8 @@
             </activation>
             <modules>
                 <module>module-simple</module>
+                <module>module-static</module>
+                <module>module-txn</module>
             </modules>
         </profile>
 
@@ -137,6 +167,8 @@
             <modules>
                 <module>module-base</module>
                 <module>module-simple</module>
+                <module>module-static</module>
+                <module>module-txn</module>
                 <module>appdefn</module>
                 <module>webapp</module>
             </modules>

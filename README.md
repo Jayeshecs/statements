@@ -4,11 +4,12 @@ A Java/J2EE based web application to manage financial transactions e.g. Bank acc
 
 This project is open source under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
-[Requirements](REQUIREMENTS.md) - All requirement specifications
+![solution-architecture](docs/solution-architecture.png)
 
-[Technical Solution](TECHNICAL_ARCHITECTURE.md) - Detail of target technical solution to meet stated requirements
-
-[Setup](SETUP.md) - Necessary steps to setup this application and get started
+Refer project [wiki](https://github.com/Jayeshecs/statements/wiki) for detail of below -
+1) Solution requirements
+2) Technical solution
+3) Development environment setup
 
 TODO -
 1) Advance setup documentation

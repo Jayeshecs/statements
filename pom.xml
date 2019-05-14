@@ -13,8 +13,8 @@
     <artifactId>statements</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>Incode QuickStart</name>
-    <description>Domain application leveraging the Incode Platform.</description>
+    <name>Outil Finance Statements Manager</name>
+    <description>Outil Finance Statements Manager application</description>
 
     <properties>
     
@@ -60,20 +60,6 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>statements-module-simple</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>statements-module-simple</artifactId>
-                <scope>test</scope>
-                <type>test-jar</type>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
                 <artifactId>statements-module-static</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
@@ -95,6 +81,20 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>statements-module-transaction</artifactId>
+                <scope>test</scope>
+                <type>test-jar</type>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>statements-module-reader</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>statements-module-reader</artifactId>
                 <scope>test</scope>
                 <type>test-jar</type>
                 <version>1.0-SNAPSHOT</version>
@@ -151,9 +151,9 @@
                 </property>
             </activation>
             <modules>
-                <module>module-simple</module>
                 <module>module-static</module>
                 <module>module-txn</module>
+                <module>module-rdr</module>
             </modules>
         </profile>
 
@@ -166,9 +166,9 @@
             </activation>
             <modules>
                 <module>module-base</module>
-                <module>module-simple</module>
                 <module>module-static</module>
                 <module>module-txn</module>
+                <module>module-rdr</module>
                 <module>appdefn</module>
                 <module>webapp</module>
             </modules>

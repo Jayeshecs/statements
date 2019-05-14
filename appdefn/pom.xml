@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>statements-appdefn</artifactId>
-    <name>Incode QuickStart App Definition</name>
+    <name>Outil Finance Statement Manager App Definition</name>
 
     <description>This defines the application (manifest) and runs application-level fixtures and integration (smoke) tests</description>
 
@@ -92,18 +92,6 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>statements-module-simple</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>statements-module-simple</artifactId>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>statements-module-static</artifactId>
         </dependency>
 
@@ -122,6 +110,18 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>statements-module-transaction</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>statements-module-reader</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>statements-module-reader</artifactId>
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>

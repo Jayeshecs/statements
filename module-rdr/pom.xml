@@ -8,12 +8,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>statements-module-simple</artifactId>
-    <name>Incode QuickStart Simple Module</name>
+    <artifactId>statements-module-reader</artifactId>
+    <name>Outil Finance Reader Module</name>
 
     <properties>
         <isis-maven-plugin.validate.appManifest>
-            domainapp.modules.simple.SimpleModuleManifest
+            domainapp.modules.rdr.ReaderModuleManifest
         </isis-maven-plugin.validate.appManifest>
 
         <maven-checkstyle-plugin.configLocation>${project.parent.basedir}/_checks/checkstyle.xml</maven-checkstyle-plugin.configLocation>
@@ -107,15 +107,41 @@
         </dependency>
 
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>statements-module-static</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>statements-module-static</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>statements-module-transaction</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>statements-module-transaction</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
             <groupId>org.incode.module.fixturesupport</groupId>
             <artifactId>incode-module-fixturesupport-dom</artifactId>
         </dependency>
 
+	<!-- TODO: REMOVEME
         <dependency>
             <groupId>org.isisaddons.module.fakedata</groupId>
             <artifactId>isis-module-fakedata-dom</artifactId>
             <scope>test</scope>
         </dependency>
+	-->
 
         <!-- test -->
         <dependency>

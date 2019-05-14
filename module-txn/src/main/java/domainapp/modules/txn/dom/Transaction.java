@@ -120,7 +120,7 @@ public class Transaction implements Comparable<Transaction> {
 
     @Override
     public int compareTo(final Transaction other) {
-        return ObjectContracts.compare(this, other, "name");
+        return ObjectContracts.compare(this, other, "source", "type", "transactionDate", "narration", "reference", "amount");
     }
 
     @javax.inject.Inject

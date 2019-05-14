@@ -1,4 +1,4 @@
-package domainapp.modules.simple;
+package domainapp.modules.rdr;
 
 import java.util.Set;
 
@@ -12,7 +12,7 @@ import org.apache.isis.applib.ModuleAbstract;
 import domainapp.modules.base.BaseModule;
 
 @XmlRootElement(name = "module")
-public class SimpleModule extends ModuleAbstract {
+public class ReaderModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies() {

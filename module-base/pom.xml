@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>statements-module-base</artifactId>
-    <name>Incode QuickStart Base Module</name>
+    <name>Base Module</name>
 
     <properties>
         <maven-checkstyle-plugin.configLocation>${project.parent.basedir}/_checks/checkstyle.xml</maven-checkstyle-plugin.configLocation>

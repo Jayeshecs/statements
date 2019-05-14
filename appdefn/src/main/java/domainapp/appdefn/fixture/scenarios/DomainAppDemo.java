@@ -4,8 +4,6 @@ import javax.annotation.Nullable;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import domainapp.modules.simple.fixture.scenario.SimpleObject_createUpTo10;
-
 import domainapp.appdefn.fixture.teardown.DomainAppTearDown;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +23,6 @@ public class DomainAppDemo extends FixtureScript {
 
         // execute
         ec.executeChild(this, new DomainAppTearDown());
-        ec.executeChild(this, new SimpleObject_createUpTo10().setNumber(number));
 
     }
 }

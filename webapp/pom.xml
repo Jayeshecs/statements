@@ -9,10 +9,10 @@
     </parent>
 
     <artifactId>statements-webapp</artifactId>
-    <name>Incode QuickStart Webapp</name>
+    <name>Outil Finance Statements Manager Webapp</name>
 
     <description>
-        This assembles and runs all of the modules of the Incode Platform in a single webapp.
+        This assembles and runs all of the modules of the Statements Manager in a single webapp.
     </description>
 
     <packaging>war</packaging>

@@ -16,8 +16,15 @@ import org.apache.isis.applib.annotation.NatureOfService;
  * 
  * @author jayeshecs
  */
-@DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "txn.StatementsMenu")
-@DomainServiceLayout(menuBar = MenuBar.PRIMARY, menuOrder = "10", named = "Statements")
+@DomainService(
+		nature = NatureOfService.VIEW_MENU_ONLY, 
+		objectType = "txn.StatementsMenu"
+)
+@DomainServiceLayout(
+		menuBar = MenuBar.PRIMARY, 
+		menuOrder = "10", 
+		named = "Statements"
+)
 public class StatementsMenu {
 	
 	public List<Transaction> listAll() {

@@ -3,13 +3,18 @@
  */
 package domainapp.modules.txn.dom;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.DomainServiceLayout;
 import org.apache.isis.applib.annotation.DomainServiceLayout.MenuBar;
 import org.apache.isis.applib.annotation.NatureOfService;
+
+import domainapp.modules.rdr.view.dashboard.ManageReaderDashboard;
+import domainapp.modules.txn.service.StatementSourceService;
+import domainapp.modules.txn.view.dashboard.ManageTransactionDashboard;
 
 /**
  * Statements menu bar
@@ -18,7 +23,7 @@ import org.apache.isis.applib.annotation.NatureOfService;
  */
 @DomainService(
 		nature = NatureOfService.VIEW_MENU_ONLY, 
-		objectType = "txn.StatementsMenu"
+		objectType = "stmt.StatementsMenu"
 )
 @DomainServiceLayout(
 		menuBar = MenuBar.PRIMARY, 
@@ -27,9 +32,19 @@ import org.apache.isis.applib.annotation.NatureOfService;
 )
 public class StatementsMenu {
 	
-	public List<Transaction> listAll() {
-		// TODO
-		return new ArrayList<>();
+	public ManageTransactionDashboard manageTransaction() {
+		return new ManageTransactionDashboard();
 	}
+	
+	public ManageReaderDashboard manageStatementReader() {
+		return new ManageReaderDashboard();
+	}
+	
+	public List<StatementSource> statementSources() {
+		return statementSourceService.all();
+	}
+	
+	@Inject
+	StatementSourceService statementSourceService;
 
 }

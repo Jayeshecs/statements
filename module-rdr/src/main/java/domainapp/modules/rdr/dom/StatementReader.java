@@ -4,23 +4,23 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.CommandReification;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.LabelPosition;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Publishing;
-import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.apache.isis.applib.services.message.MessageService;
-import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.applib.services.title.TitleService;
-import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import domainapp.modules.base.entity.WithDescription;
+import domainapp.modules.base.entity.WithName;
+import domainapp.modules.base.entity.WithNameAndDescription;
+import domainapp.modules.ref.StaticModule.ActionDomainEvent;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -38,8 +38,12 @@ import lombok.ToString;
         strategy= VersionStrategy.DATE_TIME,
         column="version")
 @javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = StatementReader.QUERY_ALL,
+            value = "SELECT "
+                    + "FROM domainapp.modules.rdr.dom.StatementReader "),
         @javax.jdo.annotations.Query(
-                name = "findByName",
+                name = StatementReader.QUERY_FIND_BY_NAME,
                 value = "SELECT "
                         + "FROM domainapp.modules.rdr.dom.StatementReader "
                         + "WHERE name.indexOf(:name) >= 0 ")
@@ -51,27 +55,35 @@ import lombok.ToString;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 @EqualsAndHashCode(of = {"name"})
 @ToString(of = {"name"})
-public class StatementReader implements Comparable<StatementReader> {
+public class StatementReader implements Comparable<StatementReader>, WithNameAndDescription {
+	
+	public static final int PROPERTIES_MAX_LEN = 2000;
+	
+	public static final String QUERY_ALL = "all";
+	
+	public static final String QUERY_FIND_BY_NAME = "findByName";
 
     @Builder
-    public StatementReader(final String name) {
+    public StatementReader(final String name, final String description, final StatementReaderType readerType) {
         setName(name);
+        setDescription(description);
+        setReaderType(readerType);
     }
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
-    @Title(prepend = "")
+    @javax.jdo.annotations.Column(allowsNull = "false", length = WithName.MAX_LEN)
+    @Title(prepend = "RDR ")
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = 4000)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = WithDescription.MAX_LEN)
     @Property(
             editing = Editing.ENABLED,
             command = CommandReification.ENABLED,
             publishing = Publishing.ENABLED
     )
     @Getter @Setter
-    private String notes;
+    private String description;
     
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Property(
@@ -79,48 +91,27 @@ public class StatementReader implements Comparable<StatementReader> {
             command = CommandReification.ENABLED,
             publishing = Publishing.ENABLED
     )
+    @MemberOrder(sequence = "3")
     @Getter @Setter
     private StatementReaderType readerType;
-
-    @Action(
-            semantics = SemanticsOf.IDEMPOTENT,
-            command = CommandReification.ENABLED,
-            publishing = Publishing.ENABLED
-    )
-    public StatementReader updateName(
-            @Parameter(maxLength = 40)
-            final String name) {
-        setName(name);
-        return this;
-    }
-
-    public String default0UpdateName() {
-        return getName();
-    }
-
-    public TranslatableString validate0UpdateName(final String name) {
-        return name != null && name.contains("!") ? TranslatableString.tr("Exclamation mark is not allowed") : null;
-    }
-
-    @Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-    public void delete() {
-        final String title = titleService.titleOf(this);
-        messageService.informUser(String.format("'%s' deleted", title));
-        repositoryService.remove(this);
+    
+    @javax.jdo.annotations.Column(allowsNull = "true", length = PROPERTIES_MAX_LEN)
+	@Property(optionality = Optionality.OPTIONAL)
+    @PropertyLayout(labelPosition = LabelPosition.TOP, multiLine = 4, describedAs = "Standard property file format to specify properties to be used by this statement reader")
+    @MemberOrder(sequence = "4")
+    @lombok.Getter @lombok.Setter
+    private String properties;
+    
+    public static class CreateEvent extends ActionDomainEvent<StatementReader> {
+		private static final long serialVersionUID = 1L;
     }
 
     @Override
     public int compareTo(final StatementReader other) {
-        return ObjectContracts.compare(this, other, "name");
+    	if (other == null) {
+    		return -1;
+    	}
+    	return getName().compareTo(other.getName());
     }
-
-    @javax.inject.Inject
-    RepositoryService repositoryService;
-
-    @javax.inject.Inject
-    TitleService titleService;
-
-    @javax.inject.Inject
-    MessageService messageService;
 
 }

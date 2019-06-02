@@ -152,8 +152,8 @@
             </activation>
             <modules>
                 <module>module-static</module>
-                <module>module-txn</module>
                 <module>module-rdr</module>
+                <module>module-txn</module>
             </modules>
         </profile>
 
@@ -167,8 +167,8 @@
             <modules>
                 <module>module-base</module>
                 <module>module-static</module>
-                <module>module-txn</module>
                 <module>module-rdr</module>
+                <module>module-txn</module>
                 <module>appdefn</module>
                 <module>webapp</module>
             </modules>

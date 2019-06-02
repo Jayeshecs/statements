@@ -8,12 +8,9 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.xactn.TransactionService;
-import org.junit.Rule;
 import org.junit.Test;
-import org.togglz.junit.TogglzRule;
 
 import domainapp.appdefn.fixture.teardown.DomainAppTearDown;
-import domainapp.modules.base.togglz.TogglzFeature;
 import domainapp.modules.txn.dom.StatementsMenu;
 import domainapp.modules.txn.dom.Transaction;
 
@@ -25,9 +22,6 @@ public class Smoke_IntegTest extends DomainAppIntegTestAbstract {
     TransactionService transactionService;
     @Inject
     StatementsMenu menu;
-
-    @Rule
-    public TogglzRule togglzRule = TogglzRule.allEnabled(TogglzFeature.class);
 
 
     @Test

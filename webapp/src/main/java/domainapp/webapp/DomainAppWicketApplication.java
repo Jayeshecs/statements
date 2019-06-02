@@ -101,7 +101,7 @@ public class DomainAppWicketApplication extends IsisWicketApplication {
         return request;
     }
 
-    private static final String APP_NAME = "Incode App";
+    private static final String APP_NAME = "Statements Manager";
 
     @Override
     protected Module newIsisWicketModule() {

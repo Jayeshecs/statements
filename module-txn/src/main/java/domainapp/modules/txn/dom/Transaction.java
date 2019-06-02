@@ -57,7 +57,7 @@ public class Transaction implements Comparable<Transaction> {
         setAmount(amount);
     }
 	
-	@javax.jdo.annotations.Column(name="SOURCE_ID", allowsNull = "false")
+	@javax.jdo.annotations.Column(name="sourceId", allowsNull = "false")
 	@Property(editing = Editing.ENABLED)
 	@MemberOrder(sequence = "1")
 	@lombok.Getter @lombok.Setter @lombok.NonNull
@@ -70,13 +70,13 @@ public class Transaction implements Comparable<Transaction> {
 	@lombok.Getter @lombok.Setter @lombok.NonNull
 	private TransactionType type;
 	
-    @javax.jdo.annotations.Column(name="CATEGORY_ID")
+    @javax.jdo.annotations.Column(name="categoryId")
 	@Property(editing = Editing.ENABLED)
 	@MemberOrder(sequence = "3")
 	@lombok.Getter @lombok.Setter
 	private Category category;
 	
-    @javax.jdo.annotations.Column(name="SUB_CATEGORY_ID")
+    @javax.jdo.annotations.Column(name="subCategoryId")
 	@Property(editing = Editing.ENABLED)
     @MemberOrder(sequence = "4")
 	@lombok.Getter @lombok.Setter
@@ -113,8 +113,8 @@ public class Transaction implements Comparable<Transaction> {
 	private String reference;
 	
     @javax.jdo.annotations.Column(allowsNull = "true", length = 4000)
-	@Property(editing = Editing.ENABLED)
-    @PropertyLayout(hidden = Where.STANDALONE_TABLES)
+	@Property(editing = Editing.DISABLED)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
 	@lombok.Getter @lombok.Setter
 	private String rawdata;
 

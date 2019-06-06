@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.service.AbstractService;
 import domainapp.modules.rdr.dom.StatementReaderType;
 
@@ -29,7 +30,7 @@ public class StatementReaderTypeService extends AbstractService<StatementReaderT
 	
 	@Programmatic
 	public List<StatementReaderType> all() {
-		return search(StatementReaderType.QUERY_ALL);
+		return search(NamedQueryConstants.QUERY_ALL);
 	}
 
 	@Programmatic

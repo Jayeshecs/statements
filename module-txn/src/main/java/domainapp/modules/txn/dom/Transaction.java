@@ -48,13 +48,14 @@ import lombok.ToString;
 public class Transaction implements Comparable<Transaction> {
 
     @Builder
-    public Transaction(final StatementSource source, final TransactionType type, final Date transactionDate, final String narration, final String reference, final BigDecimal amount) {
+    public Transaction(final StatementSource source, final TransactionType type, final Date transactionDate, final String narration, final String reference, final BigDecimal amount, final String rawdata) {
         setSource(source);
         setType(type);
         setTransactionDate(transactionDate);
         setNarration(narration);
         setReference(reference);
         setAmount(amount);
+        setRawdata(rawdata);
     }
 	
 	@javax.jdo.annotations.Column(name="sourceId", allowsNull = "false")
@@ -120,16 +121,32 @@ public class Transaction implements Comparable<Transaction> {
 
     @Override
     public int compareTo(final Transaction other) {
-        return ObjectContracts.compare(this, other, "source", "type", "transactionDate", "narration", "reference", "amount");
+    	if (other == null) {
+    		return -1;
+    	}
+    	int result = 0;
+    	result = source.compareTo(other.source);
+    	if (result != 0) {
+    		return result;
+    	}
+    	result = type.compareTo(other.type);
+    	if (result != 0) {
+    		return result;
+    	}
+    	result = transactionDate.compareTo(other.transactionDate);
+    	if (result != 0) {
+    		return result;
+    	}
+    	result = narration.compareTo(other.narration);
+    	if (result != 0) {
+    		return result;
+    	}
+    	result = reference.compareTo(other.reference);
+    	if (result != 0) {
+    		return result;
+    	}
+    	result = amount.compareTo(other.amount);
+    	return result;
     }
-
-    @javax.inject.Inject
-    RepositoryService repositoryService;
-
-    @javax.inject.Inject
-    TitleService titleService;
-
-    @javax.inject.Inject
-    MessageService messageService;
 
 }

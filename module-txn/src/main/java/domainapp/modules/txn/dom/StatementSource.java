@@ -13,6 +13,9 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import domainapp.modules.base.entity.NamedQueryConstants;
+import domainapp.modules.base.entity.WithDescription;
+import domainapp.modules.base.entity.WithName;
 import domainapp.modules.base.entity.WithNameAndDescription;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -32,11 +35,11 @@ import lombok.ToString;
         column="version")
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
-            name = StatementSource.QUERY_ALL,
+            name = NamedQueryConstants.QUERY_ALL,
             value = "SELECT "
                     + "FROM domainapp.modules.txn.dom.StatementSource "),
         @javax.jdo.annotations.Query(
-                name = StatementSource.QUERY_FIND_BY_NAME,
+                name = NamedQueryConstants.QUERY_FIND_BY_NAME,
                 value = "SELECT "
                         + "FROM domainapp.modules.txn.dom.StatementSource "
                         + "WHERE name.indexOf(:name) >= 0 ")
@@ -50,23 +53,13 @@ import lombok.ToString;
 @ToString(of = {"name"})
 public class StatementSource implements Comparable<StatementSource>, WithNameAndDescription {
 
-	public static final String QUERY_ALL = "all";
-
-	public static final String QUERY_FIND_BY_NAME = "findByName";
-	
-    @Builder
-    public StatementSource(final String name, final String description) {
-        setName(name);
-        setDescription(description);
-    }
-
-    @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = WithName.MAX_LEN)
     @Title(prepend = "")
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length = 4000)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = WithDescription.MAX_LEN)
     @Property(
             editing = Editing.ENABLED,
             command = CommandReification.ENABLED,
@@ -74,6 +67,12 @@ public class StatementSource implements Comparable<StatementSource>, WithNameAnd
     )
     @Getter @Setter
     private String description;
+	
+    @Builder
+    public StatementSource(final String name, final String description) {
+        setName(name);
+        setDescription(description);
+    }
 
     @Override
     public int compareTo(final StatementSource other) {

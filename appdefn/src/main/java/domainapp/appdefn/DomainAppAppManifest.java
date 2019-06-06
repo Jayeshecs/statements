@@ -73,7 +73,7 @@ public class DomainAppAppManifest extends AppManifestAbstract2 {
             .withConfigurationProperty("isis.viewer.wicket.rememberMe.cookieKey", "DomainAppEncryptionKey")
 
                 // override as required
-            .withConfigurationProperty("isis.viewer.wicket.gmap3.apiKey","XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+//            .withConfigurationProperty("isis.viewer.wicket.gmap3.apiKey","XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
             .withConfigurationProperty("isis.services.audit.objects","none")
             .withConfigurationProperty("isis.services.command.actions","none")
             .withConfigurationProperty("isis.services.command.properties","none")

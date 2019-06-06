@@ -32,7 +32,7 @@ import domainapp.modules.ref.service.SubCategoryService;
  */
 @DomainObject(
 		nature = Nature.VIEW_MODEL,
-		objectType = "stmt.ManageCategoryDashboard"
+		objectType = "ref.ManageCategoryDashboard"
 )
 public class ManageCategoryDashboard {
 
@@ -117,9 +117,9 @@ public class ManageCategoryDashboard {
     }
 	
     @javax.inject.Inject
-    protected SubCategoryService subCategoryService;
-	
-    @javax.inject.Inject
     protected CategoryService categoryService;
+    
+    @javax.inject.Inject
+    protected SubCategoryService subCategoryService;
     
 }

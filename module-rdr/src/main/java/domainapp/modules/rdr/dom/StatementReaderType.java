@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
 import domainapp.modules.base.entity.WithNameAndDescription;
@@ -36,11 +37,11 @@ import lombok.ToString;
         column="version")
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
-            name = StatementReaderType.QUERY_ALL,
+            name = NamedQueryConstants.QUERY_ALL,
             value = "SELECT "
                     + "FROM domainapp.modules.rdr.dom.StatementReaderType "),
         @javax.jdo.annotations.Query(
-                name = StatementReaderType.QUERY_FIND_BY_NAME,
+                name = NamedQueryConstants.QUERY_FIND_BY_NAME,
                 value = "SELECT "
                         + "FROM domainapp.modules.rdr.dom.StatementReaderType "
                         + "WHERE name.indexOf(:name) >= 0 ")
@@ -54,10 +55,6 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"name"})
 @ToString(of = {"name"})
 public class StatementReaderType implements Comparable<StatementReaderType>, WithNameAndDescription {
-
-	public static final String QUERY_ALL = "all";
-	
-	public static final String QUERY_FIND_BY_NAME = "findByName";
 	
 	public static final int CLASSNAME_MAX_LEN = 256;
 	

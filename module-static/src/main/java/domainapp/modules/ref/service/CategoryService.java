@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.service.AbstractService;
 import domainapp.modules.ref.dom.Category;
 
@@ -28,7 +29,7 @@ public class CategoryService extends AbstractService<Category>{
 	
 	@Programmatic
 	public List<Category> all() {
-		return search(Category.QUERY_ALL);
+		return search(NamedQueryConstants.QUERY_ALL);
 	}
 
 	@Programmatic

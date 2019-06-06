@@ -13,6 +13,8 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import domainapp.modules.base.entity.Activable;
+import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithNameAndDescription;
 import domainapp.modules.ref.StaticModule.ActionDomainEvent;
 import lombok.Builder;
@@ -32,16 +34,12 @@ import lombok.ToString;
         strategy= VersionStrategy.DATE_TIME,
         column="version")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = SubCategory.QUERY_ALL,
-            value = "SELECT "
-                    + "FROM domainapp.modules.ref.dom.SubCategory"),
-        @javax.jdo.annotations.Query(
-                name = SubCategory.QUERY_FIND_BY_NAME,
-                value = "SELECT "
-                        + "FROM domainapp.modules.ref.dom.SubCategory "
-                        + "WHERE name.indexOf(:name) >= 0 ")
-})
+		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL, value = "SELECT "
+				+ "FROM domainapp.modules.ref.dom.SubCategory"),
+		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL_ACTIVE, value = "SELECT "
+				+ "FROM domainapp.modules.ref.dom.SubCategory " + "WHERE active == true"),
+		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_FIND_BY_NAME, value = "SELECT "
+				+ "FROM domainapp.modules.ref.dom.SubCategory " + "WHERE name.indexOf(:name) >= 0 ") })
 @javax.jdo.annotations.Unique(name="SubCategory_name_UNQ", members = {"name"})
 @DomainObject(
         auditing = Auditing.ENABLED, 
@@ -51,17 +49,7 @@ import lombok.ToString;
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 @EqualsAndHashCode(of = {"name"})
 @ToString(of = {"name"})
-public class SubCategory implements Comparable<SubCategory>, WithNameAndDescription {
-
-	public static final String QUERY_ALL = "all";
-
-	public static final String QUERY_FIND_BY_NAME = "findByName";
-
-    @Builder
-    public SubCategory(final String name, final String description) {
-        setName(name);
-        setDescription(description);
-    }
+public class SubCategory implements Comparable<SubCategory>, WithNameAndDescription, Activable {
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
     @Title(prepend = "")
@@ -77,6 +65,27 @@ public class SubCategory implements Comparable<SubCategory>, WithNameAndDescript
     )
     @Getter @Setter
     private String description;
+    
+    @javax.jdo.annotations.Column(allowsNull = "true", defaultValue = "true")
+    @Property(
+            editing = Editing.DISABLED,
+            command = CommandReification.ENABLED,
+            publishing = Publishing.ENABLED
+    )
+    @Getter @Setter
+    private Boolean active;
+
+    @Builder
+    public SubCategory(final String name, final String description) {
+        setName(name);
+        setDescription(description);
+        setActive(true);
+    }
+    
+    @Override
+    public Boolean isActive() {
+    	return getActive() != null ? getActive() : true;
+    }
     
     public static class CreateEvent extends ActionDomainEvent<SubCategory> {
 		private static final long serialVersionUID = 1L;

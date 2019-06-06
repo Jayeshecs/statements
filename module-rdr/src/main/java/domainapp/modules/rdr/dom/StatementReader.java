@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
 import domainapp.modules.base.entity.WithNameAndDescription;
@@ -39,11 +40,11 @@ import lombok.ToString;
         column="version")
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
-            name = StatementReader.QUERY_ALL,
+            name = NamedQueryConstants.QUERY_ALL,
             value = "SELECT "
                     + "FROM domainapp.modules.rdr.dom.StatementReader "),
         @javax.jdo.annotations.Query(
-                name = StatementReader.QUERY_FIND_BY_NAME,
+                name = NamedQueryConstants.QUERY_FIND_BY_NAME,
                 value = "SELECT "
                         + "FROM domainapp.modules.rdr.dom.StatementReader "
                         + "WHERE name.indexOf(:name) >= 0 ")
@@ -58,17 +59,6 @@ import lombok.ToString;
 public class StatementReader implements Comparable<StatementReader>, WithNameAndDescription {
 	
 	public static final int PROPERTIES_MAX_LEN = 2000;
-	
-	public static final String QUERY_ALL = "all";
-	
-	public static final String QUERY_FIND_BY_NAME = "findByName";
-
-    @Builder
-    public StatementReader(final String name, final String description, final StatementReaderType readerType) {
-        setName(name);
-        setDescription(description);
-        setReaderType(readerType);
-    }
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = WithName.MAX_LEN)
     @Title(prepend = "RDR ")
@@ -101,6 +91,14 @@ public class StatementReader implements Comparable<StatementReader>, WithNameAnd
     @MemberOrder(sequence = "4")
     @lombok.Getter @lombok.Setter
     private String properties;
+
+    @Builder
+    public StatementReader(final String name, final String description, final StatementReaderType readerType, final String properties) {
+        setName(name);
+        setDescription(description);
+        setReaderType(readerType);
+        setProperties(properties);
+    }
     
     public static class CreateEvent extends ActionDomainEvent<StatementReader> {
 		private static final long serialVersionUID = 1L;

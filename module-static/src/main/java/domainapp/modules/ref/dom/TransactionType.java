@@ -3,6 +3,10 @@
  */
 package domainapp.modules.ref.dom;
 
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Nature;
+
 import domainapp.modules.base.IEntityEnum;
 
 /**
@@ -10,6 +14,11 @@ import domainapp.modules.base.IEntityEnum;
  * 
  * @author Prajapati
  */
+@DomainObject(
+		nature = Nature.EXTERNAL_ENTITY,
+		objectType = "ref.TransactionType"
+)
+@DomainObjectLayout(named = "Transaction type", plural = "Transaction types", describedAs = "Transaction types e.g. Debut and Credit")
 public enum TransactionType implements IEntityEnum {
 
 	CREDIT(1),
@@ -30,8 +39,16 @@ public enum TransactionType implements IEntityEnum {
 	 * @return identifier for this {@link TransactionType}
 	 */
 	@Override
-	public int id() {
+	public int getId() {
 		return id;
+	}
+	
+	/**
+	 * @return name for this {@link TransactionType}
+	 */
+	@Override
+	public String getName() {
+		return name();
 	}
 	
 	/**
@@ -41,7 +58,7 @@ public enum TransactionType implements IEntityEnum {
 	 */
 	public static TransactionType byId(int id) {
 		for (TransactionType type : values()) {
-			if (type.id() == id) {
+			if (type.getId() == id) {
 				return type;
 			}
 		}

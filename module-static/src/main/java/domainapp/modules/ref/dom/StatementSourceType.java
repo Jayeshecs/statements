@@ -3,6 +3,10 @@
  */
 package domainapp.modules.ref.dom;
 
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Nature;
+
 import domainapp.modules.base.IEntityEnum;
 
 /**
@@ -10,6 +14,12 @@ import domainapp.modules.base.IEntityEnum;
  * 
  * @author Prajapati
  */
+@DomainObject(
+		nature = Nature.INMEMORY_ENTITY,
+		objectType = "ref.StatementSourceType",
+		bounded = true
+)
+@DomainObjectLayout(named = "Statement source type", plural = "Statement source types", describedAs = "Statement source types e.g. saving account, load account, credit card, etc.")
 public enum StatementSourceType implements IEntityEnum {
 
 	SAVING_ACCOUNT(0),
@@ -31,8 +41,16 @@ public enum StatementSourceType implements IEntityEnum {
 	/**
 	 * @return identifier for this {@link StatementSourceType}
 	 */
-	public int id() {
+	public int getId() {
 		return id;
+	}
+	
+	/**
+	 * @return name for this {@link StatementSourceType}
+	 */
+	@Override
+	public String getName() {
+		return name();
 	}
 	
 	/**
@@ -42,7 +60,7 @@ public enum StatementSourceType implements IEntityEnum {
 	 */
 	public static StatementSourceType byId(int id) {
 		for (StatementSourceType type : values()) {
-			if (type.id() == id) {
+			if (type.getId() == id) {
 				return type;
 			}
 		}

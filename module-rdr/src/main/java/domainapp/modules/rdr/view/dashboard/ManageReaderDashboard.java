@@ -29,8 +29,9 @@ import domainapp.modules.rdr.service.StatementReaderService;
 import domainapp.modules.rdr.service.StatementReaderTypeService;
 
 /**
+ * Manage readers and their types
+ * 
  * @author jayeshecs
- *
  */
 @DomainObject(
 		nature = Nature.VIEW_MODEL,
@@ -120,19 +121,19 @@ public class ManageReaderDashboard {
     		@ParameterLayout(labelPosition = LabelPosition.TOP, named = "Properties", multiLine = 4, describedAs = "Enter properties of new reader that will be created")
     		final String properties
     		) {
-    	StatementReader statementReader = statementReaderService.create(name, description, readerType);
+    	StatementReader statementReader = statementReaderService.create(name, description, readerType, properties);
     	Objects.requireNonNull(statementReader, "Reader could not be created, check log for more detail");
     	return this;
     }
-//    
-//    public String default3createStatementReader() {
-//    	return "#dateFormat=dd/MM/yyyy";
-//    }
+
+    
+    public String default3CreateStatementReader() {
+    	return "#dateFormat=dd/MM/yyyy";
+    }
 	
 	@Inject
 	StatementReaderTypeService statementReaderTypeService;
 	
 	@Inject
 	StatementReaderService statementReaderService;
-	
 }

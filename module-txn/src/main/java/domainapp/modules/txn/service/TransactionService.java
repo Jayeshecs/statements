@@ -47,6 +47,11 @@ public class TransactionService extends AbstractService<Transaction>{
 	@Programmatic
 	public Transaction debit(String sourceName, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
 		StatementSource statementSource = statementSourceService.getOrCreate(sourceName);
+		return debit(statementSource, transactionDate, amount, narration, reference, rawdata);
+	}
+
+	@Programmatic
+	public Transaction debit(StatementSource statementSource, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
 		return create(TransactionType.DEBIT, statementSource, transactionDate, amount, narration, reference, rawdata);
 	}
 	
@@ -56,6 +61,7 @@ public class TransactionService extends AbstractService<Transaction>{
 				.type(type)
 				.source(source)
 				.amount(amount)
+				.transactionDate(transactionDate)
 				.narration(narration)
 				.reference(reference)
 				.rawdata(rawdata)

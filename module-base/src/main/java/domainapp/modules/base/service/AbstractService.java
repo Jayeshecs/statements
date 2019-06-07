@@ -3,6 +3,7 @@
  */
 package domainapp.modules.base.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.Programmatic;
@@ -44,6 +45,19 @@ public abstract class AbstractService<T> {
 	 */
 	protected void clearCache() {
 		queryResultsCache.resetForNextTransaction();
+	}
+	
+	@Programmatic
+	public void save(List<T> records) {
+		List<T> result = new ArrayList<>(records.size());
+		for (int i = 0; i < records.size(); i++) {
+			if (i == records.size() - 1) {
+				result.add(repositoryService.persistAndFlush(records.get(i)));
+				continue ;
+			}
+			result.add(repositoryService.persist(records.get(i)));
+		}
+		clearCache();
 	}
     
     @javax.inject.Inject

@@ -21,6 +21,7 @@ import org.apache.isis.applib.services.title.TitleService;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.SubCategory;
 import domainapp.modules.ref.dom.TransactionType;
@@ -38,6 +39,10 @@ import lombok.ToString;
 @javax.jdo.annotations.Version(
         strategy= VersionStrategy.DATE_TIME,
         column="version")
+@javax.jdo.annotations.Queries({
+	@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL, value = "SELECT "
+			+ "FROM domainapp.modules.txn.dom.Transaction ")
+})
 @javax.jdo.annotations.Unique(name="Transaction_hash_UNQ", members = {"source", "type", "transactionDate", "narration", "reference", "amount"})
 @DomainObject(
         auditing = Auditing.ENABLED
@@ -94,12 +99,12 @@ public class Transaction implements Comparable<Transaction> {
 	@MemberOrder(sequence = "6")
 	@lombok.Getter @lombok.Setter @lombok.NonNull
 	private Date transactionDate;
-	
-    @javax.jdo.annotations.Column(allowsNull = "false")
-	@Property(editing = Editing.ENABLED)
-	@MemberOrder(sequence = "7")
-	@lombok.Getter @lombok.Setter @lombok.NonNull
-	private Date valueDate;
+//	TODO: is this needed ? Mostly NO
+//    @javax.jdo.annotations.Column(allowsNull = "false")
+//	@Property(editing = Editing.ENABLED)
+//	@MemberOrder(sequence = "7")
+//	@lombok.Getter @lombok.Setter @lombok.NonNull
+//	private Date valueDate;
 	
     @javax.jdo.annotations.Column(allowsNull = "false", length = 4000)
 	@Property(editing = Editing.ENABLED)

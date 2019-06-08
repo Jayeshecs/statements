@@ -5,11 +5,19 @@ package domainapp.modules.base.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.jdo.Query;
 
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.datanucleus.query.typesafe.BooleanExpression;
+import org.datanucleus.query.typesafe.PersistableExpression;
+import org.datanucleus.query.typesafe.TypesafeQuery;
 
 /**
  * @author jayeshecs
@@ -30,6 +38,19 @@ public abstract class AbstractService<T> {
 	
 	private <A> List<A> execute(Class<A> clazz, String queryName, Object... arguments) { 
 		return repositoryService.allMatches(new QueryDefault<A>(clazz, queryName, arguments));
+	}
+	
+	/**
+	 * @param filter
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> filter(String filter, Map<String, Object> parameters) {
+		Query query = isisJdoSupport.getJdoPersistenceManager().newQuery(entityClass);
+		query.setFilter(filter);
+		return (parameters != null && !parameters.isEmpty())
+					? (List<T>) query.executeWithMap(parameters) 
+							: (List<T>) query.execute();
 	}
 
 	@Programmatic
@@ -59,6 +80,9 @@ public abstract class AbstractService<T> {
 		}
 		clearCache();
 	}
+	
+	@Inject
+	IsisJdoSupport isisJdoSupport;
     
     @javax.inject.Inject
     protected RepositoryService repositoryService;

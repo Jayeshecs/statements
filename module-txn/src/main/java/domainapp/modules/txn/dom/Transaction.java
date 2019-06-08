@@ -15,13 +15,10 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.message.MessageService;
-import org.apache.isis.applib.services.repository.RepositoryService;
-import org.apache.isis.applib.services.title.TitleService;
-import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
 import domainapp.modules.base.entity.NamedQueryConstants;
+import domainapp.modules.ref.StaticModule.ActionDomainEvent;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.SubCategory;
 import domainapp.modules.ref.dom.TransactionType;
@@ -51,16 +48,9 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"source", "type", "transactionDate", "narration", "reference", "amount"})
 @ToString(of = {"source", "type", "transactionDate", "narration", "reference", "amount"})
 public class Transaction implements Comparable<Transaction> {
-
-    @Builder
-    public Transaction(final StatementSource source, final TransactionType type, final Date transactionDate, final String narration, final String reference, final BigDecimal amount, final String rawdata) {
-        setSource(source);
-        setType(type);
-        setTransactionDate(transactionDate);
-        setNarration(narration);
-        setReference(reference);
-        setAmount(amount);
-        setRawdata(rawdata);
+    
+    public static class CreateEvent extends ActionDomainEvent<Transaction> {
+		private static final long serialVersionUID = 1L;
     }
 	
 	@javax.jdo.annotations.Column(name="sourceId", allowsNull = "false")
@@ -123,6 +113,17 @@ public class Transaction implements Comparable<Transaction> {
     @PropertyLayout(hidden = Where.EVERYWHERE)
 	@lombok.Getter @lombok.Setter
 	private String rawdata;
+
+    @Builder
+    public Transaction(final StatementSource source, final TransactionType type, final Date transactionDate, final String narration, final String reference, final BigDecimal amount, final String rawdata) {
+        setSource(source);
+        setType(type);
+        setTransactionDate(transactionDate);
+        setNarration(narration);
+        setReference(reference);
+        setAmount(amount);
+        setRawdata(rawdata);
+    }
 
     @Override
     public int compareTo(final Transaction other) {

@@ -3,29 +3,47 @@
  */
 package domainapp.modules.txn.view.dashboard;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionLayout.Position;
+import org.apache.isis.applib.annotation.Collection;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.LabelPosition;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PromptStyle;
+import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.hint.HintStore;
 
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.SubCategory;
+import domainapp.modules.ref.dom.TransactionType;
 import domainapp.modules.txn.dom.StatementSource;
 import domainapp.modules.txn.dom.Transaction;
 import domainapp.modules.txn.service.StatementSourceService;
 import domainapp.modules.txn.service.TransactionService;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author jayeshecs
@@ -35,28 +53,89 @@ import domainapp.modules.txn.service.TransactionService;
 		nature = Nature.VIEW_MODEL,
 		objectType = "stmt.ManageTransactionDashboard"
 )
-public class ManageTransactionDashboard {
+public class ManageTransactionDashboard implements HintStore.HintIdProvider{
+	
+	@EqualsAndHashCode
+	@ToString(of = {"filter", "parameters"})
+	class TransactionFilter implements Serializable {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
+		@Getter @Setter
+		private String filter = "";
+		
+		@Getter @Setter
+		private Map<String, Object> parameters = new HashMap<>();
+	}
+	
+	@PropertyLayout(hidden = Where.EVERYWHERE)
+	private TransactionFilter filter;
+	
+	/**
+	 * @return
+	 */
 	public String title() {
 		return "Manage Transactions";
 	}
 	
-	/**
-	 * @return 
-	 */
-	public List<Transaction> getTransactions() {
-		return transactionService.all();
+	@Override
+	public String hintId() {
+		return getFilterDescription();
+	}
+	
+	@Property(editing = Editing.DISABLED, editingDisabledReason = "This is read-only field")
+	@PropertyLayout(labelPosition = LabelPosition.TOP, named = "Filter", multiLine = 4)
+	@MemberOrder(sequence = "1")
+	public String getFilterDescription() {
+		if (filter == null) {
+			return "[ Show all transactions ]";
+		}
+		String filterDescription = filter.getFilter();
+		Map<String, Object> parameters = filter.getParameters();
+		if (parameters == null || parameters.isEmpty()) {
+			return filterDescription;
+		}
+		for (Entry<String, Object> entry : parameters.entrySet()) {
+			filterDescription = filterDescription.replaceAll(":" + entry.getKey(), String.valueOf(entry.getValue()));
+		}
+		return filterDescription;
 	}
 	
 	/**
 	 * @return 
 	 */
+	@Collection(typeOf = StatementSource.class)
+	@CollectionLayout(defaultView = "table")
+	@MemberOrder(sequence = "2")
 	public List<StatementSource> getStatementSources() {
 		return statementSourceService.all();
 	}
 	
-	@Action(associateWith = "transactions", associateWithSequence = "1", semantics = SemanticsOf.SAFE, typeOf = Transaction.class)
-	@ActionLayout(named = "Change Category", position = Position.RIGHT, promptStyle = PromptStyle.DIALOG)
+	/**
+	 * @return 
+	 */
+	@Collection(typeOf = Transaction.class)
+	@CollectionLayout(defaultView = "table", paged = 100)
+	@MemberOrder(sequence = "3")
+	public List<Transaction> getTransactions() {
+		if (filter != null) {
+			return transactionService.filter(filter.getFilter(), filter.getParameters());
+		}
+		return transactionService.all();
+	}
+	
+	@Action(
+			associateWith = "transactions", 
+			associateWithSequence = "1", 
+			semantics = SemanticsOf.SAFE, 
+			typeOf = Transaction.class)
+	@ActionLayout(
+			named = "Change Category", 
+			position = Position.RIGHT, 
+			promptStyle = PromptStyle.DIALOG)
 	public ManageTransactionDashboard changeCategory(
 			List<Transaction> selectedTransactions, 
 			@Parameter(optionality = Optionality.MANDATORY)
@@ -65,17 +144,74 @@ public class ManageTransactionDashboard {
 			@Parameter(optionality = Optionality.MANDATORY)
 			@ParameterLayout(named = "Sub-Category")
 			SubCategory subCategory) {
+		/**
+		 * Update all transaction records with given category and sub-category
+		 */
 		for (Transaction transaction : selectedTransactions) {
 			transaction.setCategory(category);
 			transaction.setSubCategory(subCategory);
 		}
+		/**
+		 * save all transaction records
+		 */
 		transactionService.save(selectedTransactions);
 		return this;
 	}
 	
-	@Action(associateWith = "transactions", associateWithSequence = "2", semantics = SemanticsOf.SAFE, typeOf = Transaction.class)
-	@ActionLayout(named = "Add debit", position = Position.RIGHT, promptStyle = PromptStyle.DIALOG)
-	public ManageTransactionDashboard debit(
+	@Action(
+			associateWith = "transactions", 
+			associateWithSequence = "2", 
+			semantics = SemanticsOf.SAFE, 
+			typeOf = Transaction.class)
+	@ActionLayout(
+			named = "Filter", 
+			position = Position.RIGHT, 
+			promptStyle = PromptStyle.DIALOG)
+	public ManageTransactionDashboard filter(
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Narration contains")
+			String narration, 
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Transaction type")
+			TransactionType type, 
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Statement Source")
+			StatementSource source, 
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Start date")
+			Date dateStart, 
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "End date")
+			Date dateEnd, 
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Minimum")
+			BigDecimal amountFloor, 
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Maximum")
+			BigDecimal amountCap, 
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Category")
+			Category category, 
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Sub-Category")
+			SubCategory subCategory) {
+		filter = new TransactionFilter();
+		filter.setFilter(transactionService.buildFilter(narration, dateStart, dateEnd, amountFloor, amountCap, type, source, category, subCategory, filter.getParameters()));
+		return this;
+	}
+	
+	@Action(
+    		domainEvent = Transaction.CreateEvent.class,
+			associateWith = "transactions", 
+			associateWithSequence = "2", 
+			semantics = SemanticsOf.SAFE, 
+			typeOf = Transaction.class
+	)
+	@ActionLayout(
+			named = "Add Expense", 
+			position = Position.PANEL_DROPDOWN, 
+			promptStyle = PromptStyle.DIALOG)
+	public ManageTransactionDashboard expense(
 			@Parameter(optionality = Optionality.MANDATORY)
 			@ParameterLayout(named = "Source")
 			String statementSource, 
@@ -92,6 +228,37 @@ public class ManageTransactionDashboard {
 			@ParameterLayout(named = "Reference")
 			String reference) {
 		transactionService.debit(statementSource, transactionDate, amount, narration, reference, "manual entry");
+		return this;
+	}
+	
+	@Action(
+    		domainEvent = Transaction.CreateEvent.class,
+			associateWith = "transactions", 
+			associateWithSequence = "3", 
+			semantics = SemanticsOf.SAFE, 
+			typeOf = Transaction.class
+	)
+	@ActionLayout(
+			named = "Add Income", 
+			position = Position.PANEL_DROPDOWN, 
+			promptStyle = PromptStyle.DIALOG)
+	public ManageTransactionDashboard income(
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Source")
+			String statementSource, 
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Transaction date")
+			Date transactionDate, 
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Amount")
+			BigDecimal amount, 
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Narration")
+			String narration, 
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Reference")
+			String reference) {
+		transactionService.credit(statementSource, transactionDate, amount, narration, reference, "manual entry");
 		return this;
 	}
 

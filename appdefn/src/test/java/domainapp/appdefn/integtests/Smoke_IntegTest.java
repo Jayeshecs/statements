@@ -11,7 +11,7 @@ import org.apache.isis.applib.services.xactn.TransactionService;
 import org.junit.Test;
 
 import domainapp.appdefn.fixture.teardown.DomainAppTearDown;
-import domainapp.modules.txn.dom.StatementsMenu;
+import domainapp.modules.txn.dom.DataProcessingMenu;
 import domainapp.modules.txn.dom.Transaction;
 
 public class Smoke_IntegTest extends DomainAppIntegTestAbstract {
@@ -21,7 +21,7 @@ public class Smoke_IntegTest extends DomainAppIntegTestAbstract {
     @Inject
     TransactionService transactionService;
     @Inject
-    StatementsMenu menu;
+    DataProcessingMenu menu;
 
 
     @Test

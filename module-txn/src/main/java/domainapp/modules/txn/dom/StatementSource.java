@@ -46,7 +46,8 @@ import lombok.ToString;
 })
 @javax.jdo.annotations.Unique(name="StatementSource_name_UNQ", members = {"name"})
 @DomainObject(
-        auditing = Auditing.ENABLED
+        auditing = Auditing.ENABLED,
+        bounded = true
 ) // objectType inferred from @PersistenceCapable#schema
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 @EqualsAndHashCode(of = {"name"})

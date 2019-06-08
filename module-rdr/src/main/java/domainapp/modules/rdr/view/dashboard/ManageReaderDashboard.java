@@ -126,7 +126,9 @@ public class ManageReaderDashboard {
     	return this;
     }
 
-    
+    /**
+     * @return default value for 4th parameter of action "Create new reader"
+     */
     public String default3CreateStatementReader() {
     	return "#dateFormat=dd/MM/yyyy";
     }

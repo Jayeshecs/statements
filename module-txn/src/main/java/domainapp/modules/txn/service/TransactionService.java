@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.service.AbstractService;
 import domainapp.modules.ref.dom.Category;
+import domainapp.modules.ref.dom.StatementSourceType;
 import domainapp.modules.ref.dom.SubCategory;
 import domainapp.modules.ref.dom.TransactionType;
 import domainapp.modules.txn.dom.StatementSource;
@@ -133,13 +134,18 @@ public class TransactionService extends AbstractService<Transaction>{
 
 	@Programmatic
 	public Transaction credit(String sourceName, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
-		StatementSource statementSource = statementSourceService.getOrCreate(sourceName);
+		StatementSource statementSource = statementSourceService.getOrCreate(sourceName, StatementSourceType.SAVING_ACCOUNT); // by default it is Saving account if not found
+		return create(TransactionType.CREDIT, statementSource, transactionDate, amount, narration, reference, rawdata);
+	}
+
+	@Programmatic
+	public Transaction credit(StatementSource statementSource, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
 		return create(TransactionType.CREDIT, statementSource, transactionDate, amount, narration, reference, rawdata);
 	}
 
 	@Programmatic
 	public Transaction debit(String sourceName, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
-		StatementSource statementSource = statementSourceService.getOrCreate(sourceName);
+		StatementSource statementSource = statementSourceService.getOrCreate(sourceName, StatementSourceType.SAVING_ACCOUNT); // by default it is Saving account if not found
 		return debit(statementSource, transactionDate, amount, narration, reference, rawdata);
 	}
 

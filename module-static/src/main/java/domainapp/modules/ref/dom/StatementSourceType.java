@@ -19,13 +19,17 @@ import domainapp.modules.base.IEntityEnum;
 		objectType = "ref.StatementSourceType",
 		bounded = true
 )
-@DomainObjectLayout(named = "Statement source type", plural = "Statement source types", describedAs = "Statement source types e.g. saving account, load account, credit card, etc.")
+@DomainObjectLayout(
+		named = "Statement source type", 
+		plural = "Statement source types", 
+		describedAs = "Statement source types e.g. saving account, load account, credit card, etc.")
 public enum StatementSourceType implements IEntityEnum {
 
 	SAVING_ACCOUNT(0),
 	CREDIT_CARD(1),
 	LOAN_ACCOUNT(2),
-	CASH(3);
+	E_WALLET(3),
+	CASH(4);
 	
 	private int id;
 

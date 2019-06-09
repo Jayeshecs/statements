@@ -17,6 +17,7 @@ import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
 import domainapp.modules.base.entity.WithNameAndDescription;
+import domainapp.modules.ref.dom.StatementSourceType;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -68,11 +69,21 @@ public class StatementSource implements Comparable<StatementSource>, WithNameAnd
     )
     @Getter @Setter
     private String description;
-	
+    
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Property(
+            editing = Editing.ENABLED,
+            command = CommandReification.ENABLED,
+            publishing = Publishing.ENABLED
+    )
+    @Getter @Setter
+    private StatementSourceType type;
+    
     @Builder
-    public StatementSource(final String name, final String description) {
+    public StatementSource(final String name, final String description, final StatementSourceType type) {
         setName(name);
         setDescription(description);
+        setType(type == null ? StatementSourceType.SAVING_ACCOUNT : type);
     }
 
     @Override

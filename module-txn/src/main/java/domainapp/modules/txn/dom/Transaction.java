@@ -38,7 +38,10 @@ import lombok.ToString;
         column="version")
 @javax.jdo.annotations.Queries({
 	@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL, value = "SELECT "
-			+ "FROM domainapp.modules.txn.dom.Transaction ")
+			+ "FROM domainapp.modules.txn.dom.Transaction "),
+	@javax.jdo.annotations.Query(name = Transaction.QUERY_FIND_BY_RAWDATA, value = "SELECT "
+			+ "FROM domainapp.modules.txn.dom.Transaction "
+			+ "WHERE rawdata == :rawdata")
 })
 @javax.jdo.annotations.Unique(name="Transaction_hash_UNQ", members = {"source", "type", "transactionDate", "narration", "reference", "amount"})
 @DomainObject(
@@ -48,10 +51,19 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"source", "type", "transactionDate", "narration", "reference", "amount"})
 @ToString(of = {"source", "type", "transactionDate", "narration", "reference", "amount"})
 public class Transaction implements Comparable<Transaction> {
+	
+	public static final String QUERY_FIND_BY_RAWDATA = "findByRawdata"; //$NON-NLS-1$
     
     public static class CreateEvent extends ActionDomainEvent<Transaction> {
 		private static final long serialVersionUID = 1L;
     }
+	
+	/**
+	 * @return
+	 */
+	public String title() {
+		return String.format("%s %tF %.2f %s, %s", source.getName(), transactionDate, amount, narration == null ? "" : narration, reference == null ? "" : reference);
+	}
 	
 	@javax.jdo.annotations.Column(name="sourceId", allowsNull = "false")
 	@Property(editing = Editing.ENABLED)

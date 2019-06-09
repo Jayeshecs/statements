@@ -3,10 +3,8 @@
  */
 package domainapp.modules.txn.view.dashboard;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,6 +31,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.hint.HintStore;
 
+import domainapp.modules.base.view.GenericlFilter;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.SubCategory;
 import domainapp.modules.ref.dom.TransactionType;
@@ -40,10 +39,6 @@ import domainapp.modules.txn.dom.StatementSource;
 import domainapp.modules.txn.dom.Transaction;
 import domainapp.modules.txn.service.StatementSourceService;
 import domainapp.modules.txn.service.TransactionService;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * @author jayeshecs
@@ -55,24 +50,8 @@ import lombok.ToString;
 )
 public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 	
-	@EqualsAndHashCode
-	@ToString(of = {"filter", "parameters"})
-	class TransactionFilter implements Serializable {
-		
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		@Getter @Setter
-		private String filter = "";
-		
-		@Getter @Setter
-		private Map<String, Object> parameters = new HashMap<>();
-	}
-	
 	@PropertyLayout(hidden = Where.EVERYWHERE)
-	private TransactionFilter filter;
+	private GenericlFilter filter;
 	
 	/**
 	 * @return
@@ -195,7 +174,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			@Parameter(optionality = Optionality.OPTIONAL)
 			@ParameterLayout(named = "Sub-Category")
 			SubCategory subCategory) {
-		filter = new TransactionFilter();
+		filter = new GenericlFilter();
 		filter.setFilter(transactionService.buildFilter(narration, dateStart, dateEnd, amountFloor, amountCap, type, source, category, subCategory, filter.getParameters()));
 		return this;
 	}
@@ -227,7 +206,8 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			@Parameter(optionality = Optionality.OPTIONAL)
 			@ParameterLayout(named = "Reference")
 			String reference) {
-		transactionService.debit(statementSource, transactionDate, amount, narration, reference, "manual entry");
+		String rawdata = String.format("%t,%.2f,\"%s\",\"%s\"", transactionDate, amount, narration, reference);
+		transactionService.debit(statementSource, transactionDate, amount, narration, reference, rawdata);
 		return this;
 	}
 	
@@ -258,7 +238,8 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			@Parameter(optionality = Optionality.OPTIONAL)
 			@ParameterLayout(named = "Reference")
 			String reference) {
-		transactionService.credit(statementSource, transactionDate, amount, narration, reference, "manual entry");
+		String rawdata = String.format("%t,%.2f,\"%s\",\"%s\"", transactionDate, amount, narration, reference);
+		transactionService.credit(statementSource, transactionDate, amount, narration, reference, rawdata);
 		return this;
 	}
 

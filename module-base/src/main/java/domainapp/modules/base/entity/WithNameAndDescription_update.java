@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.i18n.TranslatableString;
-import org.isisaddons.wicket.summernote.cpt.applib.SummernoteEditor;
+//import org.isisaddons.wicket.summernote.cpt.applib.SummernoteEditor;
 
 /**
  * Mixin for update of name for entity with name
@@ -40,7 +40,7 @@ public class WithNameAndDescription_update {
 			
 			@Parameter(optionality = Optionality.OPTIONAL, maxLength = WithDescription.MAX_LEN)
 			@ParameterLayout(named = "Description", labelPosition = LabelPosition.TOP, multiLine = 4, describedAs = "Description of this entity")
-			@SummernoteEditor(height = 100, maxHeight = 300)
+//			@SummernoteEditor(height = 100, maxHeight = 300)
 			final String description
 	) {
 		entity.setName(name);

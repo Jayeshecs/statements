@@ -23,7 +23,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-01-09 20:57:10+\n"
+"POT-Creation-Date: 2019-06-12 01:16:32+\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -50,23 +50,24 @@ msgstr ""
 #: org.apache.isis.applib.services.dto.Dto_downloadXml#act()
 #: org.apache.isis.applib.services.dto.Dto_downloadXsd#act()
 #: org.apache.isis.applib.services.layout.Object_downloadLayoutXml#act()
+#: org.apache.isis.applib.services.layout.Object_openRestApi#act()
 #: org.apache.isis.applib.services.layout.Object_rebuildMetamodel#act()
 #: org.apache.isis.core.metamodel.services.jdosupport.Persistable_downloadJdoMetadata#act()
 #: org.isisaddons.module.audit.dom.Object_recentAuditEntries#act()
+#: org.isisaddons.module.command.dom.CommandJdo_retry#act()
+#: org.isisaddons.module.command.dom.Object_recentCommands#act()
 msgid "Act"
 msgstr ""
 
 
 #: org.apache.isis.applib.services.appfeat.ApplicationMemberType#ACTION
 #: org.isisaddons.module.command.dom.CommandJdo#targetAction
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#targetAction
 #: org.isisaddons.module.security.dom.role.ApplicationRole#addAction(org.isisaddons.module.security.dom.permission.ApplicationPermissionRule,org.isisaddons.module.security.dom.permission.ApplicationPermissionMode,java.lang.String,java.lang.String,java.lang.String)
 msgid "Action"
 msgstr ""
 
 
 #: org.apache.isis.schema.common.v1.InteractionType#ACTION_INVOCATION
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEventType#ACTION_INVOCATION
 msgid "Action Invocation"
 msgstr ""
 
@@ -78,6 +79,12 @@ msgstr ""
 
 #: org.isisaddons.module.security.app.feature.ApplicationClass#actions
 msgid "Actions"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.Category#active
+#: domainapp.modules.ref.dom.SubCategory#active
+msgid "Active"
 msgstr ""
 
 
@@ -93,7 +100,6 @@ msgstr ""
 
 #: org.isisaddons.module.audit.dom.AuditingServiceMenu
 #: org.isisaddons.module.command.dom.CommandServiceMenu
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishingServiceMenu
 #: org.isisaddons.module.sessionlogger.dom.SessionLoggingServiceMenu
 msgid "Activity"
 msgstr ""
@@ -119,6 +125,16 @@ msgstr ""
 
 #: org.isisaddons.module.security.dom.role.ApplicationRole#addCollection()
 msgid "Add Collection"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#expense()
+msgid "Add Expense"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#income()
+msgid "Add Income"
 msgstr ""
 
 
@@ -185,6 +201,18 @@ msgid "Allow"
 msgstr ""
 
 
+#: org.apache.isis.applib.services.xactn.TransactionService3$Policy#ALWAYS
+msgid "Always"
+msgstr ""
+
+
+#: domainapp.modules.txn.dom.Transaction#amount
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#expense(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#income(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+msgid "Amount"
+msgstr ""
+
+
 #: org.incode.example.settings.dom.jdo.ApplicationSettingJdo
 msgid "Application Setting"
 msgstr ""
@@ -210,6 +238,17 @@ msgid "AtPath"
 msgstr ""
 
 
+#: org.apache.isis.applib.services.HasTransactionId#auditEntriesInTransaction()
+#: org.apache.isis.applib.services.command.Command#auditEntriesInTransaction()
+#: org.apache.isis.applib.services.command.Command2#auditEntriesInTransaction()
+#: org.apache.isis.applib.services.command.Command3#auditEntriesInTransaction()
+#: org.apache.isis.applib.services.command.CommandWithDto#auditEntriesInTransaction()
+#: org.isisaddons.module.audit.dom.AuditEntry#auditEntriesInTransaction()
+#: org.isisaddons.module.command.dom.CommandJdo#auditEntriesInTransaction()
+msgid "Audit Entries In Transaction"
+msgstr ""
+
+
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract$ChangeType#AUDIT_ENTRY
 msgid "Audit Entry"
 msgstr ""
@@ -231,6 +270,24 @@ msgid "Cancel"
 msgstr ""
 
 
+#: domainapp.modules.ref.dom.StatementSourceType#CASH
+msgid "Cash"
+msgstr ""
+
+
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#categories
+msgid "Categories"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.Category
+#: domainapp.modules.txn.dom.Transaction#category
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#changeCategory(java.util.List,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "Category"
+msgstr ""
+
+
 #: org.isisaddons.module.security.app.user.UserPermissionViewModel
 msgid "Cause"
 msgstr ""
@@ -246,8 +303,8 @@ msgid "Caused by"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEventType#CHANGED_OBJECTS
-msgid "Changed Objects"
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#changeCategory()
+msgid "Change Category"
 msgstr ""
 
 
@@ -262,6 +319,11 @@ msgid "Changing Permission"
 msgstr ""
 
 
+#: org.isisaddons.module.command.dom.CommandJdo#childCommands()
+msgid "Child Commands"
+msgstr ""
+
+
 #: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy
 #: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy#children
 msgid "Children"
@@ -272,7 +334,6 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#targetClass
 #: org.isisaddons.module.audit.dom.AuditEntry#targetClass
 #: org.isisaddons.module.command.dom.CommandJdo#targetClass
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#targetClass
 #: org.isisaddons.module.security.app.user.ApplicationUser_filterPermissions#$$(java.lang.String,java.lang.String)
 #: org.isisaddons.module.security.dom.role.ApplicationRole#addAction(org.isisaddons.module.security.dom.permission.ApplicationPermissionRule,org.isisaddons.module.security.dom.permission.ApplicationPermissionMode,java.lang.String,java.lang.String,java.lang.String)
 #: org.isisaddons.module.security.dom.role.ApplicationRole#addClass(org.isisaddons.module.security.dom.permission.ApplicationPermissionRule,org.isisaddons.module.security.dom.permission.ApplicationPermissionMode,java.lang.String,java.lang.String)
@@ -282,6 +343,9 @@ msgid "Class"
 msgstr ""
 
 
+#: domainapp.modules.rdr.dom.StatementReaderType#className
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader(java.lang.String,java.lang.String,domainapp.modules.rdr.dom.StatementReaderType,java.lang.String)
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReaderType(java.lang.String,java.lang.String,java.lang.String)
 #: org.isisaddons.module.security.app.feature.ApplicationClass#className
 #: org.isisaddons.module.security.app.feature.ApplicationClassAction#className
 #: org.isisaddons.module.security.app.feature.ApplicationClassCollection#className
@@ -313,12 +377,11 @@ msgstr ""
 #: org.apache.isis.applib.services.command.Command#command()
 #: org.apache.isis.applib.services.command.Command2#command()
 #: org.apache.isis.applib.services.command.Command3#command()
+#: org.apache.isis.applib.services.command.CommandWithDto#command()
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract$ChangeType#COMMAND
 #: org.isisaddons.module.audit.dom.AuditEntry#command()
 #: org.isisaddons.module.command.dom.CommandJdo
 #: org.isisaddons.module.command.dom.CommandJdo#command()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#command()
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#command()
 msgid "Command"
 msgstr ""
 
@@ -329,6 +392,7 @@ msgid "Complete"
 msgstr ""
 
 
+#: org.apache.isis.schema.common.v1.PeriodDto#completedAt
 #: org.isisaddons.module.command.dom.CommandJdo#completedAt
 msgid "Completed At"
 msgstr ""
@@ -372,14 +436,51 @@ msgid "Contributed"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObjectMenu#create()
-#: domainapp.modules.simple.dom.SimpleObjectRepository#create()
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader()
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReaderType()
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createCategory()
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createSubCategory()
 msgid "Create"
+msgstr ""
+
+
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createCategory()
+msgid "Create new category"
+msgstr ""
+
+
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader()
+msgid "Create new reader"
+msgstr ""
+
+
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReaderType()
+msgid "Create new reader type"
+msgstr ""
+
+
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createSubCategory()
+msgid "Create new sub category"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.TransactionType#CREDIT
+msgid "Credit"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.StatementSourceType#CREDIT_CARD
+msgid "Credit Card"
 msgstr ""
 
 
 #: org.apache.isis.applib.services.layout.LayoutService$Style#CURRENT
 msgid "Current"
+msgstr ""
+
+
+#: domainapp.modules.txn.dom.DataProcessingMenu
+msgid "Data Processing"
 msgstr ""
 
 
@@ -390,12 +491,25 @@ msgid "Data Type"
 msgstr ""
 
 
+#: domainapp.modules.ref.dom.TransactionType#DEBIT
+msgid "Debit"
+msgstr ""
+
+
+#: org.apache.isis.applib.services.menu.MenuBarsService$Type#DEFAULT
+msgid "Default"
+msgstr ""
+
+
 #: org.isisaddons.module.security.dom.user.AccountType#DELEGATED
 msgid "Delegated"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObject#delete()
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#deleteStatementReaderTypes()
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#deleteStatementReaders()
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#deleteCategories()
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#deleteSubCategories()
 #: org.incode.example.settings.dom.jdo.ApplicationSettingJdo#delete()
 #: org.incode.example.settings.dom.jdo.SettingAbstractJdo#delete()
 #: org.incode.example.settings.dom.jdo.UserSettingJdo#delete()
@@ -413,6 +527,16 @@ msgid "Derived"
 msgstr ""
 
 
+#: domainapp.modules.base.entity.WithNameAndDescription_update#$$(java.lang.String,java.lang.String)
+#: domainapp.modules.rdr.dom.StatementReader#description
+#: domainapp.modules.rdr.dom.StatementReaderType#description
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader(java.lang.String,java.lang.String,domainapp.modules.rdr.dom.StatementReaderType,java.lang.String)
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReaderType(java.lang.String,java.lang.String,java.lang.String)
+#: domainapp.modules.ref.dom.Category#description
+#: domainapp.modules.ref.dom.SubCategory#description
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createCategory(java.lang.String,java.lang.String)
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createSubCategory(java.lang.String,java.lang.String)
+#: domainapp.modules.txn.dom.StatementSource#description
 #: org.incode.example.settings.dom.ApplicationSettingMenu#newBoolean(java.lang.String,java.lang.String,java.lang.Boolean)
 #: org.incode.example.settings.dom.ApplicationSettingMenu#newInt(java.lang.String,java.lang.String,java.lang.Integer)
 #: org.incode.example.settings.dom.ApplicationSettingMenu#newLocalDate(java.lang.String,java.lang.String,org.joda.time.LocalDate)
@@ -446,12 +570,14 @@ msgid "Description"
 msgstr ""
 
 
+#: domainapp.modules.base.entity.WithNameAndDescription_update#$$(java.lang.String,java.lang.String)
+msgid "Description of this entity"
+msgstr ""
+
+
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract
 #: org.isisaddons.module.audit.dom.AuditEntry
 #: org.isisaddons.module.command.dom.CommandJdo
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#detail
 #: org.isisaddons.module.security.app.feature.ApplicationClassAction
 #: org.isisaddons.module.security.app.feature.ApplicationClassCollection
 #: org.isisaddons.module.security.app.feature.ApplicationClassProperty
@@ -459,8 +585,19 @@ msgid "Detail"
 msgstr ""
 
 
+#: domainapp.modules.base.entity.Activable#disable()
+#: domainapp.modules.ref.dom.Category#disable()
+#: domainapp.modules.ref.dom.SubCategory#disable()
 #: org.isisaddons.module.security.dom.user.ApplicationUser#lock()
 msgid "Disable"
+msgstr ""
+
+
+#: domainapp.modules.base.entity.Activable#disable()
+#: domainapp.modules.base.entity.Activable_disable#$$()
+#: domainapp.modules.ref.dom.Category#disable()
+#: domainapp.modules.ref.dom.SubCategory#disable()
+msgid "Disable this record"
 msgstr ""
 
 
@@ -475,13 +612,16 @@ msgid "Domain Change"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObject#downloadJdoMetadata()
+#: domainapp.modules.rdr.dom.StatementReader#downloadJdoMetadata()
+#: domainapp.modules.rdr.dom.StatementReaderType#downloadJdoMetadata()
+#: domainapp.modules.ref.dom.Category#downloadJdoMetadata()
+#: domainapp.modules.ref.dom.SubCategory#downloadJdoMetadata()
+#: domainapp.modules.txn.dom.StatementSource#downloadJdoMetadata()
+#: domainapp.modules.txn.dom.Transaction#downloadJdoMetadata()
 #: org.incode.example.settings.dom.jdo.ApplicationSettingJdo#downloadJdoMetadata()
 #: org.incode.example.settings.dom.jdo.UserSettingJdo#downloadJdoMetadata()
 #: org.isisaddons.module.audit.dom.AuditEntry#downloadJdoMetadata()
 #: org.isisaddons.module.command.dom.CommandJdo#downloadJdoMetadata()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#downloadJdoMetadata()
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#downloadJdoMetadata()
 #: org.isisaddons.module.security.dom.permission.ApplicationPermission#downloadJdoMetadata()
 #: org.isisaddons.module.security.dom.role.ApplicationRole#downloadJdoMetadata()
 #: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy#downloadJdoMetadata()
@@ -491,24 +631,43 @@ msgid "Download Jdo Metadata"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObject#downloadLayoutXml()
+#: domainapp.modules.base.entity.Activable#downloadLayoutXml()
+#: domainapp.modules.base.entity.WithDescription#downloadLayoutXml()
+#: domainapp.modules.base.entity.WithName#downloadLayoutXml()
+#: domainapp.modules.base.entity.WithNameAndDescription#downloadLayoutXml()
+#: domainapp.modules.base.service.AbstractService#downloadLayoutXml()
+#: domainapp.modules.rdr.api.IReaderCallback#downloadLayoutXml()
+#: domainapp.modules.rdr.dom.StatementReader#downloadLayoutXml()
+#: domainapp.modules.rdr.dom.StatementReaderType#downloadLayoutXml()
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#downloadLayoutXml()
+#: domainapp.modules.ref.dom.Category#downloadLayoutXml()
+#: domainapp.modules.ref.dom.SubCategory#downloadLayoutXml()
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#downloadLayoutXml()
+#: domainapp.modules.txn.dom.StatementSource#downloadLayoutXml()
+#: domainapp.modules.txn.dom.Transaction#downloadLayoutXml()
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#downloadLayoutXml()
 #: java.io.Serializable#downloadLayoutXml()
+#: java.lang.Cloneable#downloadLayoutXml()
 #: java.lang.Comparable#downloadLayoutXml()
 #: java.lang.Iterable#downloadLayoutXml()
 #: java.lang.Object#downloadLayoutXml()
 #: java.util.Collection#downloadLayoutXml()
 #: java.util.List#downloadLayoutXml()
+#: java.util.Map#downloadLayoutXml()
 #: java.util.Set#downloadLayoutXml()
 #: java.util.SortedSet#downloadLayoutXml()
 #: javax.jdo.listener.InstanceLifecycleListener#downloadLayoutXml()
 #: javax.jdo.listener.LoadLifecycleListener#downloadLayoutXml()
 #: javax.jdo.listener.StoreLifecycleListener#downloadLayoutXml()
+#: javax.xml.datatype.XMLGregorianCalendar#downloadLayoutXml()
 #: org.apache.isis.applib.AbstractContainedObject#downloadLayoutXml()
 #: org.apache.isis.applib.AbstractFactoryAndRepository#downloadLayoutXml()
 #: org.apache.isis.applib.AbstractService#downloadLayoutXml()
 #: org.apache.isis.applib.AbstractSubscriber#downloadLayoutXml()
 #: org.apache.isis.applib.AbstractViewModel#downloadLayoutXml()
 #: org.apache.isis.applib.ViewModel#downloadLayoutXml()
+#: org.apache.isis.applib.conmap.ContentMappingService#downloadLayoutXml()
+#: org.apache.isis.applib.conmap.spi.CommandDtoProcessorService#downloadLayoutXml()
 #: org.apache.isis.applib.fixtures.InstallableFixture#downloadLayoutXml()
 #: org.apache.isis.applib.fixturescripts.FixtureResult#downloadLayoutXml()
 #: org.apache.isis.applib.fixturescripts.FixtureScript#downloadLayoutXml()
@@ -529,6 +688,8 @@ msgstr ""
 #: org.apache.isis.applib.services.command.Command#downloadLayoutXml()
 #: org.apache.isis.applib.services.command.Command2#downloadLayoutXml()
 #: org.apache.isis.applib.services.command.Command3#downloadLayoutXml()
+#: org.apache.isis.applib.services.command.CommandExecutorService#downloadLayoutXml()
+#: org.apache.isis.applib.services.command.CommandWithDto#downloadLayoutXml()
 #: org.apache.isis.applib.services.command.spi.CommandService#downloadLayoutXml()
 #: org.apache.isis.applib.services.config.ConfigurationProperty#downloadLayoutXml()
 #: org.apache.isis.applib.services.config.ConfigurationService#downloadLayoutXml()
@@ -542,17 +703,23 @@ msgstr ""
 #: org.apache.isis.applib.services.grid.GridLoaderService#downloadLayoutXml()
 #: org.apache.isis.applib.services.grid.GridService#downloadLayoutXml()
 #: org.apache.isis.applib.services.grid.GridSystemService#downloadLayoutXml()
+#: org.apache.isis.applib.services.hint.HintStore$HintIdProvider#downloadLayoutXml()
 #: org.apache.isis.applib.services.homepage.HomePageProviderService#downloadLayoutXml()
 #: org.apache.isis.applib.services.i18n.TranslationService#downloadLayoutXml()
 #: org.apache.isis.applib.services.jaxb.JaxbService#downloadLayoutXml()
 #: org.apache.isis.applib.services.jaxb.JaxbService$Simple#downloadLayoutXml()
 #: org.apache.isis.applib.services.jdosupport.IsisJdoSupport#downloadLayoutXml()
 #: org.apache.isis.applib.services.layout.LayoutService#downloadLayoutXml()
+#: org.apache.isis.applib.services.layout.LayoutService2#downloadLayoutXml()
 #: org.apache.isis.applib.services.memento.MementoService#downloadLayoutXml()
+#: org.apache.isis.applib.services.menu.MenuBarsLoaderService#downloadLayoutXml()
+#: org.apache.isis.applib.services.menu.MenuBarsService#downloadLayoutXml()
 #: org.apache.isis.applib.services.message.MessageService#downloadLayoutXml()
 #: org.apache.isis.applib.services.metamodel.MetaModelService#downloadLayoutXml()
 #: org.apache.isis.applib.services.metamodel.MetaModelService2#downloadLayoutXml()
 #: org.apache.isis.applib.services.metamodel.MetaModelService3#downloadLayoutXml()
+#: org.apache.isis.applib.services.metamodel.MetaModelService4#downloadLayoutXml()
+#: org.apache.isis.applib.services.metamodel.MetaModelService5#downloadLayoutXml()
 #: org.apache.isis.applib.services.metrics.MetricsService#downloadLayoutXml()
 #: org.apache.isis.applib.services.publish.PublisherService#downloadLayoutXml()
 #: org.apache.isis.applib.services.registry.ServiceRegistry#downloadLayoutXml()
@@ -568,10 +735,12 @@ msgstr ""
 #: org.apache.isis.applib.services.title.TitleService#downloadLayoutXml()
 #: org.apache.isis.applib.services.urlencoding.UrlEncodingService#downloadLayoutXml()
 #: org.apache.isis.applib.services.user.UserService#downloadLayoutXml()
+#: org.apache.isis.applib.services.userprof.UserProfileService#downloadLayoutXml()
 #: org.apache.isis.applib.services.userreg.EmailNotificationService#downloadLayoutXml()
 #: org.apache.isis.applib.services.wrapper.WrapperFactory#downloadLayoutXml()
 #: org.apache.isis.applib.services.xactn.TransactionService#downloadLayoutXml()
 #: org.apache.isis.applib.services.xactn.TransactionService2#downloadLayoutXml()
+#: org.apache.isis.applib.services.xactn.TransactionService3#downloadLayoutXml()
 #: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotService#downloadLayoutXml()
 #: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotServiceAbstract#downloadLayoutXml()
 #: org.apache.isis.core.commons.authentication.AuthenticationSessionProvider#downloadLayoutXml()
@@ -586,6 +755,7 @@ msgstr ""
 #: org.apache.isis.core.metamodel.facetapi.MetaModelValidatorRefiner#downloadLayoutXml()
 #: org.apache.isis.core.metamodel.services.ServicesInjectorAware#downloadLayoutXml()
 #: org.apache.isis.core.metamodel.services.appfeat.ApplicationFeature#downloadLayoutXml()
+#: org.apache.isis.core.metamodel.services.appmanifest.AppManifestProvider#downloadLayoutXml()
 #: org.apache.isis.core.metamodel.services.command.CommandDtoServiceInternal#downloadLayoutXml()
 #: org.apache.isis.core.metamodel.services.configinternal.ConfigurationServiceInternal#downloadLayoutXml()
 #: org.apache.isis.core.metamodel.services.grid.GridSystemServiceAbstract#downloadLayoutXml()
@@ -602,9 +772,12 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#downloadLayoutXml()
 #: org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport#downloadLayoutXml()
 #: org.apache.isis.schema.cmd.v1.CommandDto#downloadLayoutXml()
+#: org.apache.isis.schema.cmd.v1.MapDto#downloadLayoutXml()
+#: org.apache.isis.schema.cmd.v1.MapDto$Entry#downloadLayoutXml()
 #: org.apache.isis.schema.cmd.v1.MemberDto#downloadLayoutXml()
 #: org.apache.isis.schema.common.v1.OidDto#downloadLayoutXml()
 #: org.apache.isis.schema.common.v1.OidsDto#downloadLayoutXml()
+#: org.apache.isis.schema.common.v1.PeriodDto#downloadLayoutXml()
 #: org.incode.example.settings.dom.ApplicationSetting#downloadLayoutXml()
 #: org.incode.example.settings.dom.ApplicationSettingsService#downloadLayoutXml()
 #: org.incode.example.settings.dom.ApplicationSettingsServiceRW#downloadLayoutXml()
@@ -620,10 +793,6 @@ msgstr ""
 #: org.incode.example.settings.dom.jdo.UserSettingsServiceJdo#downloadLayoutXml()
 #: org.isisaddons.module.audit.dom.AuditEntry#downloadLayoutXml()
 #: org.isisaddons.module.command.dom.CommandJdo#downloadLayoutXml()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#downloadLayoutXml()
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#downloadLayoutXml()
-#: org.isisaddons.module.publishmq.dom.servicespi.InteractionExecutionRepository#downloadLayoutXml()
-#: org.isisaddons.module.publishmq.dom.servicespi.PublishedObjectsRepository#downloadLayoutXml()
 #: org.isisaddons.module.security.app.feature.ApplicationClass#downloadLayoutXml()
 #: org.isisaddons.module.security.app.feature.ApplicationClassAction#downloadLayoutXml()
 #: org.isisaddons.module.security.app.feature.ApplicationClassCollection#downloadLayoutXml()
@@ -646,13 +815,18 @@ msgid "Download Layout Xml"
 msgstr ""
 
 
-#: org.apache.isis.applib.services.layout.LayoutServiceMenu#downloadLayouts()
-msgid "Download Layouts (XML)"
+#: org.apache.isis.applib.services.layout.LayoutServiceMenu#downloadMenuBarsLayout()
+msgid "Download Menu Bars Layout (XML)"
 msgstr ""
 
 
 #: org.apache.isis.applib.services.metamodel.MetaModelServicesMenu#downloadMetaModel()
 msgid "Download Meta Model (CSV)"
+msgstr ""
+
+
+#: org.apache.isis.applib.services.layout.LayoutServiceMenu#downloadLayouts()
+msgid "Download Object Layouts (ZIP)"
 msgstr ""
 
 
@@ -668,6 +842,11 @@ msgstr ""
 
 #: org.isisaddons.module.command.dom.CommandJdo#duration
 msgid "Duration"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.StatementSourceType#E_WALLET
+msgid "E Wallet"
 msgstr ""
 
 
@@ -687,8 +866,19 @@ msgid "Email Address"
 msgstr ""
 
 
+#: domainapp.modules.base.entity.Activable#enable()
+#: domainapp.modules.ref.dom.Category#enable()
+#: domainapp.modules.ref.dom.SubCategory#enable()
 #: org.isisaddons.module.security.dom.user.ApplicationUser#unlock()
 msgid "Enable"
+msgstr ""
+
+
+#: domainapp.modules.base.entity.Activable#enable()
+#: domainapp.modules.base.entity.Activable_enable#$$()
+#: domainapp.modules.ref.dom.Category#enable()
+#: domainapp.modules.ref.dom.SubCategory#enable()
+msgid "Enable entity"
 msgstr ""
 
 
@@ -708,8 +898,74 @@ msgid "Encrypted Password"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#eventType
-msgid "Event Type"
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "End date"
+msgstr ""
+
+
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader(java.lang.String,java.lang.String,domainapp.modules.rdr.dom.StatementReaderType,java.lang.String)
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReaderType(java.lang.String,java.lang.String,java.lang.String)
+msgid "Enter class name of new reader type that will be created"
+msgstr ""
+
+
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createCategory(java.lang.String,java.lang.String)
+msgid "Enter description of new category that will be created"
+msgstr ""
+
+
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader(java.lang.String,java.lang.String,domainapp.modules.rdr.dom.StatementReaderType,java.lang.String)
+msgid "Enter description of new reader that will be created"
+msgstr ""
+
+
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReaderType(java.lang.String,java.lang.String,java.lang.String)
+msgid "Enter description of new reader type that will be created"
+msgstr ""
+
+
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createSubCategory(java.lang.String,java.lang.String)
+msgid "Enter description of new sub category that will be created"
+msgstr ""
+
+
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createCategory(java.lang.String,java.lang.String)
+msgid "Enter name of new category to be created"
+msgstr ""
+
+
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader(java.lang.String,java.lang.String,domainapp.modules.rdr.dom.StatementReaderType,java.lang.String)
+msgid "Enter name of new reader to be created"
+msgstr ""
+
+
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReaderType(java.lang.String,java.lang.String,java.lang.String)
+msgid "Enter name of new reader type to be created"
+msgstr ""
+
+
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createSubCategory(java.lang.String,java.lang.String)
+msgid "Enter name of new sub category to be created"
+msgstr ""
+
+
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader(java.lang.String,java.lang.String,domainapp.modules.rdr.dom.StatementReaderType,java.lang.String)
+msgid "Enter properties of new reader that will be created"
+msgstr ""
+
+
+#: org.apache.isis.schema.cmd.v1.MapDto#entry
+msgid "Entry"
+msgstr ""
+
+
+#: org.isisaddons.module.command.dom.CommandJdo#exception
+msgid "Exception (if any)"
+msgstr ""
+
+
+#: org.isisaddons.module.command.dom.ReplayState#EXCLUDED
+msgid "Excluded"
 msgstr ""
 
 
@@ -731,6 +987,16 @@ msgstr ""
 
 #: org.isisaddons.module.security.dom.user.ApplicationUser#updatePassword(org.apache.isis.applib.value.Password,org.apache.isis.applib.value.Password,org.apache.isis.applib.value.Password)
 msgid "Existing password"
+msgstr ""
+
+
+#: org.isisaddons.module.command.dom.ReplayState#FAILED
+msgid "Failed"
+msgstr ""
+
+
+#: org.apache.isis.applib.services.menu.MenuBarsService$Type#FALLBACK
+msgid "Fallback"
 msgstr ""
 
 
@@ -770,6 +1036,7 @@ msgstr ""
 
 #: org.apache.isis.applib.services.dto.Dto_downloadXml#act(java.lang.String)
 #: org.apache.isis.applib.services.dto.Dto_downloadXsd#act(java.lang.String,org.apache.isis.applib.services.jaxb.JaxbService$IsisSchemas)
+#: org.apache.isis.applib.services.layout.LayoutServiceMenu#downloadMenuBarsLayout(java.lang.String,org.apache.isis.applib.services.menu.MenuBarsService$Type)
 #: org.apache.isis.applib.services.layout.Object_downloadLayoutXml#act(java.lang.String,org.apache.isis.applib.services.layout.LayoutService$Style)
 #: org.apache.isis.core.metamodel.services.jdosupport.Persistable_downloadJdoMetadata#act(java.lang.String)
 msgid "File name"
@@ -778,6 +1045,20 @@ msgstr ""
 
 #: org.apache.isis.applib.services.swagger.SwaggerServiceMenu#downloadSwaggerSchemaDefinition(java.lang.String,org.apache.isis.applib.services.swagger.SwaggerService$Visibility,org.apache.isis.applib.services.swagger.SwaggerService$Format)
 msgid "Filename"
+msgstr ""
+
+
+#: domainapp.modules.base.service.AbstractService#filter()
+#: domainapp.modules.rdr.service.StatementReaderService#filter()
+#: domainapp.modules.rdr.service.StatementReaderTypeService#filter()
+#: domainapp.modules.ref.service.CategoryService#filter()
+#: domainapp.modules.ref.service.SubCategoryService#filter()
+#: domainapp.modules.txn.service.StatementSourceService#filter()
+#: domainapp.modules.txn.service.TransactionService#filter()
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter()
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filterDescription
+#: java.util.Map#filter()
+msgid "Filter"
 msgstr ""
 
 
@@ -797,12 +1078,6 @@ msgid "Find Audit Entries"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObjectMenu#findByName()
-#: domainapp.modules.simple.dom.SimpleObjectRepository#findByName()
-msgid "Find By Name"
-msgstr ""
-
-
 #: org.isisaddons.module.command.dom.CommandServiceMenu#findCommandById()
 msgid "Find Command By Id"
 msgstr ""
@@ -810,6 +1085,11 @@ msgstr ""
 
 #: org.isisaddons.module.command.dom.CommandServiceMenu#findCommands()
 msgid "Find Commands"
+msgstr ""
+
+
+#: org.isisaddons.module.command.dom.CommandServiceJdoRepository#findForegroundSince()
+msgid "Find Foreground Since"
 msgstr ""
 
 
@@ -822,26 +1102,6 @@ msgstr ""
 
 #: org.isisaddons.module.security.dom.permission.ApplicationPermissionMenu#findOrphanedPermissions()
 msgid "Find Orphaned Permissions"
-msgstr ""
-
-
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishingServiceMenu#findPublishedEvents()
-msgid "Find Published Events"
-msgstr ""
-
-
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishingServiceMenu#findPublishedEventsByTransactionId()
-msgid "Find Published Events By Transaction Id"
-msgstr ""
-
-
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEventRepository#findRecentByTarget()
-msgid "Find Recent By Target"
-msgstr ""
-
-
-#: org.isisaddons.module.audit.dom.AuditingServiceRepository#findRecentByTargetAndPropertyId()
-msgid "Find Recent By Target And Property Id"
 msgstr ""
 
 
@@ -881,6 +1141,15 @@ msgid "Find Users"
 msgstr ""
 
 
+#: domainapp.modules.ref.dom.Category
+#: domainapp.modules.txn.dom.Transaction#category
+#: domainapp.modules.txn.service.TransactionService#search(java.lang.String,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.txn.dom.StatementSource,domainapp.modules.ref.dom.TransactionType,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#changeCategory(java.util.List,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "First level category of a categorized entity"
+msgstr ""
+
+
 #: org.apache.isis.applib.fixturescripts.FixtureResult#fixtureScriptClassName
 msgid "Fixture script"
 msgstr ""
@@ -898,7 +1167,6 @@ msgstr ""
 
 #: org.isisaddons.module.audit.dom.AuditingServiceMenu#findAuditEntries(org.joda.time.LocalDate,org.joda.time.LocalDate)
 #: org.isisaddons.module.command.dom.CommandServiceMenu#findCommands(org.joda.time.LocalDate,org.joda.time.LocalDate)
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishingServiceMenu#findPublishedEvents(org.joda.time.LocalDate,org.joda.time.LocalDate)
 #: org.isisaddons.module.sessionlogger.dom.SessionLoggingServiceMenu#findSessions(java.lang.String,org.joda.time.LocalDate,org.joda.time.LocalDate)
 msgid "From"
 msgstr ""
@@ -920,10 +1188,19 @@ msgid "Has Password"
 msgstr ""
 
 
+#: domainapp.modules.rdr.dom.StatementReader#datanucleusIdLong()
+#: domainapp.modules.rdr.dom.StatementReaderType#datanucleusIdLong()
+#: domainapp.modules.ref.dom.Category#datanucleusIdLong()
+#: domainapp.modules.ref.dom.SubCategory#datanucleusIdLong()
+#: domainapp.modules.txn.dom.StatementSource#datanucleusIdLong()
+#: domainapp.modules.txn.dom.Transaction#datanucleusIdLong()
 #: org.apache.isis.core.metamodel.services.jdosupport.Persistable_datanucleusIdLong#prop()
 #: org.apache.isis.schema.common.v1.OidDto#id
+#: org.incode.example.settings.dom.jdo.ApplicationSettingJdo#datanucleusIdLong()
+#: org.incode.example.settings.dom.jdo.UserSettingJdo#datanucleusIdLong()
 #: org.incode.module.base.services.calendar.CalendarService#id
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageService#id()
+#: org.isisaddons.module.audit.dom.AuditEntry#datanucleusIdLong()
+#: org.isisaddons.module.command.dom.CommandJdo#datanucleusIdLong()
 #: org.isisaddons.module.security.app.feature.ApplicationClass
 #: org.isisaddons.module.security.app.feature.ApplicationClassAction
 #: org.isisaddons.module.security.app.feature.ApplicationClassCollection
@@ -931,7 +1208,12 @@ msgstr ""
 #: org.isisaddons.module.security.app.feature.ApplicationClassProperty
 #: org.isisaddons.module.security.app.feature.ApplicationFeatureViewModel
 #: org.isisaddons.module.security.app.feature.ApplicationPackage
+#: org.isisaddons.module.security.dom.permission.ApplicationPermission#datanucleusIdLong()
+#: org.isisaddons.module.security.dom.role.ApplicationRole#datanucleusIdLong()
+#: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy#datanucleusIdLong()
 #: org.isisaddons.module.security.dom.user.ApplicationUser
+#: org.isisaddons.module.security.dom.user.ApplicationUser#datanucleusIdLong()
+#: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#datanucleusIdLong()
 msgid "Id"
 msgstr ""
 
@@ -949,9 +1231,6 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract
 #: org.isisaddons.module.audit.dom.AuditEntry
 #: org.isisaddons.module.command.dom.CommandJdo
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage
-#: org.isisaddons.module.sessionlogger.dom.SessionLogEntry
 msgid "Identifiers"
 msgstr ""
 
@@ -993,6 +1272,7 @@ msgstr ""
 
 
 #: org.apache.isis.applib.services.config.ConfigurationProperty#key
+#: org.apache.isis.schema.cmd.v1.MapDto$Entry#key
 #: org.incode.example.settings.dom.ApplicationSettingMenu#find(java.lang.String)
 #: org.incode.example.settings.dom.ApplicationSettingMenu#newBoolean(java.lang.String,java.lang.String,java.lang.Boolean)
 #: org.incode.example.settings.dom.ApplicationSettingMenu#newInt(java.lang.String,java.lang.String,java.lang.Integer)
@@ -1030,12 +1310,6 @@ msgid "Known As"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObjectMenu#listAll()
-#: domainapp.modules.simple.dom.SimpleObjectRepository#listAll()
-msgid "List All"
-msgstr ""
-
-
 #: org.incode.example.settings.dom.ApplicationSettingMenu#listAll()
 #: org.incode.example.settings.dom.jdo.ApplicationSettingsServiceJdo#listAll()
 msgid "List All Application Settings"
@@ -1054,6 +1328,11 @@ msgid "List All User Settings"
 msgstr ""
 
 
+#: domainapp.modules.ref.dom.StatementSourceType#LOAN_ACCOUNT
+msgid "Loan Account"
+msgstr ""
+
+
 #: org.isisaddons.module.security.dom.user.AccountType#LOCAL
 msgid "Local"
 msgstr ""
@@ -1064,28 +1343,13 @@ msgid "Local Date"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageService#log()
-msgid "Log"
-msgstr ""
-
-
 #: org.apache.isis.schema.cmd.v1.MemberDto#logicalMemberIdentifier
 msgid "Logical Member Identifier"
 msgstr ""
 
 
-#: org.isisaddons.module.sessionlogger.dom.SessionLogEntry
-msgid "Login"
-msgstr ""
-
-
 #: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#loginTimestamp
 msgid "Login Timestamp"
-msgstr ""
-
-
-#: org.isisaddons.module.sessionlogger.dom.SessionLogEntry
-msgid "Logout"
 msgstr ""
 
 
@@ -1109,8 +1373,28 @@ msgid "Major Version"
 msgstr ""
 
 
+#: domainapp.modules.ref.dom.StaticMenu#manageCategory()
+msgid "Manage Category"
+msgstr ""
+
+
+#: domainapp.modules.txn.dom.DataProcessingMenu#manageStatementReader()
+msgid "Manage Statement Reader"
+msgstr ""
+
+
+#: domainapp.modules.txn.dom.DataProcessingMenu#manageTransaction()
+msgid "Manage Transaction"
+msgstr ""
+
+
 #: org.isisaddons.module.security.app.feature.ApplicationClassProperty#maxLength
 msgid "Max Length"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "Maximum"
 msgstr ""
 
 
@@ -1130,7 +1414,6 @@ msgstr ""
 #: org.apache.isis.schema.cmd.v1.MemberDto#memberIdentifier
 #: org.isisaddons.module.audit.dom.AuditEntry#memberIdentifier
 #: org.isisaddons.module.command.dom.CommandJdo#memberIdentifier
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#memberIdentifier
 msgid "Member Identifier"
 msgstr ""
 
@@ -1151,34 +1434,26 @@ msgid "Memento"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#message
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#messageOnForm
-msgid "Message"
-msgstr ""
-
-
 #: org.apache.isis.core.metamodel.services.jdosupport.Persistable_datanucleusIdLong
 #: org.apache.isis.core.metamodel.services.jdosupport.Persistable_datanucleusVersionLong
 #: org.apache.isis.core.metamodel.services.jdosupport.Persistable_datanucleusVersionTimestamp
-#: org.isisaddons.module.audit.dom.AuditEntry
 #: org.isisaddons.module.audit.dom.Object_recentAuditEntries
-#: org.isisaddons.module.command.dom.CommandJdo
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage
 msgid "Metadata"
 msgstr ""
 
 
-#: org.isisaddons.module.audit.dom.AuditEntry#metadataRegionDummyProperty
-#: org.isisaddons.module.command.dom.CommandJdo#metadataRegionDummyProperty
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#metadataRegionDummyProperty
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#metadataRegionDummyProperty
-msgid "Metadata Region Dummy Property"
+#: javax.xml.datatype.XMLGregorianCalendar#millisecond
+msgid "Millisecond"
 msgstr ""
 
 
 #: org.apache.isis.applib.services.layout.LayoutService$Style#MINIMAL
 msgid "Minimal"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "Minimum"
 msgstr ""
 
 
@@ -1198,9 +1473,16 @@ msgid "Mode"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObject#name
-#: domainapp.modules.simple.dom.SimpleObjectMenu#create(java.lang.String)
-#: domainapp.modules.simple.dom.SimpleObjectMenu#findByName(java.lang.String)
+#: domainapp.modules.base.entity.WithNameAndDescription_update#$$(java.lang.String,java.lang.String)
+#: domainapp.modules.rdr.dom.StatementReader#name
+#: domainapp.modules.rdr.dom.StatementReaderType#name
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader(java.lang.String,java.lang.String,domainapp.modules.rdr.dom.StatementReaderType,java.lang.String)
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReaderType(java.lang.String,java.lang.String,java.lang.String)
+#: domainapp.modules.ref.dom.Category#name
+#: domainapp.modules.ref.dom.SubCategory#name
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createCategory(java.lang.String,java.lang.String)
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#createSubCategory(java.lang.String,java.lang.String)
+#: domainapp.modules.txn.dom.StatementSource#name
 #: org.isisaddons.module.security.dom.role.ApplicationRole#name
 #: org.isisaddons.module.security.dom.role.ApplicationRole#updateName(java.lang.String)
 #: org.isisaddons.module.security.dom.role.ApplicationRoleMenu#newRole(java.lang.String,java.lang.String)
@@ -1214,6 +1496,23 @@ msgstr ""
 #: org.isisaddons.module.security.dom.user.ApplicationUserMenu#newDelegateUser(java.lang.String,org.isisaddons.module.security.dom.role.ApplicationRole,java.lang.Boolean)
 #: org.isisaddons.module.security.dom.user.ApplicationUserMenu#newLocalUser(java.lang.String,org.apache.isis.applib.value.Password,org.apache.isis.applib.value.Password,org.isisaddons.module.security.dom.role.ApplicationRole,java.lang.Boolean,java.lang.String)
 msgid "Name"
+msgstr ""
+
+
+#: domainapp.modules.base.entity.WithNameAndDescription_update#$$(java.lang.String,java.lang.String)
+msgid "Name of this entity"
+msgstr ""
+
+
+#: domainapp.modules.txn.dom.Transaction#narration
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#expense(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#income(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+msgid "Narration"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "Narration contains"
 msgstr ""
 
 
@@ -1303,6 +1602,11 @@ msgid "Next"
 msgstr ""
 
 
+#: org.apache.isis.core.metamodel.services.xactn.TransactionServiceDefault#nextTransaction()
+msgid "Next Transaction"
+msgstr ""
+
+
 #: org.apache.isis.applib.annotation.SemanticsOf#NON_IDEMPOTENT
 msgid "Non Idempotent"
 msgstr ""
@@ -1323,15 +1627,9 @@ msgid "Not Persisted"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObject#notes
-msgid "Notes"
-msgstr ""
-
-
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#targetStr
 #: org.isisaddons.module.audit.dom.AuditEntry#targetStr
 #: org.isisaddons.module.command.dom.CommandJdo#targetStr
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#targetStr
 msgid "Object"
 msgstr ""
 
@@ -1357,9 +1655,12 @@ msgstr ""
 
 
 #: org.apache.isis.schema.common.v1.OidsDto#oid
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#oid
 msgid "Oid"
+msgstr ""
+
+
+#: org.isisaddons.module.command.dom.ReplayState#OK
+msgid "Ok"
 msgstr ""
 
 
@@ -1371,11 +1672,199 @@ msgstr ""
 #: org.isisaddons.module.command.dom.CommandJdo#open()
 #: org.isisaddons.module.command.dom.CommandJdo#openResultObject()
 #: org.isisaddons.module.command.dom.CommandJdo#openTargetObject()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#open()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#openTargetObject()
 #: org.isisaddons.module.security.dom.user.ApplicationUser#open()
 #: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#open()
 msgid "Open"
+msgstr ""
+
+
+#: domainapp.modules.base.entity.Activable#openRestApi()
+#: domainapp.modules.base.entity.WithDescription#openRestApi()
+#: domainapp.modules.base.entity.WithName#openRestApi()
+#: domainapp.modules.base.entity.WithNameAndDescription#openRestApi()
+#: domainapp.modules.base.service.AbstractService#openRestApi()
+#: domainapp.modules.rdr.api.IReaderCallback#openRestApi()
+#: domainapp.modules.rdr.dom.StatementReader#openRestApi()
+#: domainapp.modules.rdr.dom.StatementReaderType#openRestApi()
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#openRestApi()
+#: domainapp.modules.ref.dom.Category#openRestApi()
+#: domainapp.modules.ref.dom.SubCategory#openRestApi()
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#openRestApi()
+#: domainapp.modules.txn.dom.StatementSource#openRestApi()
+#: domainapp.modules.txn.dom.Transaction#openRestApi()
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#openRestApi()
+#: java.io.Serializable#openRestApi()
+#: java.lang.Cloneable#openRestApi()
+#: java.lang.Comparable#openRestApi()
+#: java.lang.Iterable#openRestApi()
+#: java.lang.Object#openRestApi()
+#: java.util.Collection#openRestApi()
+#: java.util.List#openRestApi()
+#: java.util.Map#openRestApi()
+#: java.util.Set#openRestApi()
+#: java.util.SortedSet#openRestApi()
+#: javax.jdo.listener.InstanceLifecycleListener#openRestApi()
+#: javax.jdo.listener.LoadLifecycleListener#openRestApi()
+#: javax.jdo.listener.StoreLifecycleListener#openRestApi()
+#: javax.xml.datatype.XMLGregorianCalendar#openRestApi()
+#: org.apache.isis.applib.AbstractContainedObject#openRestApi()
+#: org.apache.isis.applib.AbstractFactoryAndRepository#openRestApi()
+#: org.apache.isis.applib.AbstractService#openRestApi()
+#: org.apache.isis.applib.AbstractSubscriber#openRestApi()
+#: org.apache.isis.applib.AbstractViewModel#openRestApi()
+#: org.apache.isis.applib.ViewModel#openRestApi()
+#: org.apache.isis.applib.conmap.ContentMappingService#openRestApi()
+#: org.apache.isis.applib.conmap.spi.CommandDtoProcessorService#openRestApi()
+#: org.apache.isis.applib.fixtures.InstallableFixture#openRestApi()
+#: org.apache.isis.applib.fixturescripts.FixtureResult#openRestApi()
+#: org.apache.isis.applib.fixturescripts.FixtureScript#openRestApi()
+#: org.apache.isis.applib.fixturescripts.FixtureScripts#openRestApi()
+#: org.apache.isis.applib.services.HasTransactionId#openRestApi()
+#: org.apache.isis.applib.services.HasUsername#openRestApi()
+#: org.apache.isis.applib.services.WithTransactionScope#openRestApi()
+#: org.apache.isis.applib.services.appfeat.ApplicationFeatureRepository#openRestApi()
+#: org.apache.isis.applib.services.audit.AuditerService#openRestApi()
+#: org.apache.isis.applib.services.background.BackgroundCommandService#openRestApi()
+#: org.apache.isis.applib.services.background.BackgroundCommandService2#openRestApi()
+#: org.apache.isis.applib.services.background.BackgroundService#openRestApi()
+#: org.apache.isis.applib.services.background.BackgroundService2#openRestApi()
+#: org.apache.isis.applib.services.bookmark.BookmarkService#openRestApi()
+#: org.apache.isis.applib.services.bookmark.BookmarkService2#openRestApi()
+#: org.apache.isis.applib.services.classdiscovery.ClassDiscoveryService#openRestApi()
+#: org.apache.isis.applib.services.classdiscovery.ClassDiscoveryService2#openRestApi()
+#: org.apache.isis.applib.services.command.Command#openRestApi()
+#: org.apache.isis.applib.services.command.Command2#openRestApi()
+#: org.apache.isis.applib.services.command.Command3#openRestApi()
+#: org.apache.isis.applib.services.command.CommandExecutorService#openRestApi()
+#: org.apache.isis.applib.services.command.CommandWithDto#openRestApi()
+#: org.apache.isis.applib.services.command.spi.CommandService#openRestApi()
+#: org.apache.isis.applib.services.config.ConfigurationProperty#openRestApi()
+#: org.apache.isis.applib.services.config.ConfigurationService#openRestApi()
+#: org.apache.isis.applib.services.email.EmailService#openRestApi()
+#: org.apache.isis.applib.services.eventbus.EventBusService#openRestApi()
+#: org.apache.isis.applib.services.exceprecog.ExceptionRecognizer#openRestApi()
+#: org.apache.isis.applib.services.exceprecog.ExceptionRecognizer2#openRestApi()
+#: org.apache.isis.applib.services.exceprecog.ExceptionRecognizerComposite#openRestApi()
+#: org.apache.isis.applib.services.factory.FactoryService#openRestApi()
+#: org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecificationProvider#openRestApi()
+#: org.apache.isis.applib.services.grid.GridLoaderService#openRestApi()
+#: org.apache.isis.applib.services.grid.GridService#openRestApi()
+#: org.apache.isis.applib.services.grid.GridSystemService#openRestApi()
+#: org.apache.isis.applib.services.hint.HintStore$HintIdProvider#openRestApi()
+#: org.apache.isis.applib.services.homepage.HomePageProviderService#openRestApi()
+#: org.apache.isis.applib.services.i18n.TranslationService#openRestApi()
+#: org.apache.isis.applib.services.jaxb.JaxbService#openRestApi()
+#: org.apache.isis.applib.services.jaxb.JaxbService$Simple#openRestApi()
+#: org.apache.isis.applib.services.jdosupport.IsisJdoSupport#openRestApi()
+#: org.apache.isis.applib.services.layout.LayoutService#openRestApi()
+#: org.apache.isis.applib.services.layout.LayoutService2#openRestApi()
+#: org.apache.isis.applib.services.memento.MementoService#openRestApi()
+#: org.apache.isis.applib.services.menu.MenuBarsLoaderService#openRestApi()
+#: org.apache.isis.applib.services.menu.MenuBarsService#openRestApi()
+#: org.apache.isis.applib.services.message.MessageService#openRestApi()
+#: org.apache.isis.applib.services.metamodel.MetaModelService#openRestApi()
+#: org.apache.isis.applib.services.metamodel.MetaModelService2#openRestApi()
+#: org.apache.isis.applib.services.metamodel.MetaModelService3#openRestApi()
+#: org.apache.isis.applib.services.metamodel.MetaModelService4#openRestApi()
+#: org.apache.isis.applib.services.metamodel.MetaModelService5#openRestApi()
+#: org.apache.isis.applib.services.metrics.MetricsService#openRestApi()
+#: org.apache.isis.applib.services.publish.PublisherService#openRestApi()
+#: org.apache.isis.applib.services.registry.ServiceRegistry#openRestApi()
+#: org.apache.isis.applib.services.registry.ServiceRegistry2#openRestApi()
+#: org.apache.isis.applib.services.repository.RepositoryService#openRestApi()
+#: org.apache.isis.applib.services.routing.RoutingService#openRestApi()
+#: org.apache.isis.applib.services.session.SessionLoggingService#openRestApi()
+#: org.apache.isis.applib.services.sessmgmt.SessionManagementService#openRestApi()
+#: org.apache.isis.applib.services.sudo.SudoService#openRestApi()
+#: org.apache.isis.applib.services.sudo.SudoService$Spi#openRestApi()
+#: org.apache.isis.applib.services.swagger.SwaggerService#openRestApi()
+#: org.apache.isis.applib.services.swagger.SwaggerServiceMenu#openRestApi()
+#: org.apache.isis.applib.services.tablecol.TableColumnOrderService#openRestApi()
+#: org.apache.isis.applib.services.title.TitleService#openRestApi()
+#: org.apache.isis.applib.services.urlencoding.UrlEncodingService#openRestApi()
+#: org.apache.isis.applib.services.user.UserService#openRestApi()
+#: org.apache.isis.applib.services.userprof.UserProfileService#openRestApi()
+#: org.apache.isis.applib.services.userreg.EmailNotificationService#openRestApi()
+#: org.apache.isis.applib.services.wrapper.WrapperFactory#openRestApi()
+#: org.apache.isis.applib.services.xactn.TransactionService#openRestApi()
+#: org.apache.isis.applib.services.xactn.TransactionService2#openRestApi()
+#: org.apache.isis.applib.services.xactn.TransactionService3#openRestApi()
+#: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotService#openRestApi()
+#: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotServiceAbstract#openRestApi()
+#: org.apache.isis.core.commons.authentication.AuthenticationSessionProvider#openRestApi()
+#: org.apache.isis.core.commons.components.ApplicationScopedComponent#openRestApi()
+#: org.apache.isis.core.commons.components.Component#openRestApi()
+#: org.apache.isis.core.commons.config.IsisConfiguration#openRestApi()
+#: org.apache.isis.core.commons.config.IsisConfigurationDefault#openRestApi()
+#: org.apache.isis.core.metamodel.adapter.mgr.AdapterManager#openRestApi()
+#: org.apache.isis.core.metamodel.adapter.mgr.AdapterManagerBase#openRestApi()
+#: org.apache.isis.core.metamodel.deployment.DeploymentCategoryProvider#openRestApi()
+#: org.apache.isis.core.metamodel.facetapi.MetaModelRefiner#openRestApi()
+#: org.apache.isis.core.metamodel.facetapi.MetaModelValidatorRefiner#openRestApi()
+#: org.apache.isis.core.metamodel.services.ServicesInjectorAware#openRestApi()
+#: org.apache.isis.core.metamodel.services.appfeat.ApplicationFeature#openRestApi()
+#: org.apache.isis.core.metamodel.services.appmanifest.AppManifestProvider#openRestApi()
+#: org.apache.isis.core.metamodel.services.command.CommandDtoServiceInternal#openRestApi()
+#: org.apache.isis.core.metamodel.services.configinternal.ConfigurationServiceInternal#openRestApi()
+#: org.apache.isis.core.metamodel.services.grid.GridSystemServiceAbstract#openRestApi()
+#: org.apache.isis.core.metamodel.services.ixn.InteractionDtoServiceInternal#openRestApi()
+#: org.apache.isis.core.metamodel.services.persistsession.PersistenceSessionServiceInternal#openRestApi()
+#: org.apache.isis.core.metamodel.services.publishing.PublishingServiceInternal#openRestApi()
+#: org.apache.isis.core.metamodel.spec.FreeStandingList#openRestApi()
+#: org.apache.isis.core.runtime.authentication.AuthenticationManager#openRestApi()
+#: org.apache.isis.core.runtime.authorization.AuthorizationManager#openRestApi()
+#: org.apache.isis.core.runtime.authorization.AuthorizationManagerAbstract#openRestApi()
+#: org.apache.isis.core.runtime.persistence.FixturesInstalledFlag#openRestApi()
+#: org.apache.isis.core.runtime.services.eventbus.EventBusServiceDefault#openRestApi()
+#: org.apache.isis.core.runtime.system.transaction.TransactionalClosure#openRestApi()
+#: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#openRestApi()
+#: org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport#openRestApi()
+#: org.apache.isis.schema.cmd.v1.CommandDto#openRestApi()
+#: org.apache.isis.schema.cmd.v1.MapDto#openRestApi()
+#: org.apache.isis.schema.cmd.v1.MapDto$Entry#openRestApi()
+#: org.apache.isis.schema.cmd.v1.MemberDto#openRestApi()
+#: org.apache.isis.schema.common.v1.OidDto#openRestApi()
+#: org.apache.isis.schema.common.v1.OidsDto#openRestApi()
+#: org.apache.isis.schema.common.v1.PeriodDto#openRestApi()
+#: org.incode.example.settings.dom.ApplicationSetting#openRestApi()
+#: org.incode.example.settings.dom.ApplicationSettingsService#openRestApi()
+#: org.incode.example.settings.dom.ApplicationSettingsServiceRW#openRestApi()
+#: org.incode.example.settings.dom.Setting#openRestApi()
+#: org.incode.example.settings.dom.SettingAbstract#openRestApi()
+#: org.incode.example.settings.dom.UserSetting#openRestApi()
+#: org.incode.example.settings.dom.UserSettingsService#openRestApi()
+#: org.incode.example.settings.dom.UserSettingsServiceRW#openRestApi()
+#: org.incode.example.settings.dom.jdo.ApplicationSettingJdo#openRestApi()
+#: org.incode.example.settings.dom.jdo.ApplicationSettingsServiceJdo#openRestApi()
+#: org.incode.example.settings.dom.jdo.SettingAbstractJdo#openRestApi()
+#: org.incode.example.settings.dom.jdo.UserSettingJdo#openRestApi()
+#: org.incode.example.settings.dom.jdo.UserSettingsServiceJdo#openRestApi()
+#: org.isisaddons.module.audit.dom.AuditEntry#openRestApi()
+#: org.isisaddons.module.command.dom.CommandJdo#openRestApi()
+#: org.isisaddons.module.security.app.feature.ApplicationClass#openRestApi()
+#: org.isisaddons.module.security.app.feature.ApplicationClassAction#openRestApi()
+#: org.isisaddons.module.security.app.feature.ApplicationClassCollection#openRestApi()
+#: org.isisaddons.module.security.app.feature.ApplicationClassMember#openRestApi()
+#: org.isisaddons.module.security.app.feature.ApplicationClassProperty#openRestApi()
+#: org.isisaddons.module.security.app.feature.ApplicationFeatureViewModel#openRestApi()
+#: org.isisaddons.module.security.app.feature.ApplicationPackage#openRestApi()
+#: org.isisaddons.module.security.app.user.UserPermissionViewModel#openRestApi()
+#: org.isisaddons.module.security.dom.password.PasswordEncryptionService#openRestApi()
+#: org.isisaddons.module.security.dom.permission.ApplicationPermission#openRestApi()
+#: org.isisaddons.module.security.dom.permission.PermissionsEvaluationService#openRestApi()
+#: org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAbstract#openRestApi()
+#: org.isisaddons.module.security.dom.role.ApplicationRole#openRestApi()
+#: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy#openRestApi()
+#: org.isisaddons.module.security.dom.tenancy.HasAtPath#openRestApi()
+#: org.isisaddons.module.security.dom.user.ApplicationUser#openRestApi()
+#: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#openRestApi()
+#: org.isisaddons.module.togglz.glue.spi.FeatureStateRepository#openRestApi()
+msgid "Open Rest Api"
+msgstr ""
+
+
+#: org.apache.isis.applib.services.swagger.SwaggerServiceMenu#openSwaggerUi()
+msgid "Open Swagger Ui"
 msgstr ""
 
 
@@ -1453,6 +1942,11 @@ msgid "Path"
 msgstr ""
 
 
+#: org.isisaddons.module.command.dom.ReplayState#PENDING
+msgid "Pending"
+msgstr ""
+
+
 #: org.isisaddons.module.security.app.user.UserPermissionViewModel
 msgid "Permission"
 msgstr ""
@@ -1468,6 +1962,7 @@ msgstr ""
 #: org.isisaddons.module.security.dom.permission.ApplicationPermission
 #: org.isisaddons.module.security.dom.role.ApplicationRole
 #: org.isisaddons.module.security.dom.role.ApplicationRole#permissions
+#: org.isisaddons.module.security.dom.user.ApplicationUser#permissions()
 msgid "Permissions"
 msgstr ""
 
@@ -1495,7 +1990,6 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#postValue
 #: org.isisaddons.module.audit.dom.AuditEntry#postValue
 #: org.isisaddons.module.command.dom.CommandJdo#postValue
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#postValue
 msgid "Post Value"
 msgstr ""
 
@@ -1503,7 +1997,6 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#preValue
 #: org.isisaddons.module.audit.dom.AuditEntry#preValue
 #: org.isisaddons.module.command.dom.CommandJdo#preValue
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#preValue
 msgid "Pre Value"
 msgstr ""
 
@@ -1532,6 +2025,8 @@ msgid "Prop"
 msgstr ""
 
 
+#: domainapp.modules.rdr.dom.StatementReader#properties
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#createStatementReader(java.lang.String,java.lang.String,domainapp.modules.rdr.dom.StatementReaderType,java.lang.String)
 #: org.isisaddons.module.security.app.feature.ApplicationClass#properties
 msgid "Properties"
 msgstr ""
@@ -1544,7 +2039,6 @@ msgstr ""
 
 
 #: org.apache.isis.schema.common.v1.InteractionType#PROPERTY_EDIT
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEventType#PROPERTY_EDIT
 msgid "Property Edit"
 msgstr ""
 
@@ -1552,7 +2046,6 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#propertyId
 #: org.isisaddons.module.audit.dom.AuditEntry#propertyId
 #: org.isisaddons.module.command.dom.CommandJdo#propertyId
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#propertyId
 msgid "Property Id"
 msgstr ""
 
@@ -1572,16 +2065,7 @@ msgid "Public"
 msgstr ""
 
 
-#: org.apache.isis.applib.services.HasTransactionId#publishedEvent()
-#: org.apache.isis.applib.services.command.Command#publishedEvent()
-#: org.apache.isis.applib.services.command.Command2#publishedEvent()
-#: org.apache.isis.applib.services.command.Command3#publishedEvent()
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract$ChangeType#PUBLISHED_EVENT
-#: org.isisaddons.module.audit.dom.AuditEntry#publishedEvent()
-#: org.isisaddons.module.command.dom.CommandJdo#publishedEvent()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#publishedEvent()
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#publishedEvent()
 msgid "Published Event"
 msgstr ""
 
@@ -1591,29 +2075,58 @@ msgid "Published Interaction"
 msgstr ""
 
 
+#: domainapp.modules.txn.dom.Transaction#rawdata
+msgid "Rawdata"
+msgstr ""
+
+
 #: org.isisaddons.module.security.dom.user.ApplicationUser#updatePassword(org.apache.isis.applib.value.Password,org.apache.isis.applib.value.Password,org.apache.isis.applib.value.Password)
 msgid "Re-enter password"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObject#rebuildMetamodel()
+#: domainapp.modules.rdr.dom.StatementReader#readerType
+msgid "Reader Type"
+msgstr ""
+
+
+#: domainapp.modules.base.entity.Activable#rebuildMetamodel()
+#: domainapp.modules.base.entity.WithDescription#rebuildMetamodel()
+#: domainapp.modules.base.entity.WithName#rebuildMetamodel()
+#: domainapp.modules.base.entity.WithNameAndDescription#rebuildMetamodel()
+#: domainapp.modules.base.service.AbstractService#rebuildMetamodel()
+#: domainapp.modules.rdr.api.IReaderCallback#rebuildMetamodel()
+#: domainapp.modules.rdr.dom.StatementReader#rebuildMetamodel()
+#: domainapp.modules.rdr.dom.StatementReaderType#rebuildMetamodel()
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#rebuildMetamodel()
+#: domainapp.modules.ref.dom.Category#rebuildMetamodel()
+#: domainapp.modules.ref.dom.SubCategory#rebuildMetamodel()
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#rebuildMetamodel()
+#: domainapp.modules.txn.dom.StatementSource#rebuildMetamodel()
+#: domainapp.modules.txn.dom.Transaction#rebuildMetamodel()
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#rebuildMetamodel()
 #: java.io.Serializable#rebuildMetamodel()
+#: java.lang.Cloneable#rebuildMetamodel()
 #: java.lang.Comparable#rebuildMetamodel()
 #: java.lang.Iterable#rebuildMetamodel()
 #: java.lang.Object#rebuildMetamodel()
 #: java.util.Collection#rebuildMetamodel()
 #: java.util.List#rebuildMetamodel()
+#: java.util.Map#rebuildMetamodel()
 #: java.util.Set#rebuildMetamodel()
 #: java.util.SortedSet#rebuildMetamodel()
 #: javax.jdo.listener.InstanceLifecycleListener#rebuildMetamodel()
 #: javax.jdo.listener.LoadLifecycleListener#rebuildMetamodel()
 #: javax.jdo.listener.StoreLifecycleListener#rebuildMetamodel()
+#: javax.xml.datatype.XMLGregorianCalendar#rebuildMetamodel()
 #: org.apache.isis.applib.AbstractContainedObject#rebuildMetamodel()
 #: org.apache.isis.applib.AbstractFactoryAndRepository#rebuildMetamodel()
 #: org.apache.isis.applib.AbstractService#rebuildMetamodel()
 #: org.apache.isis.applib.AbstractSubscriber#rebuildMetamodel()
 #: org.apache.isis.applib.AbstractViewModel#rebuildMetamodel()
 #: org.apache.isis.applib.ViewModel#rebuildMetamodel()
+#: org.apache.isis.applib.conmap.ContentMappingService#rebuildMetamodel()
+#: org.apache.isis.applib.conmap.spi.CommandDtoProcessorService#rebuildMetamodel()
 #: org.apache.isis.applib.fixtures.InstallableFixture#rebuildMetamodel()
 #: org.apache.isis.applib.fixturescripts.FixtureResult#rebuildMetamodel()
 #: org.apache.isis.applib.fixturescripts.FixtureScript#rebuildMetamodel()
@@ -1634,6 +2147,8 @@ msgstr ""
 #: org.apache.isis.applib.services.command.Command#rebuildMetamodel()
 #: org.apache.isis.applib.services.command.Command2#rebuildMetamodel()
 #: org.apache.isis.applib.services.command.Command3#rebuildMetamodel()
+#: org.apache.isis.applib.services.command.CommandExecutorService#rebuildMetamodel()
+#: org.apache.isis.applib.services.command.CommandWithDto#rebuildMetamodel()
 #: org.apache.isis.applib.services.command.spi.CommandService#rebuildMetamodel()
 #: org.apache.isis.applib.services.config.ConfigurationProperty#rebuildMetamodel()
 #: org.apache.isis.applib.services.config.ConfigurationService#rebuildMetamodel()
@@ -1647,17 +2162,23 @@ msgstr ""
 #: org.apache.isis.applib.services.grid.GridLoaderService#rebuildMetamodel()
 #: org.apache.isis.applib.services.grid.GridService#rebuildMetamodel()
 #: org.apache.isis.applib.services.grid.GridSystemService#rebuildMetamodel()
+#: org.apache.isis.applib.services.hint.HintStore$HintIdProvider#rebuildMetamodel()
 #: org.apache.isis.applib.services.homepage.HomePageProviderService#rebuildMetamodel()
 #: org.apache.isis.applib.services.i18n.TranslationService#rebuildMetamodel()
 #: org.apache.isis.applib.services.jaxb.JaxbService#rebuildMetamodel()
 #: org.apache.isis.applib.services.jaxb.JaxbService$Simple#rebuildMetamodel()
 #: org.apache.isis.applib.services.jdosupport.IsisJdoSupport#rebuildMetamodel()
 #: org.apache.isis.applib.services.layout.LayoutService#rebuildMetamodel()
+#: org.apache.isis.applib.services.layout.LayoutService2#rebuildMetamodel()
 #: org.apache.isis.applib.services.memento.MementoService#rebuildMetamodel()
+#: org.apache.isis.applib.services.menu.MenuBarsLoaderService#rebuildMetamodel()
+#: org.apache.isis.applib.services.menu.MenuBarsService#rebuildMetamodel()
 #: org.apache.isis.applib.services.message.MessageService#rebuildMetamodel()
 #: org.apache.isis.applib.services.metamodel.MetaModelService#rebuildMetamodel()
 #: org.apache.isis.applib.services.metamodel.MetaModelService2#rebuildMetamodel()
 #: org.apache.isis.applib.services.metamodel.MetaModelService3#rebuildMetamodel()
+#: org.apache.isis.applib.services.metamodel.MetaModelService4#rebuildMetamodel()
+#: org.apache.isis.applib.services.metamodel.MetaModelService5#rebuildMetamodel()
 #: org.apache.isis.applib.services.metrics.MetricsService#rebuildMetamodel()
 #: org.apache.isis.applib.services.publish.PublisherService#rebuildMetamodel()
 #: org.apache.isis.applib.services.registry.ServiceRegistry#rebuildMetamodel()
@@ -1673,10 +2194,12 @@ msgstr ""
 #: org.apache.isis.applib.services.title.TitleService#rebuildMetamodel()
 #: org.apache.isis.applib.services.urlencoding.UrlEncodingService#rebuildMetamodel()
 #: org.apache.isis.applib.services.user.UserService#rebuildMetamodel()
+#: org.apache.isis.applib.services.userprof.UserProfileService#rebuildMetamodel()
 #: org.apache.isis.applib.services.userreg.EmailNotificationService#rebuildMetamodel()
 #: org.apache.isis.applib.services.wrapper.WrapperFactory#rebuildMetamodel()
 #: org.apache.isis.applib.services.xactn.TransactionService#rebuildMetamodel()
 #: org.apache.isis.applib.services.xactn.TransactionService2#rebuildMetamodel()
+#: org.apache.isis.applib.services.xactn.TransactionService3#rebuildMetamodel()
 #: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotService#rebuildMetamodel()
 #: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotServiceAbstract#rebuildMetamodel()
 #: org.apache.isis.core.commons.authentication.AuthenticationSessionProvider#rebuildMetamodel()
@@ -1691,6 +2214,7 @@ msgstr ""
 #: org.apache.isis.core.metamodel.facetapi.MetaModelValidatorRefiner#rebuildMetamodel()
 #: org.apache.isis.core.metamodel.services.ServicesInjectorAware#rebuildMetamodel()
 #: org.apache.isis.core.metamodel.services.appfeat.ApplicationFeature#rebuildMetamodel()
+#: org.apache.isis.core.metamodel.services.appmanifest.AppManifestProvider#rebuildMetamodel()
 #: org.apache.isis.core.metamodel.services.command.CommandDtoServiceInternal#rebuildMetamodel()
 #: org.apache.isis.core.metamodel.services.configinternal.ConfigurationServiceInternal#rebuildMetamodel()
 #: org.apache.isis.core.metamodel.services.grid.GridSystemServiceAbstract#rebuildMetamodel()
@@ -1707,9 +2231,12 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#rebuildMetamodel()
 #: org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport#rebuildMetamodel()
 #: org.apache.isis.schema.cmd.v1.CommandDto#rebuildMetamodel()
+#: org.apache.isis.schema.cmd.v1.MapDto#rebuildMetamodel()
+#: org.apache.isis.schema.cmd.v1.MapDto$Entry#rebuildMetamodel()
 #: org.apache.isis.schema.cmd.v1.MemberDto#rebuildMetamodel()
 #: org.apache.isis.schema.common.v1.OidDto#rebuildMetamodel()
 #: org.apache.isis.schema.common.v1.OidsDto#rebuildMetamodel()
+#: org.apache.isis.schema.common.v1.PeriodDto#rebuildMetamodel()
 #: org.incode.example.settings.dom.ApplicationSetting#rebuildMetamodel()
 #: org.incode.example.settings.dom.ApplicationSettingsService#rebuildMetamodel()
 #: org.incode.example.settings.dom.ApplicationSettingsServiceRW#rebuildMetamodel()
@@ -1725,10 +2252,6 @@ msgstr ""
 #: org.incode.example.settings.dom.jdo.UserSettingsServiceJdo#rebuildMetamodel()
 #: org.isisaddons.module.audit.dom.AuditEntry#rebuildMetamodel()
 #: org.isisaddons.module.command.dom.CommandJdo#rebuildMetamodel()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#rebuildMetamodel()
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#rebuildMetamodel()
-#: org.isisaddons.module.publishmq.dom.servicespi.InteractionExecutionRepository#rebuildMetamodel()
-#: org.isisaddons.module.publishmq.dom.servicespi.PublishedObjectsRepository#rebuildMetamodel()
 #: org.isisaddons.module.security.app.feature.ApplicationClass#rebuildMetamodel()
 #: org.isisaddons.module.security.app.feature.ApplicationClassAction#rebuildMetamodel()
 #: org.isisaddons.module.security.app.feature.ApplicationClassCollection#rebuildMetamodel()
@@ -1751,24 +2274,43 @@ msgid "Rebuild Metamodel"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObject#recentAuditEntries()
+#: domainapp.modules.base.entity.Activable#recentAuditEntries()
+#: domainapp.modules.base.entity.WithDescription#recentAuditEntries()
+#: domainapp.modules.base.entity.WithName#recentAuditEntries()
+#: domainapp.modules.base.entity.WithNameAndDescription#recentAuditEntries()
+#: domainapp.modules.base.service.AbstractService#recentAuditEntries()
+#: domainapp.modules.rdr.api.IReaderCallback#recentAuditEntries()
+#: domainapp.modules.rdr.dom.StatementReader#recentAuditEntries()
+#: domainapp.modules.rdr.dom.StatementReaderType#recentAuditEntries()
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#recentAuditEntries()
+#: domainapp.modules.ref.dom.Category#recentAuditEntries()
+#: domainapp.modules.ref.dom.SubCategory#recentAuditEntries()
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#recentAuditEntries()
+#: domainapp.modules.txn.dom.StatementSource#recentAuditEntries()
+#: domainapp.modules.txn.dom.Transaction#recentAuditEntries()
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#recentAuditEntries()
 #: java.io.Serializable#recentAuditEntries()
+#: java.lang.Cloneable#recentAuditEntries()
 #: java.lang.Comparable#recentAuditEntries()
 #: java.lang.Iterable#recentAuditEntries()
 #: java.lang.Object#recentAuditEntries()
 #: java.util.Collection#recentAuditEntries()
 #: java.util.List#recentAuditEntries()
+#: java.util.Map#recentAuditEntries()
 #: java.util.Set#recentAuditEntries()
 #: java.util.SortedSet#recentAuditEntries()
 #: javax.jdo.listener.InstanceLifecycleListener#recentAuditEntries()
 #: javax.jdo.listener.LoadLifecycleListener#recentAuditEntries()
 #: javax.jdo.listener.StoreLifecycleListener#recentAuditEntries()
+#: javax.xml.datatype.XMLGregorianCalendar#recentAuditEntries()
 #: org.apache.isis.applib.AbstractContainedObject#recentAuditEntries()
 #: org.apache.isis.applib.AbstractFactoryAndRepository#recentAuditEntries()
 #: org.apache.isis.applib.AbstractService#recentAuditEntries()
 #: org.apache.isis.applib.AbstractSubscriber#recentAuditEntries()
 #: org.apache.isis.applib.AbstractViewModel#recentAuditEntries()
 #: org.apache.isis.applib.ViewModel#recentAuditEntries()
+#: org.apache.isis.applib.conmap.ContentMappingService#recentAuditEntries()
+#: org.apache.isis.applib.conmap.spi.CommandDtoProcessorService#recentAuditEntries()
 #: org.apache.isis.applib.fixtures.InstallableFixture#recentAuditEntries()
 #: org.apache.isis.applib.fixturescripts.FixtureResult#recentAuditEntries()
 #: org.apache.isis.applib.fixturescripts.FixtureScript#recentAuditEntries()
@@ -1789,6 +2331,8 @@ msgstr ""
 #: org.apache.isis.applib.services.command.Command#recentAuditEntries()
 #: org.apache.isis.applib.services.command.Command2#recentAuditEntries()
 #: org.apache.isis.applib.services.command.Command3#recentAuditEntries()
+#: org.apache.isis.applib.services.command.CommandExecutorService#recentAuditEntries()
+#: org.apache.isis.applib.services.command.CommandWithDto#recentAuditEntries()
 #: org.apache.isis.applib.services.command.spi.CommandService#recentAuditEntries()
 #: org.apache.isis.applib.services.config.ConfigurationProperty#recentAuditEntries()
 #: org.apache.isis.applib.services.config.ConfigurationService#recentAuditEntries()
@@ -1802,17 +2346,23 @@ msgstr ""
 #: org.apache.isis.applib.services.grid.GridLoaderService#recentAuditEntries()
 #: org.apache.isis.applib.services.grid.GridService#recentAuditEntries()
 #: org.apache.isis.applib.services.grid.GridSystemService#recentAuditEntries()
+#: org.apache.isis.applib.services.hint.HintStore$HintIdProvider#recentAuditEntries()
 #: org.apache.isis.applib.services.homepage.HomePageProviderService#recentAuditEntries()
 #: org.apache.isis.applib.services.i18n.TranslationService#recentAuditEntries()
 #: org.apache.isis.applib.services.jaxb.JaxbService#recentAuditEntries()
 #: org.apache.isis.applib.services.jaxb.JaxbService$Simple#recentAuditEntries()
 #: org.apache.isis.applib.services.jdosupport.IsisJdoSupport#recentAuditEntries()
 #: org.apache.isis.applib.services.layout.LayoutService#recentAuditEntries()
+#: org.apache.isis.applib.services.layout.LayoutService2#recentAuditEntries()
 #: org.apache.isis.applib.services.memento.MementoService#recentAuditEntries()
+#: org.apache.isis.applib.services.menu.MenuBarsLoaderService#recentAuditEntries()
+#: org.apache.isis.applib.services.menu.MenuBarsService#recentAuditEntries()
 #: org.apache.isis.applib.services.message.MessageService#recentAuditEntries()
 #: org.apache.isis.applib.services.metamodel.MetaModelService#recentAuditEntries()
 #: org.apache.isis.applib.services.metamodel.MetaModelService2#recentAuditEntries()
 #: org.apache.isis.applib.services.metamodel.MetaModelService3#recentAuditEntries()
+#: org.apache.isis.applib.services.metamodel.MetaModelService4#recentAuditEntries()
+#: org.apache.isis.applib.services.metamodel.MetaModelService5#recentAuditEntries()
 #: org.apache.isis.applib.services.metrics.MetricsService#recentAuditEntries()
 #: org.apache.isis.applib.services.publish.PublisherService#recentAuditEntries()
 #: org.apache.isis.applib.services.registry.ServiceRegistry#recentAuditEntries()
@@ -1828,10 +2378,12 @@ msgstr ""
 #: org.apache.isis.applib.services.title.TitleService#recentAuditEntries()
 #: org.apache.isis.applib.services.urlencoding.UrlEncodingService#recentAuditEntries()
 #: org.apache.isis.applib.services.user.UserService#recentAuditEntries()
+#: org.apache.isis.applib.services.userprof.UserProfileService#recentAuditEntries()
 #: org.apache.isis.applib.services.userreg.EmailNotificationService#recentAuditEntries()
 #: org.apache.isis.applib.services.wrapper.WrapperFactory#recentAuditEntries()
 #: org.apache.isis.applib.services.xactn.TransactionService#recentAuditEntries()
 #: org.apache.isis.applib.services.xactn.TransactionService2#recentAuditEntries()
+#: org.apache.isis.applib.services.xactn.TransactionService3#recentAuditEntries()
 #: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotService#recentAuditEntries()
 #: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotServiceAbstract#recentAuditEntries()
 #: org.apache.isis.core.commons.authentication.AuthenticationSessionProvider#recentAuditEntries()
@@ -1846,6 +2398,7 @@ msgstr ""
 #: org.apache.isis.core.metamodel.facetapi.MetaModelValidatorRefiner#recentAuditEntries()
 #: org.apache.isis.core.metamodel.services.ServicesInjectorAware#recentAuditEntries()
 #: org.apache.isis.core.metamodel.services.appfeat.ApplicationFeature#recentAuditEntries()
+#: org.apache.isis.core.metamodel.services.appmanifest.AppManifestProvider#recentAuditEntries()
 #: org.apache.isis.core.metamodel.services.command.CommandDtoServiceInternal#recentAuditEntries()
 #: org.apache.isis.core.metamodel.services.configinternal.ConfigurationServiceInternal#recentAuditEntries()
 #: org.apache.isis.core.metamodel.services.grid.GridSystemServiceAbstract#recentAuditEntries()
@@ -1862,9 +2415,12 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#recentAuditEntries()
 #: org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport#recentAuditEntries()
 #: org.apache.isis.schema.cmd.v1.CommandDto#recentAuditEntries()
+#: org.apache.isis.schema.cmd.v1.MapDto#recentAuditEntries()
+#: org.apache.isis.schema.cmd.v1.MapDto$Entry#recentAuditEntries()
 #: org.apache.isis.schema.cmd.v1.MemberDto#recentAuditEntries()
 #: org.apache.isis.schema.common.v1.OidDto#recentAuditEntries()
 #: org.apache.isis.schema.common.v1.OidsDto#recentAuditEntries()
+#: org.apache.isis.schema.common.v1.PeriodDto#recentAuditEntries()
 #: org.incode.example.settings.dom.ApplicationSetting#recentAuditEntries()
 #: org.incode.example.settings.dom.ApplicationSettingsService#recentAuditEntries()
 #: org.incode.example.settings.dom.ApplicationSettingsServiceRW#recentAuditEntries()
@@ -1880,10 +2436,6 @@ msgstr ""
 #: org.incode.example.settings.dom.jdo.UserSettingsServiceJdo#recentAuditEntries()
 #: org.isisaddons.module.audit.dom.AuditEntry#recentAuditEntries()
 #: org.isisaddons.module.command.dom.CommandJdo#recentAuditEntries()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#recentAuditEntries()
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#recentAuditEntries()
-#: org.isisaddons.module.publishmq.dom.servicespi.InteractionExecutionRepository#recentAuditEntries()
-#: org.isisaddons.module.publishmq.dom.servicespi.PublishedObjectsRepository#recentAuditEntries()
 #: org.isisaddons.module.security.app.feature.ApplicationClass#recentAuditEntries()
 #: org.isisaddons.module.security.app.feature.ApplicationClassAction#recentAuditEntries()
 #: org.isisaddons.module.security.app.feature.ApplicationClassCollection#recentAuditEntries()
@@ -1906,25 +2458,197 @@ msgid "Recent Audit Entries"
 msgstr ""
 
 
+#: domainapp.modules.base.entity.Activable#recentCommands()
+#: domainapp.modules.base.entity.WithDescription#recentCommands()
+#: domainapp.modules.base.entity.WithName#recentCommands()
+#: domainapp.modules.base.entity.WithNameAndDescription#recentCommands()
+#: domainapp.modules.base.service.AbstractService#recentCommands()
+#: domainapp.modules.rdr.api.IReaderCallback#recentCommands()
+#: domainapp.modules.rdr.dom.StatementReader#recentCommands()
+#: domainapp.modules.rdr.dom.StatementReaderType#recentCommands()
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#recentCommands()
+#: domainapp.modules.ref.dom.Category#recentCommands()
+#: domainapp.modules.ref.dom.SubCategory#recentCommands()
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#recentCommands()
+#: domainapp.modules.txn.dom.StatementSource#recentCommands()
+#: domainapp.modules.txn.dom.Transaction#recentCommands()
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#recentCommands()
+#: java.io.Serializable#recentCommands()
+#: java.lang.Cloneable#recentCommands()
+#: java.lang.Comparable#recentCommands()
+#: java.lang.Iterable#recentCommands()
+#: java.lang.Object#recentCommands()
+#: java.util.Collection#recentCommands()
+#: java.util.List#recentCommands()
+#: java.util.Map#recentCommands()
+#: java.util.Set#recentCommands()
+#: java.util.SortedSet#recentCommands()
+#: javax.jdo.listener.InstanceLifecycleListener#recentCommands()
+#: javax.jdo.listener.LoadLifecycleListener#recentCommands()
+#: javax.jdo.listener.StoreLifecycleListener#recentCommands()
+#: javax.xml.datatype.XMLGregorianCalendar#recentCommands()
+#: org.apache.isis.applib.AbstractContainedObject#recentCommands()
+#: org.apache.isis.applib.AbstractFactoryAndRepository#recentCommands()
+#: org.apache.isis.applib.AbstractService#recentCommands()
+#: org.apache.isis.applib.AbstractSubscriber#recentCommands()
+#: org.apache.isis.applib.AbstractViewModel#recentCommands()
+#: org.apache.isis.applib.ViewModel#recentCommands()
+#: org.apache.isis.applib.conmap.ContentMappingService#recentCommands()
+#: org.apache.isis.applib.conmap.spi.CommandDtoProcessorService#recentCommands()
+#: org.apache.isis.applib.fixtures.InstallableFixture#recentCommands()
+#: org.apache.isis.applib.fixturescripts.FixtureResult#recentCommands()
+#: org.apache.isis.applib.fixturescripts.FixtureScript#recentCommands()
+#: org.apache.isis.applib.fixturescripts.FixtureScripts#recentCommands()
+#: org.apache.isis.applib.services.HasTransactionId#recentCommands()
+#: org.apache.isis.applib.services.HasUsername#recentCommands()
+#: org.apache.isis.applib.services.WithTransactionScope#recentCommands()
+#: org.apache.isis.applib.services.appfeat.ApplicationFeatureRepository#recentCommands()
+#: org.apache.isis.applib.services.audit.AuditerService#recentCommands()
+#: org.apache.isis.applib.services.background.BackgroundCommandService#recentCommands()
+#: org.apache.isis.applib.services.background.BackgroundCommandService2#recentCommands()
+#: org.apache.isis.applib.services.background.BackgroundService#recentCommands()
+#: org.apache.isis.applib.services.background.BackgroundService2#recentCommands()
+#: org.apache.isis.applib.services.bookmark.BookmarkService#recentCommands()
+#: org.apache.isis.applib.services.bookmark.BookmarkService2#recentCommands()
+#: org.apache.isis.applib.services.classdiscovery.ClassDiscoveryService#recentCommands()
+#: org.apache.isis.applib.services.classdiscovery.ClassDiscoveryService2#recentCommands()
+#: org.apache.isis.applib.services.command.Command#recentCommands()
+#: org.apache.isis.applib.services.command.Command2#recentCommands()
+#: org.apache.isis.applib.services.command.Command3#recentCommands()
+#: org.apache.isis.applib.services.command.CommandExecutorService#recentCommands()
+#: org.apache.isis.applib.services.command.CommandWithDto#recentCommands()
+#: org.apache.isis.applib.services.command.spi.CommandService#recentCommands()
+#: org.apache.isis.applib.services.config.ConfigurationProperty#recentCommands()
+#: org.apache.isis.applib.services.config.ConfigurationService#recentCommands()
+#: org.apache.isis.applib.services.email.EmailService#recentCommands()
+#: org.apache.isis.applib.services.eventbus.EventBusService#recentCommands()
+#: org.apache.isis.applib.services.exceprecog.ExceptionRecognizer#recentCommands()
+#: org.apache.isis.applib.services.exceprecog.ExceptionRecognizer2#recentCommands()
+#: org.apache.isis.applib.services.exceprecog.ExceptionRecognizerComposite#recentCommands()
+#: org.apache.isis.applib.services.factory.FactoryService#recentCommands()
+#: org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecificationProvider#recentCommands()
+#: org.apache.isis.applib.services.grid.GridLoaderService#recentCommands()
+#: org.apache.isis.applib.services.grid.GridService#recentCommands()
+#: org.apache.isis.applib.services.grid.GridSystemService#recentCommands()
+#: org.apache.isis.applib.services.hint.HintStore$HintIdProvider#recentCommands()
+#: org.apache.isis.applib.services.homepage.HomePageProviderService#recentCommands()
+#: org.apache.isis.applib.services.i18n.TranslationService#recentCommands()
+#: org.apache.isis.applib.services.jaxb.JaxbService#recentCommands()
+#: org.apache.isis.applib.services.jaxb.JaxbService$Simple#recentCommands()
+#: org.apache.isis.applib.services.jdosupport.IsisJdoSupport#recentCommands()
+#: org.apache.isis.applib.services.layout.LayoutService#recentCommands()
+#: org.apache.isis.applib.services.layout.LayoutService2#recentCommands()
+#: org.apache.isis.applib.services.memento.MementoService#recentCommands()
+#: org.apache.isis.applib.services.menu.MenuBarsLoaderService#recentCommands()
+#: org.apache.isis.applib.services.menu.MenuBarsService#recentCommands()
+#: org.apache.isis.applib.services.message.MessageService#recentCommands()
+#: org.apache.isis.applib.services.metamodel.MetaModelService#recentCommands()
+#: org.apache.isis.applib.services.metamodel.MetaModelService2#recentCommands()
+#: org.apache.isis.applib.services.metamodel.MetaModelService3#recentCommands()
+#: org.apache.isis.applib.services.metamodel.MetaModelService4#recentCommands()
+#: org.apache.isis.applib.services.metamodel.MetaModelService5#recentCommands()
+#: org.apache.isis.applib.services.metrics.MetricsService#recentCommands()
+#: org.apache.isis.applib.services.publish.PublisherService#recentCommands()
+#: org.apache.isis.applib.services.registry.ServiceRegistry#recentCommands()
+#: org.apache.isis.applib.services.registry.ServiceRegistry2#recentCommands()
+#: org.apache.isis.applib.services.repository.RepositoryService#recentCommands()
+#: org.apache.isis.applib.services.routing.RoutingService#recentCommands()
+#: org.apache.isis.applib.services.session.SessionLoggingService#recentCommands()
+#: org.apache.isis.applib.services.sessmgmt.SessionManagementService#recentCommands()
+#: org.apache.isis.applib.services.sudo.SudoService#recentCommands()
+#: org.apache.isis.applib.services.sudo.SudoService$Spi#recentCommands()
+#: org.apache.isis.applib.services.swagger.SwaggerService#recentCommands()
+#: org.apache.isis.applib.services.tablecol.TableColumnOrderService#recentCommands()
+#: org.apache.isis.applib.services.title.TitleService#recentCommands()
+#: org.apache.isis.applib.services.urlencoding.UrlEncodingService#recentCommands()
+#: org.apache.isis.applib.services.user.UserService#recentCommands()
+#: org.apache.isis.applib.services.userprof.UserProfileService#recentCommands()
+#: org.apache.isis.applib.services.userreg.EmailNotificationService#recentCommands()
+#: org.apache.isis.applib.services.wrapper.WrapperFactory#recentCommands()
+#: org.apache.isis.applib.services.xactn.TransactionService#recentCommands()
+#: org.apache.isis.applib.services.xactn.TransactionService2#recentCommands()
+#: org.apache.isis.applib.services.xactn.TransactionService3#recentCommands()
+#: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotService#recentCommands()
+#: org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotServiceAbstract#recentCommands()
+#: org.apache.isis.core.commons.authentication.AuthenticationSessionProvider#recentCommands()
+#: org.apache.isis.core.commons.components.ApplicationScopedComponent#recentCommands()
+#: org.apache.isis.core.commons.components.Component#recentCommands()
+#: org.apache.isis.core.commons.config.IsisConfiguration#recentCommands()
+#: org.apache.isis.core.commons.config.IsisConfigurationDefault#recentCommands()
+#: org.apache.isis.core.metamodel.adapter.mgr.AdapterManager#recentCommands()
+#: org.apache.isis.core.metamodel.adapter.mgr.AdapterManagerBase#recentCommands()
+#: org.apache.isis.core.metamodel.deployment.DeploymentCategoryProvider#recentCommands()
+#: org.apache.isis.core.metamodel.facetapi.MetaModelRefiner#recentCommands()
+#: org.apache.isis.core.metamodel.facetapi.MetaModelValidatorRefiner#recentCommands()
+#: org.apache.isis.core.metamodel.services.ServicesInjectorAware#recentCommands()
+#: org.apache.isis.core.metamodel.services.appfeat.ApplicationFeature#recentCommands()
+#: org.apache.isis.core.metamodel.services.appmanifest.AppManifestProvider#recentCommands()
+#: org.apache.isis.core.metamodel.services.command.CommandDtoServiceInternal#recentCommands()
+#: org.apache.isis.core.metamodel.services.configinternal.ConfigurationServiceInternal#recentCommands()
+#: org.apache.isis.core.metamodel.services.grid.GridSystemServiceAbstract#recentCommands()
+#: org.apache.isis.core.metamodel.services.ixn.InteractionDtoServiceInternal#recentCommands()
+#: org.apache.isis.core.metamodel.services.persistsession.PersistenceSessionServiceInternal#recentCommands()
+#: org.apache.isis.core.metamodel.services.publishing.PublishingServiceInternal#recentCommands()
+#: org.apache.isis.core.metamodel.spec.FreeStandingList#recentCommands()
+#: org.apache.isis.core.runtime.authentication.AuthenticationManager#recentCommands()
+#: org.apache.isis.core.runtime.authorization.AuthorizationManager#recentCommands()
+#: org.apache.isis.core.runtime.authorization.AuthorizationManagerAbstract#recentCommands()
+#: org.apache.isis.core.runtime.persistence.FixturesInstalledFlag#recentCommands()
+#: org.apache.isis.core.runtime.services.eventbus.EventBusServiceDefault#recentCommands()
+#: org.apache.isis.core.runtime.system.transaction.TransactionalClosure#recentCommands()
+#: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#recentCommands()
+#: org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport#recentCommands()
+#: org.apache.isis.schema.cmd.v1.CommandDto#recentCommands()
+#: org.apache.isis.schema.cmd.v1.MapDto#recentCommands()
+#: org.apache.isis.schema.cmd.v1.MapDto$Entry#recentCommands()
+#: org.apache.isis.schema.cmd.v1.MemberDto#recentCommands()
+#: org.apache.isis.schema.common.v1.OidDto#recentCommands()
+#: org.apache.isis.schema.common.v1.OidsDto#recentCommands()
+#: org.apache.isis.schema.common.v1.PeriodDto#recentCommands()
+#: org.incode.example.settings.dom.ApplicationSetting#recentCommands()
+#: org.incode.example.settings.dom.ApplicationSettingsService#recentCommands()
+#: org.incode.example.settings.dom.ApplicationSettingsServiceRW#recentCommands()
+#: org.incode.example.settings.dom.Setting#recentCommands()
+#: org.incode.example.settings.dom.SettingAbstract#recentCommands()
+#: org.incode.example.settings.dom.UserSetting#recentCommands()
+#: org.incode.example.settings.dom.UserSettingsService#recentCommands()
+#: org.incode.example.settings.dom.UserSettingsServiceRW#recentCommands()
+#: org.incode.example.settings.dom.jdo.ApplicationSettingJdo#recentCommands()
+#: org.incode.example.settings.dom.jdo.ApplicationSettingsServiceJdo#recentCommands()
+#: org.incode.example.settings.dom.jdo.SettingAbstractJdo#recentCommands()
+#: org.incode.example.settings.dom.jdo.UserSettingJdo#recentCommands()
+#: org.incode.example.settings.dom.jdo.UserSettingsServiceJdo#recentCommands()
+#: org.isisaddons.module.audit.dom.AuditEntry#recentCommands()
+#: org.isisaddons.module.command.dom.CommandJdo#recentCommands()
+#: org.isisaddons.module.security.app.feature.ApplicationClass#recentCommands()
+#: org.isisaddons.module.security.app.feature.ApplicationClassAction#recentCommands()
+#: org.isisaddons.module.security.app.feature.ApplicationClassCollection#recentCommands()
+#: org.isisaddons.module.security.app.feature.ApplicationClassMember#recentCommands()
+#: org.isisaddons.module.security.app.feature.ApplicationClassProperty#recentCommands()
+#: org.isisaddons.module.security.app.feature.ApplicationFeatureViewModel#recentCommands()
+#: org.isisaddons.module.security.app.feature.ApplicationPackage#recentCommands()
+#: org.isisaddons.module.security.app.user.UserPermissionViewModel#recentCommands()
+#: org.isisaddons.module.security.dom.password.PasswordEncryptionService#recentCommands()
+#: org.isisaddons.module.security.dom.permission.ApplicationPermission#recentCommands()
+#: org.isisaddons.module.security.dom.permission.PermissionsEvaluationService#recentCommands()
+#: org.isisaddons.module.security.dom.permission.PermissionsEvaluationServiceAbstract#recentCommands()
+#: org.isisaddons.module.security.dom.role.ApplicationRole#recentCommands()
+#: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy#recentCommands()
+#: org.isisaddons.module.security.dom.tenancy.HasAtPath#recentCommands()
+#: org.isisaddons.module.security.dom.user.ApplicationUser#recentCommands()
+#: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#recentCommands()
+#: org.isisaddons.module.togglz.glue.spi.FeatureStateRepository#recentCommands()
+msgid "Recent Commands"
+msgstr ""
+
+
 #: org.apache.isis.applib.services.HasUsername#recentCommandsByUser()
 #: org.incode.example.settings.dom.jdo.UserSettingJdo#recentCommandsByUser()
 #: org.isisaddons.module.audit.dom.AuditEntry#recentCommandsByUser()
 #: org.isisaddons.module.command.dom.CommandJdo#recentCommandsByUser()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#recentCommandsByUser()
 #: org.isisaddons.module.security.dom.user.ApplicationUser#recentCommandsByUser()
 #: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#recentCommandsByUser()
 msgid "Recent Commands By User"
-msgstr ""
-
-
-#: org.apache.isis.applib.services.HasUsername#recentEventsPublishedByUser()
-#: org.incode.example.settings.dom.jdo.UserSettingJdo#recentEventsPublishedByUser()
-#: org.isisaddons.module.audit.dom.AuditEntry#recentEventsPublishedByUser()
-#: org.isisaddons.module.command.dom.CommandJdo#recentEventsPublishedByUser()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#recentEventsPublishedByUser()
-#: org.isisaddons.module.security.dom.user.ApplicationUser#recentEventsPublishedByUser()
-#: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#recentEventsPublishedByUser()
-msgid "Recent Events Published By User"
 msgstr ""
 
 
@@ -1932,7 +2656,6 @@ msgstr ""
 #: org.incode.example.settings.dom.jdo.UserSettingJdo#recentSessionsForUser()
 #: org.isisaddons.module.audit.dom.AuditEntry#recentSessionsForUser()
 #: org.isisaddons.module.command.dom.CommandJdo#recentSessionsForUser()
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#recentSessionsForUser()
 #: org.isisaddons.module.security.dom.user.ApplicationUser#recentSessionsForUser()
 #: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#recentSessionsForUser()
 msgid "Recent Sessions For User"
@@ -1941,6 +2664,13 @@ msgstr ""
 
 #: org.apache.isis.applib.services.fixturespec.FixtureScriptsDefault#recreateObjectsAndReturnFirst()
 msgid "Recreate Objects And Return First"
+msgstr ""
+
+
+#: domainapp.modules.txn.dom.Transaction#reference
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#expense(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#income(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+msgid "Reference"
 msgstr ""
 
 
@@ -1967,8 +2697,18 @@ msgid "Repeat password"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#republish()
-msgid "Republish"
+#: org.isisaddons.module.command.dom.CommandJdo#replayState
+msgid "Replay State"
+msgstr ""
+
+
+#: org.isisaddons.module.command.dom.CommandJdo#replayStateFailureReason
+msgid "Replay State Failure Reason"
+msgstr ""
+
+
+#: org.apache.isis.applib.annotation.Command$ExecuteIn#REPLAYABLE
+msgid "Replayable"
 msgstr ""
 
 
@@ -2008,11 +2748,6 @@ msgid "ResultStr"
 msgstr ""
 
 
-#: org.isisaddons.module.command.dom.CommandJdo
-msgid "Results"
-msgstr ""
-
-
 #: org.isisaddons.module.command.dom.CommandJdo#retry()
 msgid "Retry"
 msgstr ""
@@ -2021,6 +2756,11 @@ msgstr ""
 #: org.isisaddons.module.security.app.feature.ApplicationClassAction#returnType
 #: org.isisaddons.module.security.app.feature.ApplicationClassProperty#returnType
 msgid "Return Type"
+msgstr ""
+
+
+#: org.isisaddons.module.command.dom.CommandJdo_retry$Mode#REUSE
+msgid "Reuse"
 msgstr ""
 
 
@@ -2047,8 +2787,6 @@ msgid "Rule"
 msgstr ""
 
 
-#: org.apache.isis.applib.fixturescripts.FixtureScript#runFixtureScript()
-#: org.apache.isis.applib.fixturescripts.FixtureScript#runFixtureScriptWithAutoComplete()
 #: org.apache.isis.applib.fixturescripts.FixtureScripts#runFixtureScript()
 #: org.apache.isis.applib.services.fixturespec.FixtureScriptsDefault#runFixtureScript()
 #: org.apache.isis.applib.services.fixturespec.FixtureScriptsDefault#runFixtureScriptWithAutoComplete()
@@ -2066,8 +2804,18 @@ msgid "Safe And Request Cacheable"
 msgstr ""
 
 
+#: domainapp.modules.ref.dom.StatementSourceType#SAVING_ACCOUNT
+msgid "Saving Account"
+msgstr ""
+
+
 #: org.isisaddons.module.command.dom.BackgroundCommandServiceJdo#schedule()
 msgid "Schedule"
+msgstr ""
+
+
+#: org.isisaddons.module.command.dom.CommandJdo_retry$Mode#SCHEDULE_NEW
+msgid "Schedule New"
 msgstr ""
 
 
@@ -2083,6 +2831,7 @@ msgid "Script-specific parameters (if any).  The format depends on the script im
 msgstr ""
 
 
+#: domainapp.modules.txn.service.TransactionService#search()
 #: org.isisaddons.module.security.dom.role.ApplicationRoleMenu#findRoles(java.lang.String)
 #: org.isisaddons.module.security.dom.user.ApplicationUserMenu#findUsers(java.lang.String)
 msgid "Search"
@@ -2100,13 +2849,7 @@ msgstr ""
 
 
 #: org.isisaddons.module.audit.dom.AuditEntry#sequence
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#sequence
 msgid "Sequence"
-msgstr ""
-
-
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#serializedForm
-msgid "Serialized Form"
 msgstr ""
 
 
@@ -2131,31 +2874,79 @@ msgid "Settings"
 msgstr ""
 
 
-#: org.isisaddons.module.command.dom.CommandJdo#showException()
-msgid "Show Exception"
+#: org.isisaddons.module.command.dom.CommandJdo#siblingCommands()
+msgid "Sibling Commands"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObjectMenu
-msgid "Simple Objects"
+#: domainapp.modules.txn.dom.Transaction#source
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#expense(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#income(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+msgid "Source"
 msgstr ""
 
 
+#: domainapp.modules.rdr.dom.StatementReader#properties
+msgid "Standard property file format to specify properties to be used by this statement reader"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "Start date"
+msgstr ""
+
+
+#: org.apache.isis.schema.common.v1.PeriodDto#startedAt
 #: org.isisaddons.module.command.dom.CommandJdo#startedAt
 msgid "Started At"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#status
-#: org.isisaddons.module.security.dom.user.ApplicationUser
-#: org.isisaddons.module.security.dom.user.ApplicationUser#status
-msgid "Status"
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#statementReaderTypes
+msgid "Statement Reader Types"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage
-msgid "Status Message"
+#: domainapp.modules.rdr.view.dashboard.ManageReaderDashboard#statementReaders
+msgid "Statement Readers"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "Statement Source"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.StaticMenu#statementSourceTypes()
+msgid "Statement Source Types"
+msgstr ""
+
+
+#: domainapp.modules.txn.dom.DataProcessingMenu#statementSources()
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#statementSources
+msgid "Statement Sources"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.StatementSourceType
+msgid "Statement source type"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.StatementSourceType
+#: domainapp.modules.txn.dom.StatementSource#type
+msgid "Statement source types e.g. saving account, load account, credit card, etc."
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.StaticMenu
+msgid "Static Data"
+msgstr ""
+
+
+#: org.isisaddons.module.security.dom.user.ApplicationUser
+#: org.isisaddons.module.security.dom.user.ApplicationUser#status
+msgid "Status"
 msgstr ""
 
 
@@ -2166,6 +2957,22 @@ msgstr ""
 
 #: org.isisaddons.module.security.dom.tenancy.ApplicationTenancyMenu#findTenancies(java.lang.String)
 msgid "String to search for, wildcard (*) can be used"
+msgstr ""
+
+
+#: domainapp.modules.ref.view.dashboard.ManageCategoryDashboard#subCategories
+msgid "Sub Categories"
+msgstr ""
+
+
+#: domainapp.modules.txn.dom.Transaction#subCategory
+msgid "Sub Category"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#changeCategory(java.util.List,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "Sub-Category"
 msgstr ""
 
 
@@ -2182,7 +2989,6 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract
 #: org.isisaddons.module.audit.dom.AuditEntry
 #: org.isisaddons.module.command.dom.CommandJdo
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent
 msgid "Target"
 msgstr ""
 
@@ -2190,7 +2996,6 @@ msgstr ""
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract
 #: org.isisaddons.module.audit.dom.AuditEntry
 #: org.isisaddons.module.command.dom.CommandJdo
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent
 msgid "TargetStr"
 msgstr ""
 
@@ -2201,29 +3006,27 @@ msgstr ""
 
 
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#timestamp
+#: org.apache.isis.schema.cmd.v1.CommandDto#timestamp
 #: org.isisaddons.module.audit.dom.AuditEntry#timestamp
 #: org.isisaddons.module.command.dom.CommandJdo#timestamp
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#timestamp
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#timestamp
 msgid "Timestamp"
 msgstr ""
 
 
-#: org.isisaddons.module.command.dom.CommandJdo
+#: org.apache.isis.schema.cmd.v1.CommandDto#timings
 msgid "Timings"
-msgstr ""
-
-
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#title
-msgid "Title"
 msgstr ""
 
 
 #: org.isisaddons.module.audit.dom.AuditingServiceMenu#findAuditEntries(org.joda.time.LocalDate,org.joda.time.LocalDate)
 #: org.isisaddons.module.command.dom.CommandServiceMenu#findCommands(org.joda.time.LocalDate,org.joda.time.LocalDate)
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishingServiceMenu#findPublishedEvents(org.joda.time.LocalDate,org.joda.time.LocalDate)
 #: org.isisaddons.module.sessionlogger.dom.SessionLoggingServiceMenu#findSessions(java.lang.String,org.joda.time.LocalDate,org.joda.time.LocalDate)
 msgid "To"
+msgstr ""
+
+
+#: domainapp.modules.txn.dom.Transaction#transactionDate
+msgid "Transaction Date"
 msgstr ""
 
 
@@ -2232,9 +3035,37 @@ msgstr ""
 #: org.isisaddons.module.audit.dom.AuditEntry#transactionId
 #: org.isisaddons.module.command.dom.CommandJdo#transactionId
 #: org.isisaddons.module.command.dom.CommandServiceMenu#findCommandById(java.util.UUID)
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#transactionId
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#transactionId
 msgid "Transaction Id"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.StaticMenu#transactionTypes()
+msgid "Transaction Types"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#expense(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#income(java.lang.String,java.util.Date,java.math.BigDecimal,java.lang.String,java.lang.String)
+msgid "Transaction date"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.TransactionType
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "Transaction type"
+msgstr ""
+
+
+#: domainapp.modules.ref.dom.TransactionType
+#: domainapp.modules.txn.dom.Transaction#type
+#: domainapp.modules.txn.service.TransactionService#search(java.lang.String,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.txn.dom.StatementSource,domainapp.modules.ref.dom.TransactionType,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#filter(java.lang.String,domainapp.modules.ref.dom.TransactionType,domainapp.modules.txn.dom.StatementSource,java.util.Date,java.util.Date,java.math.BigDecimal,java.math.BigDecimal,domainapp.modules.ref.dom.Category,domainapp.modules.ref.dom.SubCategory)
+msgid "Transaction types e.g. Debut and Credit"
+msgstr ""
+
+
+#: domainapp.modules.txn.view.dashboard.ManageTransactionDashboard#transactions
+msgid "Transactions"
 msgstr ""
 
 
@@ -2243,6 +3074,8 @@ msgid "Transient"
 msgstr ""
 
 
+#: domainapp.modules.txn.dom.StatementSource#type
+#: domainapp.modules.txn.dom.Transaction#type
 #: org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract#type
 #: org.apache.isis.schema.common.v1.OidDto#type
 #: org.incode.example.settings.dom.jdo.ApplicationSettingJdo#type
@@ -2250,7 +3083,6 @@ msgstr ""
 #: org.incode.example.settings.dom.jdo.UserSettingJdo#type
 #: org.isisaddons.module.audit.dom.AuditEntry#type
 #: org.isisaddons.module.command.dom.CommandJdo#type
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#type
 #: org.isisaddons.module.security.dom.permission.ApplicationPermission#type
 #: org.isisaddons.module.security.dom.role.ApplicationRole#removePermission(org.isisaddons.module.security.dom.permission.ApplicationPermissionRule,org.apache.isis.core.metamodel.services.appfeat.ApplicationFeatureType,java.lang.String)
 msgid "Type"
@@ -2259,6 +3091,21 @@ msgstr ""
 
 #: org.isisaddons.module.security.app.feature.ApplicationClassProperty#typicalLength
 msgid "Typical Length"
+msgstr ""
+
+
+#: org.apache.isis.applib.services.xactn.TransactionService3$Policy#UNLESS_MARKED_FOR_ABORT
+msgid "Unless Marked For Abort"
+msgstr ""
+
+
+#: domainapp.modules.base.entity.WithNameAndDescription#update()
+#: domainapp.modules.rdr.dom.StatementReader#update()
+#: domainapp.modules.rdr.dom.StatementReaderType#update()
+#: domainapp.modules.ref.dom.Category#update()
+#: domainapp.modules.ref.dom.SubCategory#update()
+#: domainapp.modules.txn.dom.StatementSource#update()
+msgid "Update"
 msgstr ""
 
 
@@ -2325,7 +3172,6 @@ msgid "Update Fax Number"
 msgstr ""
 
 
-#: domainapp.modules.simple.dom.SimpleObject#updateName()
 #: org.isisaddons.module.security.dom.role.ApplicationRole#updateName()
 #: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy#updateName()
 #: org.isisaddons.module.security.dom.user.ApplicationUser#updateName()
@@ -2358,9 +3204,14 @@ msgid "Update Username"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessage#uri
-msgid "Uri"
+#: domainapp.modules.base.entity.WithNameAndDescription#update()
+#: domainapp.modules.base.entity.WithNameAndDescription_update#$$()
+#: domainapp.modules.rdr.dom.StatementReader#update()
+#: domainapp.modules.rdr.dom.StatementReaderType#update()
+#: domainapp.modules.ref.dom.Category#update()
+#: domainapp.modules.ref.dom.SubCategory#update()
+#: domainapp.modules.txn.dom.StatementSource#update()
+msgid "Update name and description"
 msgstr ""
 
 
@@ -2384,13 +3235,17 @@ msgstr ""
 #: org.incode.example.settings.dom.jdo.UserSettingsServiceJdo#newString(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 #: org.isisaddons.module.audit.dom.AuditEntry#user
 #: org.isisaddons.module.command.dom.CommandJdo#user
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent#user
 #: org.isisaddons.module.security.app.user.UserPermissionViewModel#user
 #: org.isisaddons.module.security.dom.user.HasUsername_open
 #: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#user
 #: org.isisaddons.module.sessionlogger.dom.SessionLogEntry$CausedBy2#USER
 #: org.isisaddons.module.sessionlogger.dom.SessionLoggingServiceMenu#findSessions(java.lang.String,org.joda.time.LocalDate,org.joda.time.LocalDate)
 msgid "User"
+msgstr ""
+
+
+#: org.apache.isis.schema.cmd.v1.CommandDto#userData
+msgid "User Data"
 msgstr ""
 
 
@@ -2414,6 +3269,7 @@ msgstr ""
 
 
 #: org.apache.isis.applib.services.config.ConfigurationProperty#value
+#: org.apache.isis.schema.cmd.v1.MapDto$Entry#value
 #: org.incode.example.settings.dom.ApplicationSettingMenu#newBoolean(java.lang.String,java.lang.String,java.lang.Boolean)
 #: org.incode.example.settings.dom.ApplicationSettingMenu#newInt(java.lang.String,java.lang.String,java.lang.Integer)
 #: org.incode.example.settings.dom.ApplicationSettingMenu#newLocalDate(java.lang.String,java.lang.String,org.joda.time.LocalDate)
@@ -2501,8 +3357,38 @@ msgid "Verb"
 msgstr ""
 
 
+#: domainapp.modules.rdr.dom.StatementReader#datanucleusVersionLong()
+#: domainapp.modules.rdr.dom.StatementReader#datanucleusVersionTimestamp()
+#: domainapp.modules.rdr.dom.StatementReaderType#datanucleusVersionLong()
+#: domainapp.modules.rdr.dom.StatementReaderType#datanucleusVersionTimestamp()
+#: domainapp.modules.ref.dom.Category#datanucleusVersionLong()
+#: domainapp.modules.ref.dom.Category#datanucleusVersionTimestamp()
+#: domainapp.modules.ref.dom.SubCategory#datanucleusVersionLong()
+#: domainapp.modules.ref.dom.SubCategory#datanucleusVersionTimestamp()
+#: domainapp.modules.txn.dom.StatementSource#datanucleusVersionLong()
+#: domainapp.modules.txn.dom.StatementSource#datanucleusVersionTimestamp()
+#: domainapp.modules.txn.dom.Transaction#datanucleusVersionLong()
+#: domainapp.modules.txn.dom.Transaction#datanucleusVersionTimestamp()
 #: org.apache.isis.core.metamodel.services.jdosupport.Persistable_datanucleusVersionLong#prop()
 #: org.apache.isis.core.metamodel.services.jdosupport.Persistable_datanucleusVersionTimestamp#prop()
+#: org.incode.example.settings.dom.jdo.ApplicationSettingJdo#datanucleusVersionLong()
+#: org.incode.example.settings.dom.jdo.ApplicationSettingJdo#datanucleusVersionTimestamp()
+#: org.incode.example.settings.dom.jdo.UserSettingJdo#datanucleusVersionLong()
+#: org.incode.example.settings.dom.jdo.UserSettingJdo#datanucleusVersionTimestamp()
+#: org.isisaddons.module.audit.dom.AuditEntry#datanucleusVersionLong()
+#: org.isisaddons.module.audit.dom.AuditEntry#datanucleusVersionTimestamp()
+#: org.isisaddons.module.command.dom.CommandJdo#datanucleusVersionLong()
+#: org.isisaddons.module.command.dom.CommandJdo#datanucleusVersionTimestamp()
+#: org.isisaddons.module.security.dom.permission.ApplicationPermission#datanucleusVersionLong()
+#: org.isisaddons.module.security.dom.permission.ApplicationPermission#datanucleusVersionTimestamp()
+#: org.isisaddons.module.security.dom.role.ApplicationRole#datanucleusVersionLong()
+#: org.isisaddons.module.security.dom.role.ApplicationRole#datanucleusVersionTimestamp()
+#: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy#datanucleusVersionLong()
+#: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy#datanucleusVersionTimestamp()
+#: org.isisaddons.module.security.dom.user.ApplicationUser#datanucleusVersionLong()
+#: org.isisaddons.module.security.dom.user.ApplicationUser#datanucleusVersionTimestamp()
+#: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#datanucleusVersionLong()
+#: org.isisaddons.module.sessionlogger.dom.SessionLogEntry#datanucleusVersionTimestamp()
 msgid "Version"
 msgstr ""
 
@@ -2539,14 +3425,11 @@ msgid "atPath"
 msgstr ""
 
 
-#: org.isisaddons.module.command.dom.CommandJdo
-msgid "causedException"
-msgstr ""
-
-
 #: org.apache.isis.applib.services.layout.Object_downloadLayoutXml
+#: org.apache.isis.applib.services.layout.Object_openRestApi
 #: org.apache.isis.applib.services.layout.Object_rebuildMetamodel
 #: org.apache.isis.core.metamodel.services.jdosupport.Persistable_downloadJdoMetadata
+#: org.isisaddons.module.command.dom.Object_recentCommands
 msgid "datanucleusIdLong"
 msgstr ""
 
@@ -2556,13 +3439,13 @@ msgid "description"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageService#log(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Integer,java.lang.String)
-msgid "detail"
+#: org.isisaddons.module.security.dom.user.ApplicationUser
+msgid "emailAddress"
 msgstr ""
 
 
-#: org.isisaddons.module.security.dom.user.ApplicationUser
-msgid "emailAddress"
+#: org.isisaddons.module.command.dom.CommandJdo_retry
+msgid "executeIn"
 msgstr ""
 
 
@@ -2581,19 +3464,9 @@ msgid "knownAs"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageService#log(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Integer,java.lang.String)
-msgid "message"
-msgstr ""
-
-
 #: org.isisaddons.module.security.dom.role.ApplicationRole
 #: org.isisaddons.module.security.dom.tenancy.ApplicationTenancy
 msgid "name"
-msgstr ""
-
-
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageService#log(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Integer,java.lang.String)
-msgid "oid"
 msgstr ""
 
 
@@ -2617,21 +3490,8 @@ msgid "roles"
 msgstr ""
 
 
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageService#log(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Integer,java.lang.String)
-msgid "status"
-msgstr ""
-
-
 #: org.isisaddons.module.command.dom.HasTransactionId_command
-#: org.isisaddons.module.publishmq.dom.jdo.events.PublishedEvent_republish
-#: org.isisaddons.module.publishmq.dom.jdo.mixins.HasTransactionId_publishedEvent
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageService#log(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Integer,java.lang.String)
 msgid "transactionId"
-msgstr ""
-
-
-#: org.isisaddons.module.publishmq.dom.jdo.status.StatusMessageService#log(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Integer,java.lang.String)
-msgid "uri"
 msgstr ""
 
 

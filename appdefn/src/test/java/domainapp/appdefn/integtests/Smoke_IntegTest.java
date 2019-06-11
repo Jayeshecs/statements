@@ -13,6 +13,7 @@ import org.junit.Test;
 import domainapp.appdefn.fixture.teardown.DomainAppTearDown;
 import domainapp.modules.txn.dom.DataProcessingMenu;
 import domainapp.modules.txn.dom.Transaction;
+import domainapp.modules.txn.view.dashboard.ManageTransactionDashboard;
 
 public class Smoke_IntegTest extends DomainAppIntegTestAbstract {
 
@@ -35,10 +36,15 @@ public class Smoke_IntegTest extends DomainAppIntegTestAbstract {
 
         // when
         // TODO: [JP]
-        List<Transaction> all = null;//wrap(menu).listAll();
+        ManageTransactionDashboard manageTransaction = wrap(menu).manageTransaction();
 
         // then
-        assertThat(all).isEmpty();
+        assertThat(manageTransaction).isNotNull();
+        
+        List<Transaction> transactions = manageTransaction.getTransactions();
+
+        // then
+        assertThat(transactions).isNotNull();
         
         transactionService.flushTransaction();
 

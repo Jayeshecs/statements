@@ -80,7 +80,8 @@
         </dependency>
 
     </dependencies>
-    
+
+<!-- 
     <profiles>
         <profile>
             <id>wicket-summernote</id>
@@ -97,5 +98,6 @@
             </dependencies>
         </profile>
     </profiles>
+ -->    
 
 </project>

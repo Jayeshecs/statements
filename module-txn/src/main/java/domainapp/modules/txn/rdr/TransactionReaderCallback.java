@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import domainapp.modules.rdr.api.IReaderCallback;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TransactionReaderCallback implements IReaderCallback<Transaction> {
 
+	@Programmatic
 	@Override
 	public void process(Collection<Transaction> records) {
 		int existingCount = 0;

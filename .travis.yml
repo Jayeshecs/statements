@@ -3,7 +3,11 @@ jdk:
 - oraclejdk8
 
 # Build everything in 'script' phase
-# install: /bin/true
+install: /bin/true
 
 #script:
 #- mvn clean install
+
+cache:
+  directories:
+- '$HOME/.m2/repository'

@@ -206,7 +206,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			@Parameter(optionality = Optionality.OPTIONAL)
 			@ParameterLayout(named = "Reference")
 			String reference) {
-		String rawdata = String.format("%t,%.2f,\"%s\",\"%s\"", transactionDate, amount, narration, reference);
+		String rawdata = String.format("%tF,%.2f,\"%s\",\"%s\"", transactionDate, amount, narration, reference);
 		transactionService.debit(statementSource, transactionDate, amount, narration, reference, rawdata);
 		return this;
 	}
@@ -238,7 +238,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			@Parameter(optionality = Optionality.OPTIONAL)
 			@ParameterLayout(named = "Reference")
 			String reference) {
-		String rawdata = String.format("%t,%.2f,\"%s\",\"%s\"", transactionDate, amount, narration, reference);
+		String rawdata = String.format("%tF,%.2f,\"%s\",\"%s\"", transactionDate, amount, narration, reference);
 		transactionService.credit(statementSource, transactionDate, amount, narration, reference, rawdata);
 		return this;
 	}

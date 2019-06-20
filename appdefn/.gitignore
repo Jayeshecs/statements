@@ -1,2 +1,4 @@
 activemq-data/*
 /target/
+
+translations.pot

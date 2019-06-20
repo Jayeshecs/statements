@@ -83,6 +83,14 @@
                     </mixins>
                 </configuration>
             </plugin>
+			<!-- refer https://stackoverflow.com/questions/31513037/jetty-startup-is-slow-with-bouncycastle-included-in-classpath -->
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<configuration>
+					<contextXml>jetty-web.xml</contextXml>
+				</configuration>
+			</plugin>
         </plugins>
     </build>
 

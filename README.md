@@ -29,8 +29,9 @@ mvn clean install
 mvn clean install -o
 ```
 
-### Running application
+# Running - Statements Manager
 
+### Run using maven jetty plugin
 ```
 mvn -pl webapp jetty:run
 ```
@@ -41,8 +42,9 @@ mvn -pl webapp jetty:run
 - Use below credentials to login
 -- username: `sven`
 -- password: `pass`
+- Goto menu ``Static Data > Manage Category`` to open dashboard where category and sub-categories can be added/edited/removed
 
-## More advanced use cases
+# More advanced use cases
 
 ### To enhance all JDO entities prior to running: +
 

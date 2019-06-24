@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import domainapp.modules.base.entity.NamedQueryConstants;
@@ -33,7 +35,7 @@ public class SubCategoryService extends AbstractService<SubCategory>{
 	}
 
 	@Programmatic
-	public SubCategory create(String name, String description) {
+	public SubCategory create(String name, @Parameter(optionality = Optionality.OPTIONAL) String description) {
 		SubCategory subCategory = SubCategory.builder().name(name).description(description).build();
 		subCategory = repositoryService.persistAndFlush(subCategory);
 		clearCache();

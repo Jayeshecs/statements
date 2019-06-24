@@ -15,9 +15,6 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.applib.services.repository.RepositoryService;
-import org.datanucleus.query.typesafe.BooleanExpression;
-import org.datanucleus.query.typesafe.PersistableExpression;
-import org.datanucleus.query.typesafe.TypesafeQuery;
 
 /**
  * @author jayeshecs

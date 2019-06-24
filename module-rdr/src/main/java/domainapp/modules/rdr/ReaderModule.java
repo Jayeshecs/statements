@@ -20,9 +20,15 @@ public class ReaderModule extends ModuleAbstract {
     }
 
     public static class PropertyDomainEvent<S,T>
-            extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> {}
+            extends org.apache.isis.applib.services.eventbus.PropertyDomainEvent<S,T> {
+		private static final long serialVersionUID = 1L;
+	}
     public static class CollectionDomainEvent<S,T>
-            extends org.apache.isis.applib.services.eventbus.CollectionDomainEvent<S,T> {}
+            extends org.apache.isis.applib.services.eventbus.CollectionDomainEvent<S,T> {
+		private static final long serialVersionUID = 1L;
+	}
     public static class ActionDomainEvent<S> extends
-            org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> {}
+            org.apache.isis.applib.services.eventbus.ActionDomainEvent<S> {
+		private static final long serialVersionUID = 1L;
+	}
 }

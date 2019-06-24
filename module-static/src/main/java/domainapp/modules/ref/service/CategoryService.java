@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
+import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import domainapp.modules.base.entity.NamedQueryConstants;
@@ -21,7 +23,7 @@ import domainapp.modules.ref.dom.Category;
 		nature = NatureOfService.DOMAIN,
 		repositoryFor = Category.class
 )
-public class CategoryService extends AbstractService<Category>{
+public class CategoryService extends AbstractService<Category> {
 
 	public CategoryService() {
 		super(Category.class);
@@ -33,7 +35,7 @@ public class CategoryService extends AbstractService<Category>{
 	}
 
 	@Programmatic
-	public Category create(String name, String description) {
+	public Category create(String name, @Parameter(optionality = Optionality.OPTIONAL) String description) {
     	Category newCategory = Category.builder().name(name).description(description).build();
     	Category category = repositoryService.persistAndFlush(newCategory);
     	return category;

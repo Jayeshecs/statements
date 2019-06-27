@@ -12,19 +12,23 @@
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="4">
+        <bs3:col span="3">
             <cpt:collection id="statementSources"/>
         </bs3:col>
-        <bs3:col span="8" unreferencedCollections="true">
-        	<cpt:fieldSet unreferencedProperties="true">
-	            <cpt:property id="filterDescription"/>
-        	</cpt:fieldSet>
-            <cpt:collection id="transactions">
-                <cpt:action id="changeCategory"/>
-                <cpt:action id="expense"/>
-                <cpt:action id="filter"/>
-                <cpt:action id="income"/>
-            </cpt:collection>
+        <bs3:col span="9" unreferencedCollections="true">
+		    <bs3:row>
+		        <bs3:col span="12">
+		        	<cpt:fieldSet unreferencedProperties="true">
+			            <cpt:property id="filterDescription"/>
+		        	</cpt:fieldSet>
+		            <cpt:collection id="transactions">
+		                <cpt:action id="changeCategory"/>
+		                <cpt:action id="expense"/>
+		                <cpt:action id="filter"/>
+		                <cpt:action id="income"/>
+		            </cpt:collection>
+		        </bs3:col>
+		    </bs3:row>
         </bs3:col>
     </bs3:row>
 </bs3:grid>

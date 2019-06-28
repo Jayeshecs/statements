@@ -1,17 +1,17 @@
-package domainapp.modules.plugin;
+package domainapp.modules.addon;
 
 import org.apache.isis.applib.AppManifestAbstract;
 
 /**
  * Used by <code>isis-maven-plugin</code> (build-time validation of the module) and also by module-level integration tests.
  */
-public class PluginModuleManifest extends AppManifestAbstract {
+public class AddonModuleManifest extends AppManifestAbstract {
 
     public static final Builder BUILDER = Builder.forModules(
-            PluginModule.class
+            AddonModule.class
     );
 
-    public PluginModuleManifest() {
+    public AddonModuleManifest() {
         super(BUILDER);
     }
 

@@ -13,15 +13,15 @@
     </bs3:row>
     <bs3:row>
         <bs3:col span="4" unreferencedCollections="true">
-            <cpt:collection id="pluginTypes">
-                <cpt:action id="createPluginType"/>
-                <cpt:action id="deletePluginTypes"/>
+            <cpt:collection id="addonTypes">
+                <cpt:action id="createAddonType"/>
+                <cpt:action id="deleteAddonTypes"/>
             </cpt:collection>
         </bs3:col>
         <bs3:col span="8" unreferencedCollections="true">
-            <cpt:collection id="plugins">
-                <cpt:action id="createPlugin"/>
-                <cpt:action id="deletePlugins"/>
+            <cpt:collection id="addons">
+                <cpt:action id="createAddon"/>
+                <cpt:action id="deleteAddons"/>
             </cpt:collection>
         </bs3:col>
     </bs3:row>

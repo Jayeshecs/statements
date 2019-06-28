@@ -60,13 +60,13 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>statements-module-plugin</artifactId>
+                <artifactId>statements-module-addon</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>statements-module-plugin</artifactId>
+                <artifactId>statements-module-addon</artifactId>
                 <scope>test</scope>
                 <type>test-jar</type>
                 <version>${project.version}</version>
@@ -165,7 +165,7 @@
                 </property>
             </activation>
             <modules>
-                <module>module-plugin</module>
+                <module>module-addon</module>
                 <module>module-static</module>
                 <module>module-rdr</module>
                 <module>module-txn</module>
@@ -181,7 +181,7 @@
             </activation>
             <modules>
                 <module>module-base</module>
-                <module>module-plugin</module>
+                <module>module-addon</module>
                 <module>module-static</module>
                 <module>module-rdr</module>
                 <module>module-txn</module>

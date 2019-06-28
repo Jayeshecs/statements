@@ -108,12 +108,12 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>statements-module-plugin</artifactId>
+            <artifactId>statements-module-addon</artifactId>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>statements-module-plugin</artifactId>
+            <artifactId>statements-module-addon</artifactId>
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>

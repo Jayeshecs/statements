@@ -1,4 +1,4 @@
-package domainapp.modules.plugin.dom;
+package domainapp.modules.addon.dom;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -14,11 +14,12 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import domainapp.modules.addon.AddonModule.ActionDomainEvent;
+import domainapp.modules.base.entity.Activable;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
 import domainapp.modules.base.entity.WithNameAndDescription;
-import domainapp.modules.plugin.PluginModule.ActionDomainEvent;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,26 +38,26 @@ import lombok.ToString;
         column="version")
 @javax.jdo.annotations.Queries({
 		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL, value = "SELECT "
-				+ "FROM domainapp.modules.plugin.dom.PluginType "),
+				+ "FROM domainapp.modules.addon.dom.Addon "),
 		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL_ACTIVE, value = "SELECT "
-				+ "FROM domainapp.modules.plugin.dom.PluginType "),
+				+ "FROM domainapp.modules.addon.dom.Addon "),
 		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_FIND_BY_NAME, value = "SELECT "
-				+ "FROM domainapp.modules.plugin.dom.PluginType " + "WHERE name.indexOf(:name) >= 0 ") })
-@javax.jdo.annotations.Unique(name="PluginType_name_UNQ", members = {"name"})
+				+ "FROM domainapp.modules.addon.dom.Addon " + "WHERE name.indexOf(:name) >= 0 ") })
+@javax.jdo.annotations.Unique(name="Addon_name_UNQ", members = {"name"})
 @DomainObject(
         auditing = Auditing.ENABLED, 
-        objectType = "plugin.PluginType",
+        objectType = "addon.Addon",
         bounded = true
 ) // objectType inferred from @PersistenceCapable#schema
 @DomainObjectLayout(
-		named = "PluginType",
-		plural = "PluginTypes",
-		describedAs = "Nature of Plugin"
+		named = "Addon",
+		plural = "Addons",
+		describedAs = "Addon detail"
 )
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
 @EqualsAndHashCode(of = {"name"})
 @ToString(of = {"name"})
-public class PluginType implements Comparable<PluginType>, WithNameAndDescription {
+public class Addon implements Comparable<Addon>, WithNameAndDescription, Activable {
 	
 	@javax.jdo.annotations.Column(allowsNull = "false", length = WithName.MAX_LEN)
     @Title
@@ -76,13 +77,58 @@ public class PluginType implements Comparable<PluginType>, WithNameAndDescriptio
     @Getter @Setter
     private String description;
 
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Property(
+            editing = Editing.ENABLED,
+            command = CommandReification.ENABLED,
+            publishing = Publishing.ENABLED
+    )
+    @Getter @Setter
+    private AddonType addonType;
+
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property(
+            editing = Editing.ENABLED,
+            command = CommandReification.ENABLED,
+            publishing = Publishing.ENABLED
+    )
+    @Getter @Setter
+    private String className;
+
+    @javax.jdo.annotations.Column(allowsNull = "true")
+    @Property(
+            editing = Editing.ENABLED,
+            command = CommandReification.ENABLED,
+            publishing = Publishing.ENABLED
+    )
+    @Getter @Setter
+    private String library;
+    
+    @javax.jdo.annotations.Column(allowsNull = "true", defaultValue = "true")
+    @Property(
+            editing = Editing.DISABLED,
+            command = CommandReification.ENABLED,
+            publishing = Publishing.ENABLED
+    )
+    @Getter @Setter
+    private Boolean active;
+
     @Builder
-    public PluginType(final String name, final String description) {
+    public Addon(final String name, final String description, final AddonType addonType, final String className, final String library) {
         setName(name);
         setDescription(description);
+        setAddonType(addonType);
+        setClassName(className);
+        setLibrary(library);
+        setActive(true);
     }
     
-    public static class CreateEvent extends ActionDomainEvent<PluginType> {
+    @Override
+    public Boolean isActive() {
+    	return getActive() != null ? getActive() : true;
+    }
+    
+    public static class CreateEvent extends ActionDomainEvent<Addon> {
 		private static final long serialVersionUID = 1L;
     }
 
@@ -90,7 +136,7 @@ public class PluginType implements Comparable<PluginType>, WithNameAndDescriptio
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(final PluginType other) {
+    public int compareTo(final Addon other) {
     	if (other == null) {
     		return -1;
     	}

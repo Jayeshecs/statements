@@ -8,12 +8,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>statements-module-plugin</artifactId>
-    <name>Outil Finance Plugin Module</name>
+    <artifactId>statements-module-addon</artifactId>
+    <name>Outil Finance Addon Module</name>
 
     <properties>
         <isis-maven-plugin.validate.appManifest>
-            domainapp.modules.plugin.PluginModuleManifest
+            domainapp.modules.addon.AddonModuleManifest
         </isis-maven-plugin.validate.appManifest>
 
         <maven-checkstyle-plugin.configLocation>${project.parent.basedir}/_checks/checkstyle.xml</maven-checkstyle-plugin.configLocation>

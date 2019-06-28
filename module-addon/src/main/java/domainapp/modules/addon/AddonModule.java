@@ -1,4 +1,4 @@
-package domainapp.modules.plugin;
+package domainapp.modules.addon;
 
 import java.util.Set;
 
@@ -12,7 +12,7 @@ import org.apache.isis.applib.ModuleAbstract;
 import domainapp.modules.base.BaseModule;
 
 @XmlRootElement(name = "module")
-public class PluginModule extends ModuleAbstract {
+public class AddonModule extends ModuleAbstract {
 
     @Override
     public Set<Module> getDependencies() {

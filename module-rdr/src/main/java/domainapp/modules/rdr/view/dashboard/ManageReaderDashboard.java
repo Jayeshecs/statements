@@ -95,7 +95,7 @@ public class ManageReaderDashboard {
     		@ParameterLayout(labelPosition = LabelPosition.TOP, named = "Description", multiLine = 4, describedAs = "Enter description of new reader type that will be created")
     		final String description,
     		@Parameter(optionality = Optionality.MANDATORY)
-    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Class Name", describedAs = "Enter class name of new reader type that will be created")
+    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Addon", describedAs = "Select addon for new reader type that will be created")
     		final Addon addon
     		) {
     	StatementReaderType statementReaderType = statementReaderTypeService.create(name, description, addon);

@@ -41,8 +41,8 @@ import lombok.ToString;
 				+ "FROM domainapp.modules.addon.dom.Addon "),
 		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL_ACTIVE, value = "SELECT "
 				+ "FROM domainapp.modules.addon.dom.Addon "),
-		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL_ACTIVE, value = "SELECT "
-				+ "FROM domainapp.modules.addon.dom.Addon "),
+		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_FIND_BY_NAME, value = "SELECT "
+				+ "FROM domainapp.modules.addon.dom.Addon " + "WHERE name.indexOf(:name) >= 0 "),
 		@javax.jdo.annotations.Query(name = Addon.QUERY_FIND_BY_ADDON_TYPE, value = "SELECT "
 				+ "FROM domainapp.modules.addon.dom.Addon " + "WHERE addonType == :addonType ") })
 @javax.jdo.annotations.Unique(name="Addon_name_UNQ", members = {"name"})

@@ -3,6 +3,7 @@
  */
 package domainapp.modules.rdr.view.dashboard;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +21,14 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.services.i18n.TranslatableString;
+import org.apache.isis.applib.services.message.MessageService;
 
+import domainapp.modules.addon.dom.Addon;
+import domainapp.modules.addon.dom.AddonType;
+import domainapp.modules.addon.service.AddonService;
+import domainapp.modules.addon.service.AddonTypeService;
+import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
 import domainapp.modules.rdr.dom.StatementReader;
@@ -88,11 +96,33 @@ public class ManageReaderDashboard {
     		final String description,
     		@Parameter(optionality = Optionality.MANDATORY)
     		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Class Name", describedAs = "Enter class name of new reader type that will be created")
-    		final String className
+    		final Addon addon
     		) {
-    	StatementReaderType statementReaderType = statementReaderTypeService.create(name, description, className);
+    	StatementReaderType statementReaderType = statementReaderTypeService.create(name, description, addon);
     	Objects.requireNonNull(statementReaderType, "Reader type could not be created, check log for more detail");
     	return this;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<Addon> choice2CreateStatementReaderType() {
+    	List<AddonType> list = addonTypeService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", StatementReaderType.ADDON_TYPE_NAME);
+    	if (list == null || list.isEmpty()) {
+    		messageService.raiseError(TranslatableString.tr("Required addon type '${addonType}' not found for statement reader", "addonType", StatementReaderType.ADDON_TYPE_NAME), getClass(), "choice2CreateStatementReaderType");
+    		return Collections.EMPTY_LIST;
+    	}
+    	AddonType addonType = null;
+    	for (AddonType type : list) {
+    		if (type.getName().equals(StatementReaderType.ADDON_TYPE_NAME)) {
+    			addonType = type;
+    			break;
+    		}
+    	}
+    	if (addonType == null) {
+    		messageService.raiseError(TranslatableString.tr("Required addon type '${addonType}' not found for statement reader", "addonType", StatementReaderType.ADDON_TYPE_NAME), getClass(), "choice2CreateStatementReaderType");
+    		return Collections.EMPTY_LIST;
+    	}
+    	List<Addon> addonList = addonService.search(Addon.QUERY_FIND_BY_ADDON_TYPE, "addonType", addonType);
+    	return addonList;
     }
     
     @Action(
@@ -138,4 +168,13 @@ public class ManageReaderDashboard {
 	
 	@Inject
 	StatementReaderService statementReaderService;
+    
+    @Inject
+    MessageService messageService;
+    
+    @Inject
+    AddonService addonService;
+    
+    @Inject
+    AddonTypeService addonTypeService;
 }

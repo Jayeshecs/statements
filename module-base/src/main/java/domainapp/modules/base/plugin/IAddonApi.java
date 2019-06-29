@@ -8,15 +8,15 @@ package domainapp.modules.base.plugin;
  * 
  * @author Prajapati
  */
-public interface IPlugin {
+public interface IAddonApi {
 
 	/**
 	 * install this plugin
 	 */
-	void install() throws PluginException;
+	void install() throws AddonException;
 	
 	/**
 	 * remove this plugin
 	 */
-	void uninstall() throws PluginException;
+	void uninstall() throws AddonException;
 }

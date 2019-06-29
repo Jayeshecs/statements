@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import domainapp.modules.addon.dom.Addon;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.service.AbstractService;
 import domainapp.modules.rdr.dom.StatementReaderType;
@@ -34,8 +35,8 @@ public class StatementReaderTypeService extends AbstractService<StatementReaderT
 	}
 
 	@Programmatic
-	public StatementReaderType create(String name, String description, String className) {
-		StatementReaderType newStatementReaderType = StatementReaderType.builder().name(name).description(description).className(className).build();
+	public StatementReaderType create(String name, String description, Addon addon) {
+		StatementReaderType newStatementReaderType = StatementReaderType.builder().name(name).description(description).addon(addon).build();
 		StatementReaderType statementReaderType = repositoryService.persistAndFlush(newStatementReaderType);
     	return statementReaderType;
 	}

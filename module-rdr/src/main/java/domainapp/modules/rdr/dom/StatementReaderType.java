@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
+import domainapp.modules.addon.dom.Addon;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
@@ -55,17 +56,10 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"name"})
 @ToString(of = {"name"})
 public class StatementReaderType implements Comparable<StatementReaderType>, WithNameAndDescription {
-	
-	public static final int CLASSNAME_MAX_LEN = 256;
-	
-    @Builder
-    public StatementReaderType(final String name, final String description, final String className) {
-        setName(name);
-        setDescription(description);
-        setClassName(className);
-    }
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = WithName.MAX_LEN)
+    public static final String ADDON_TYPE_NAME = "Statement Reader";
+
+	@javax.jdo.annotations.Column(allowsNull = "false", length = WithName.MAX_LEN)
     @Title(prepend = "RTYP ")
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
@@ -80,7 +74,7 @@ public class StatementReaderType implements Comparable<StatementReaderType>, Wit
     @Getter @Setter
     private String description;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = CLASSNAME_MAX_LEN)
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Property(
     		editing = Editing.ENABLED,
     		command = CommandReification.ENABLED,
@@ -88,7 +82,14 @@ public class StatementReaderType implements Comparable<StatementReaderType>, Wit
     )
     @Getter @Setter
     @MemberOrder(sequence = "3")
-    private String className;
+    private Addon addon;
+    
+    @Builder
+    public StatementReaderType(final String name, final String description, final Addon addon) {
+    	setName(name);
+    	setDescription(description);
+    	setAddon(addon);
+    }
     
     public static class CreateEvent extends ActionDomainEvent<StatementReaderType> {
 		private static final long serialVersionUID = 1L;

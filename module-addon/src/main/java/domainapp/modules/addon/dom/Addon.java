@@ -41,8 +41,10 @@ import lombok.ToString;
 				+ "FROM domainapp.modules.addon.dom.Addon "),
 		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL_ACTIVE, value = "SELECT "
 				+ "FROM domainapp.modules.addon.dom.Addon "),
-		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_FIND_BY_NAME, value = "SELECT "
-				+ "FROM domainapp.modules.addon.dom.Addon " + "WHERE name.indexOf(:name) >= 0 ") })
+		@javax.jdo.annotations.Query(name = NamedQueryConstants.QUERY_ALL_ACTIVE, value = "SELECT "
+				+ "FROM domainapp.modules.addon.dom.Addon "),
+		@javax.jdo.annotations.Query(name = Addon.QUERY_FIND_BY_ADDON_TYPE, value = "SELECT "
+				+ "FROM domainapp.modules.addon.dom.Addon " + "WHERE addonType == :addonType ") })
 @javax.jdo.annotations.Unique(name="Addon_name_UNQ", members = {"name"})
 @DomainObject(
         auditing = Auditing.ENABLED, 
@@ -58,6 +60,13 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"name"})
 @ToString(of = {"name"})
 public class Addon implements Comparable<Addon>, WithNameAndDescription, Activable {
+	
+	public static final int CLASSNAME_MAX_LEN = 256;
+	
+	/**
+	 * Named query constant for getting all active or enabled records
+	 */
+	public static final String QUERY_FIND_BY_ADDON_TYPE = "findByAddonType"; //$NON-NLS-1$
 	
 	@javax.jdo.annotations.Column(allowsNull = "false", length = WithName.MAX_LEN)
     @Title
@@ -86,7 +95,7 @@ public class Addon implements Comparable<Addon>, WithNameAndDescription, Activab
     @Getter @Setter
     private AddonType addonType;
 
-    @javax.jdo.annotations.Column(allowsNull = "true")
+    @javax.jdo.annotations.Column(allowsNull = "true", length = CLASSNAME_MAX_LEN)
     @Property(
             editing = Editing.ENABLED,
             command = CommandReification.ENABLED,
@@ -103,6 +112,15 @@ public class Addon implements Comparable<Addon>, WithNameAndDescription, Activab
     )
     @Getter @Setter
     private String library;
+
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Property(
+            editing = Editing.ENABLED,
+            command = CommandReification.ENABLED,
+            publishing = Publishing.ENABLED
+    )
+    @Getter @Setter
+    private Boolean embedded;
     
     @javax.jdo.annotations.Column(allowsNull = "true", defaultValue = "true")
     @Property(
@@ -114,12 +132,13 @@ public class Addon implements Comparable<Addon>, WithNameAndDescription, Activab
     private Boolean active;
 
     @Builder
-    public Addon(final String name, final String description, final AddonType addonType, final String className, final String library) {
+    public Addon(final String name, final String description, final AddonType addonType, final String className, final String library, final Boolean embedded) {
         setName(name);
         setDescription(description);
         setAddonType(addonType);
         setClassName(className);
         setLibrary(library);
+        setEmbedded(embedded);
         setActive(true);
     }
     

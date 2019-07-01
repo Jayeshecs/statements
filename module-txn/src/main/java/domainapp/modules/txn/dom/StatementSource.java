@@ -17,6 +17,7 @@ import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
 import domainapp.modules.base.entity.WithNameAndDescription;
+import domainapp.modules.ref.StaticModule.ActionDomainEvent;
 import domainapp.modules.ref.dom.StatementSourceType;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -54,6 +55,10 @@ import lombok.ToString;
 @EqualsAndHashCode(of = {"name"})
 @ToString(of = {"name"})
 public class StatementSource implements Comparable<StatementSource>, WithNameAndDescription {
+    
+    public static class CreateEvent extends ActionDomainEvent<StatementSource> {
+		private static final long serialVersionUID = 1L;
+    }
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = WithName.MAX_LEN)
     @Title(prepend = "")

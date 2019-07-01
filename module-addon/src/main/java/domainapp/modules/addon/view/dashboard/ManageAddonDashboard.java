@@ -7,7 +7,6 @@ import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
 import java.util.Properties;
 
@@ -145,7 +144,7 @@ public class ManageAddonDashboard {
     			 * Transfer jar file to library location
     			 */
     			log.info("Transfering addon library to temporary location ...");			
-    			tempFile = Files.createTempFile(library.getName().replace(".jar", ""), ".jar", PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rw-rw-rw-")));
+    			tempFile = Files.createTempFile("", library.getName());
     			Files.copy(new ByteArrayInputStream(library.getBytes()), tempFile, StandardCopyOption.REPLACE_EXISTING);
     		}
     		

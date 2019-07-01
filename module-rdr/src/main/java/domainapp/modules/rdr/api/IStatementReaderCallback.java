@@ -5,6 +5,9 @@ package domainapp.modules.rdr.api;
 
 import java.util.Collection;
 
+import domainapp.modules.base.reader.IReaderCallback;
+import domainapp.modules.rdr.addon.IStatementReaderContext;
+
 /**
  * Specification for reader callback where a collection of records <T> are made
  * available to {@link #process(Collection)} API
@@ -12,13 +15,6 @@ import java.util.Collection;
  * @author jayeshecs
  *
  */
-public interface IReaderCallback<T> {
-
-	/**
-	 * Process given records
-	 * 
-	 * @param records
-	 */
-	void process(Collection<T> records);
+public interface IStatementReaderCallback extends IReaderCallback<IStatementReaderContext, IStatementRecord> {
 
 }

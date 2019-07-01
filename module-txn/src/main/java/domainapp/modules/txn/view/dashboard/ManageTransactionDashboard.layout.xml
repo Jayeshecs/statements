@@ -9,11 +9,14 @@
             <cpt:action id="openRestApi"/>
             <cpt:action id="rebuildMetamodel"/>
             <cpt:action id="recentCommands"/>
+            <cpt:action id="uploadStatement" cssClass="btn-primary"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>
         <bs3:col span="3">
-            <cpt:collection id="statementSources"/>
+            <cpt:collection id="statementSources">
+                <cpt:action id="createStatementSource" />
+            </cpt:collection>
         </bs3:col>
         <bs3:col span="9" unreferencedCollections="true">
 		    <bs3:row>
@@ -23,9 +26,9 @@
 		        	</cpt:fieldSet>
 		            <cpt:collection id="transactions">
 		                <cpt:action id="changeCategory"/>
-		                <cpt:action id="expense"/>
 		                <cpt:action id="filter"/>
-		                <cpt:action id="income"/>
+		                <cpt:action id="expense" position="PANEL_DROPDOWN"/>
+		                <cpt:action id="income" position="PANEL_DROPDOWN"/>
 		            </cpt:collection>
 		        </bs3:col>
 		    </bs3:row>

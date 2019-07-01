@@ -14,9 +14,9 @@ import domainapp.modules.addon.dom.Addon;
 import domainapp.modules.addon.service.AddonService;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.plugin.IAddonApi;
+import domainapp.modules.rdr.addon.hdfc.HDFCBankAccountStatementReader;
+import domainapp.modules.rdr.addon.hdfc.HDFCCreditcardStatementReader;
 import domainapp.modules.rdr.dom.StatementReaderType;
-import domainapp.modules.rdr.hdfc.HDFCBankAccountStatementReader;
-import domainapp.modules.rdr.hdfc.HDFCCreditcardStatementReader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

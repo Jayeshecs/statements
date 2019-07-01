@@ -3,30 +3,16 @@
  */
 package domainapp.modules.rdr.api;
 
-import java.io.File;
-import java.util.Properties;
+import domainapp.modules.base.plugin.IAddonApi;
+import domainapp.modules.base.reader.IReader;
+import domainapp.modules.rdr.addon.IStatementReaderContext;
 
 /**
  * Specification for statement reader
  * 
  * @author jayeshecs
- * @see IReaderCallback
+ * @see IStatementReaderCallback
  */
-public interface IStatementReader<T> {
-
-	/**
-	 * Initialize reader with given config properties
-	 * 
-	 * @param config
-	 */
-	void initialize(Properties config);
-
-	/**
-	 * Read from inputfile and feedback transformed object to given {@link IReaderCallback}
-	 * 
-	 * @param inputFile
-	 * @param readerCallback
-	 */
-	void read(File inputFile, IReaderCallback<T> readerCallback);
+public interface IStatementReader extends IAddonApi, IReader<IStatementReaderContext, IStatementRecord, IStatementReaderCallback> {
 
 }

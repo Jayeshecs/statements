@@ -10,7 +10,6 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.LabelPosition;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Publishing;
@@ -89,7 +88,11 @@ public class StatementReader implements Comparable<StatementReader>, WithNameAnd
     private StatementReaderType readerType;
     
     @javax.jdo.annotations.Column(allowsNull = "true", length = PROPERTIES_MAX_LEN)
-	@Property(optionality = Optionality.OPTIONAL)
+	@Property(
+			editing = Editing.ENABLED,
+			command = CommandReification.ENABLED,
+			publishing = Publishing.ENABLED
+	)
     @PropertyLayout(labelPosition = LabelPosition.TOP, multiLine = 4, describedAs = "Standard property file format to specify properties to be used by this statement reader")
     @MemberOrder(sequence = "4")
     @lombok.Getter @lombok.Setter

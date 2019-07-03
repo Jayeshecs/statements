@@ -6,9 +6,10 @@ import java.util.Map;
 /**
  * Statement reader record
  */
-public class AbstractRecord<F extends Enum<?>> implements IRecord<F> {
+public abstract class AbstractRecord<F extends Enum<?>> implements IRecord<F> {
 	
 	private Map<F, Object> values;
+	private Boolean filtered = Boolean.FALSE;
 	
 	public AbstractRecord() {
 		values = new HashMap<>();
@@ -22,5 +23,15 @@ public class AbstractRecord<F extends Enum<?>> implements IRecord<F> {
 	public <T> IRecord<F> set(F field, T value) {
 		values.put(field, value);
 		return this;
+	}
+
+	@Override
+	public Boolean isFiltered() {
+		return filtered;
+	}
+
+	@Override
+	public void markAsFiltered() {
+		filtered = Boolean.TRUE;
 	}
 }

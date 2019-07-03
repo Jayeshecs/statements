@@ -10,8 +10,8 @@ import domainapp.modules.base.reader.IReaderContext;
 
 /**
  * Specification for reader context for statement reader
+ * 
  * @author Prajapati
- *
  */
 public interface IStatementReaderContext extends IReaderContext<IStatementReaderContext> {
 

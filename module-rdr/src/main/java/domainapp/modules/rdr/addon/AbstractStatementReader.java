@@ -5,6 +5,7 @@ package domainapp.modules.rdr.addon;
 
 import java.io.File;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import domainapp.modules.base.plugin.AddonException;
 import domainapp.modules.rdr.api.IStatementReader;
@@ -18,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class AbstractStatementReader implements IStatementReader {
+
+	protected static final Pattern CSV_REGEX_PATTERN = Pattern.compile("(\"(?:[^\"]|\"\")*\"|[^,\"\\n\\r]*)(,|\\r?\\n|\\r)");
 
 	@Override
 	public void install() throws AddonException {
@@ -46,5 +49,25 @@ public abstract class AbstractStatementReader implements IStatementReader {
 	 * @param callback {@link IStatementReaderCallback}
 	 */
 	protected abstract void read(IStatementReaderContext context, File inputFile, Properties config, IStatementReaderCallback callback);
+	
+	/**
+	 * Remove enclosing quotes and ending delimiter.<br>
+	 * "Paid For Order", => Paid For Order<br>
+	 * 
+	 * @param text
+	 * @return
+	 */
+	protected String sanitizeCsvValue(String text) {
+		if (text == null) {
+			return null;
+		}
+		text = text.trim();
+		if (text.charAt(0) == '"' && text.endsWith("\",")) {
+			return text.substring(1, text.length() - 2).trim();
+		} else if (text.charAt(text.length() - 1) == ',') {
+			return text.substring(0, text.length() - 1).trim();
+		}
+		return text.trim();
+	}
 
 }

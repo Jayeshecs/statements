@@ -47,12 +47,17 @@ public class TransactionReaderCallback implements IStatementReaderCallback {
 		int existingCount = 0;
 		List<Transaction> transactionToSave = new ArrayList<>();
 		for (IStatementRecord record : records) {
+			if (record.isFiltered()) {
+				context.addFilteredCount(1);
+				continue;
+			}
 			String rawdata = record.get(Field.RAWDATA);
 			if (rawdata != null && !rawdata.trim().isEmpty()) {
 				List<Transaction> result = transactionService.search(Transaction.QUERY_FIND_BY_RAWDATA, "rawdata", rawdata);
 				if (result != null && !result.isEmpty()) {
 					// skip transaction because it is already present
 					existingCount++;
+					context.addSkippedCount(1);
 					continue ;
 				}
 			}

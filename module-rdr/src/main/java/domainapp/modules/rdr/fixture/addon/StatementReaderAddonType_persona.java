@@ -17,8 +17,9 @@ import domainapp.modules.rdr.dom.StatementReaderType;
 import lombok.AllArgsConstructor;
 
 /**
+ * Fixture for {@link AddonType}
+ * 
  * @author Prajapati
- *
  */
 @AllArgsConstructor
 public enum StatementReaderAddonType_persona implements PersonaWithBuilderScript<AddonType, StatementReaderAddonTypeBuilder>, PersonaWithFinder<AddonType> {

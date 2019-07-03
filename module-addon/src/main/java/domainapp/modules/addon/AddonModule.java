@@ -4,11 +4,15 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.google.common.collect.Sets;
-
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.ModuleAbstract;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.teardown.TeardownFixtureAbstract2;
 
+import com.google.common.collect.Sets;
+
+import domainapp.modules.addon.dom.Addon;
+import domainapp.modules.addon.dom.AddonType;
 import domainapp.modules.base.BaseModule;
 
 @XmlRootElement(name = "module")
@@ -17,6 +21,17 @@ public class AddonModule extends ModuleAbstract {
     @Override
     public Set<Module> getDependencies() {
         return Sets.newHashSet(new BaseModule());
+    }
+    
+    @Override
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureAbstract2() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                deleteFrom(Addon.class);
+                deleteFrom(AddonType.class);
+            }
+        };
     }
 
     public static class PropertyDomainEvent<S,T>

@@ -17,6 +17,7 @@ import domainapp.modules.base.plugin.IAddonApi;
 import domainapp.modules.rdr.addon.hdfc.HDFCBankAccountStatementReader;
 import domainapp.modules.rdr.addon.hdfc.HDFCCreditcardStatementReader;
 import domainapp.modules.rdr.addon.kotak.KOTAKBankAccountStatementReader;
+import domainapp.modules.rdr.addon.kotak.KOTAKCreditcardStatementReader;
 import domainapp.modules.rdr.addon.paytm.PayTMWalletStatementReader;
 import domainapp.modules.rdr.dom.StatementReaderType;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,7 @@ public enum StatementReaderAddon_persona implements PersonaWithBuilderScript<Add
 	HDFC_BANK_ACCOUNT("HDFC Bank Account reader", StatementReaderType.ADDON_TYPE_NAME, HDFCBankAccountStatementReader.class),
 	HDFC_CREDITCARD("HDFC Creditcard reader", StatementReaderType.ADDON_TYPE_NAME, HDFCCreditcardStatementReader.class),
 	KOTAK_BANK_ACCOUNT("KOTAK Bank Account reader", StatementReaderType.ADDON_TYPE_NAME, KOTAKBankAccountStatementReader.class),
+	KOTAK_CREDITCARD("KOTAK Creditcard reader", StatementReaderType.ADDON_TYPE_NAME, KOTAKCreditcardStatementReader.class),
 	PAYTM_WALLET("PayTM Wallet reader", StatementReaderType.ADDON_TYPE_NAME, PayTMWalletStatementReader.class)
 	;
 

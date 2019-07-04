@@ -26,6 +26,7 @@ public enum StatementReader_persona implements PersonaWithBuilderScript<Statemen
 	HDFC_BANK("HDFC Bank Account", StatementReaderType_persona.HDFC_BANK.getName()),
 	HDFC_CREDITCARD("HDFC Creditcard", StatementReaderType_persona.HDFC_CREDITCARD.getName()),
 	KOTAK_BANK("KOTAK Bank Account", StatementReaderType_persona.KOTAK_BANK.getName()),
+	KOTAK_CREDITCARD("KOTAK Creditcard", StatementReaderType_persona.KOTAK_CREDITCARD.getName()),
 	PAYTM_WALLET("PayTM Wallet", StatementReaderType_persona.PAYTM_WALLET.getName()),
 	;
 

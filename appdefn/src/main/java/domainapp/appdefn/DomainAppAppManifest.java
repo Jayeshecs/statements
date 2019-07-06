@@ -19,7 +19,7 @@ import org.isisaddons.wicket.pdfjs.cpt.PdfjsCptModule;
 import org.isisaddons.wicket.summernote.cpt.ui.SummernoteUiModule;
 import org.isisaddons.wicket.wickedcharts.cpt.ui.WickedChartsUiModule;
 
-import domainapp.appdefn.seed.security.SeedSuperAdministratorRoleAndSvenSuperUser;
+import domainapp.appdefn.seed.security.SeedSuperAdministratorRoleAndAdminUser;
 
 public class DomainAppAppManifest extends AppManifestAbstract2 {
 
@@ -90,7 +90,7 @@ public class DomainAppAppManifest extends AppManifestAbstract2 {
     @Override
     protected void overrideFixtures(final List<Class<? extends FixtureScript>> fixtureScripts) {
         // using withFixtureScripts(...) is broken in 1.16.0
-        fixtureScripts.add(SeedSuperAdministratorRoleAndSvenSuperUser.class);
+        fixtureScripts.add(SeedSuperAdministratorRoleAndAdminUser.class);
     }
 
 }

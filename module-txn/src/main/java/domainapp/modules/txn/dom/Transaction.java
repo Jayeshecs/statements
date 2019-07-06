@@ -43,7 +43,7 @@ import lombok.ToString;
 			+ "FROM domainapp.modules.txn.dom.Transaction "
 			+ "WHERE rawdata == :rawdata")
 })
-@javax.jdo.annotations.Unique(name="Transaction_hash_UNQ", members = {"source", "type", "transactionDate", "narration", "reference", "amount"})
+@javax.jdo.annotations.Unique(name="Transaction_hash_UNQ", members = {"source", "rawdata"})
 @DomainObject(
         auditing = Auditing.ENABLED
 ) // objectType inferred from @PersistenceCapable#schema
@@ -101,12 +101,6 @@ public class Transaction implements Comparable<Transaction> {
 	@MemberOrder(sequence = "6")
 	@lombok.Getter @lombok.Setter @lombok.NonNull
 	private Date transactionDate;
-//	TODO: is this needed ? Mostly NO
-//    @javax.jdo.annotations.Column(allowsNull = "false")
-//	@Property(editing = Editing.ENABLED)
-//	@MemberOrder(sequence = "7")
-//	@lombok.Getter @lombok.Setter @lombok.NonNull
-//	private Date valueDate;
 	
     @javax.jdo.annotations.Column(allowsNull = "false", length = 4000)
 	@Property(editing = Editing.ENABLED)

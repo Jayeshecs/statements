@@ -63,7 +63,7 @@ public class TransactionReaderCallback implements IStatementReaderCallback {
 			}
 			Boolean credit = record.get(Field.CREDIT);
 			
-			Transaction transaction = transactionService.create(
+			Transaction transaction = transactionService.createNoSave(
 					credit ? TransactionType.CREDIT : TransactionType.DEBIT, 
 					statementSource, 
 					record.get(Field.DATE), 
@@ -73,7 +73,12 @@ public class TransactionReaderCallback implements IStatementReaderCallback {
 					rawdata);
 			transactionToSave.add(transaction);
 		}
-		transactionService.save(transactionToSave);
+		try {
+			transactionService.save(transactionToSave);
+		} catch (Exception e) {
+			log.error(e.getMessage() + "\n" + transactionToSave.toString());
+			context.addErrorCount(transactionToSave.size());
+		}
 		log.info(String.format("Inserted %d of %d transactions", (records.size() - existingCount), records.size()));
 	}
 	

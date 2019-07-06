@@ -57,6 +57,7 @@ public class HDFCBankAccountStatementReader extends AbstractStatementReader {
 					log.error(String.format("Parsing failed for record : %s", record));
 					log.error(String.format("Error: %s", e.getMessage() == null ? e.getClass().getName() : e.getMessage()));
 					context.addErrorCount(1);
+					e.printStackTrace();
 					continue ;
 				}
 				batch.add(transaction);
@@ -92,10 +93,19 @@ public class HDFCBankAccountStatementReader extends AbstractStatementReader {
 		
 		matcher.find(); // Value Date
 		matcher.group(0); // skip
-		
-		matcher.find(); // Debit Amount
-		String debitAmountStr = sanitizeCsvValue(matcher.group(0));
-		BigDecimal debitAmount = new BigDecimal(debitAmountStr);
+		String debitAmountStr = null;
+		BigDecimal debitAmount = null;
+		while (debitAmount == null) {
+			try {
+				matcher.find(); // Debit Amount
+				debitAmountStr = sanitizeCsvValue(matcher.group(0));
+				debitAmount = new BigDecimal(debitAmountStr);
+			} catch (NumberFormatException e) {
+				// sometime narration has comma value inbetween so try again
+				narration = narration + "," + debitAmountStr;
+				record.set(Field.NARRATION, narration);
+			}
+		}
 		
 		matcher.find(); // Debit Amount
 		String creditAmountStr = sanitizeCsvValue(matcher.group(0));
@@ -127,6 +137,7 @@ public class HDFCBankAccountStatementReader extends AbstractStatementReader {
 				" 12/04/14  ,CHQ PAID-MICR CTS-MUMBAI CLEAR                                                                                           ,12/04/14 ,      24959.00     ,          0.00     ,0000000000000012       ,     86679.18  \r\n" + 
 				" 17/04/14  ,NWD-421424XXXXXX7648-SW002801-MUMBAI                                                                                     ,17/04/14 ,       1400.00     ,          0.00     ,0000000000003859       ,     85279.18  \r\n" + 
 				" 18/04/14  ,ATW-421424XXXXXX7648-S1ANBY92-DAHANU BRANCH                                                                              ,18/04/14 ,       2400.00     ,          0.00     ,0000000000009465       ,     82879.18  \r\n" + 
+				" 23/11/16  ,IMPS-632812354621-MONIKA KANADE-KKBK-XXXXXX0568-FROM JP,NS,EB                                                            ,23/11/16 ,       1500.00     ,          0.00     ,0000632812354621       ,    180605.00  \r\n" + 
 				"";
 		
 		HDFCBankAccountStatementReader reader = new HDFCBankAccountStatementReader();

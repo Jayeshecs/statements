@@ -5,6 +5,8 @@ package domainapp.modules.txn.view.dashboard;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.inject.Inject;
 
@@ -33,6 +37,7 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -175,6 +180,52 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			semantics = SemanticsOf.SAFE
 	)
 	@ActionLayout(
+			named = "Upload (Zip)",
+			describedAs = "Upload more than one statements in a zip file",
+			position = Position.PANEL, 
+			promptStyle = PromptStyle.DIALOG)
+	public ManageTransactionDashboard uploadBulkStatement(
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Statement Source", describedAs = "Select the statement source for which you are uploading zip file containing more than one statements")
+			StatementSource source,
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Statement Reader", describedAs = "Select statement reader for reading statement files present inside zip file")
+			StatementReader statementReader,
+			@Parameter(optionality = Optionality.MANDATORY, fileAccept = "zip")
+			@ParameterLayout(named = "Statement File (zip)", describedAs = "Select statement file (*.zip)")
+			Blob statementFile
+			) {
+		StringBuilder sb = new StringBuilder();
+		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(statementFile.getBytes()))) {
+			ZipEntry ze = null;
+			int failureCount = 0;
+            while((ze = zis.getNextEntry()) != null){
+                String fileName = ze.getName();
+                Path tempFile = Files.createTempFile("", fileName);
+                Files.copy(zis, tempFile, StandardCopyOption.REPLACE_EXISTING);
+                boolean result = loadStatement(source, statementReader, fileName, new FileInputStream(tempFile.toFile()));
+                if (!result) {
+                	failureCount++;
+                	sb.append(failureCount + ") " + fileName + "\n");
+                }
+            }
+            if (failureCount > 0) {
+    			messageService.warnUser(TranslatableString.tr("Bulk upload of statements has failed for ${failureCount} files - ${failures}", "failureCount", failureCount, "failures", sb.toString()), getClass(), "uploadBulkStatement");
+            } else {
+    			messageService.informUser(TranslatableString.tr("Statement upload completed successfully"), getClass(), "uploadBulkStatement");
+            }
+		} catch (IOException e) {
+			log.error("Error occurred while uploading statement - " + e.getMessage(), e);
+			messageService.warnUser(TranslatableString.tr("Unexpected error has occurred while uploading statement"), getClass(), "uploadBulkStatement");
+		}
+		return this;
+	}
+	
+	@Action(
+    		domainEvent = Transaction.CreateEvent.class,
+			semantics = SemanticsOf.SAFE
+	)
+	@ActionLayout(
 			named = "Upload",
 			describedAs = "Upload statement",
 			position = Position.PANEL, 
@@ -186,11 +237,29 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			@Parameter(optionality = Optionality.MANDATORY)
 			@ParameterLayout(named = "Statement Reader", describedAs = "Select statement reader for reading statement file")
 			StatementReader statementReader,
-			@Parameter(optionality = Optionality.MANDATORY)
-			@ParameterLayout(named = "Statement File", describedAs = "Select statement file")
+			@Parameter(optionality = Optionality.MANDATORY, fileAccept = "csv|pdf")
+			@ParameterLayout(named = "Statement File", describedAs = "Select statement file (*.csv, *.pdf)")
 			Blob statementFile
 			) {
-		try (InputStream is = new BufferedInputStream(new ByteArrayInputStream(statementFile.getBytes()))) {
+		boolean success = loadStatement(source, statementReader, statementFile.getName(), new ByteArrayInputStream(statementFile.getBytes()));
+		if (success) {
+			messageService.informUser(TranslatableString.tr("Statement upload completed successfully"), getClass(), "uploadStatement");
+		} else {
+			messageService.warnUser(TranslatableString.tr("Unexpected error has occurred while uploading statement"), getClass(), "uploadStatement");
+		}
+		return this;
+	}
+
+	/**
+	 * @param source
+	 * @param statementReader
+	 * @param statementFile
+	 * @return
+	 */
+	@Programmatic
+	private boolean loadStatement(StatementSource source, StatementReader statementReader, String fileName, InputStream inputStream) {
+		boolean success = false;
+		try (InputStream is = new BufferedInputStream(inputStream)) {
 			/**
 			 * Load custom properties/config associated with given StatementReader
 			 */
@@ -202,7 +271,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			/**
 			 * Save file to temporary location for reading
 			 */
-			Path tempFile = Files.createTempFile("", statementFile.getName());
+			Path tempFile = Files.createTempFile("", fileName);
 			Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
 			/**
 			 * Create statement reader context
@@ -215,12 +284,12 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			 */
 			IStatementReader reader = addonService.get(statementReader.getReaderType().getAddon().getName());
 			reader.read(readerContext, transactionReaderCallback);
-			messageService.informUser(TranslatableString.tr("Statement upload completed successfully"), getClass(), "uploadStatement");
+			success = true;
 		} catch (Exception e) {
 			log.error("Error occurred while uploading statement - " + e.getMessage(), e);
-			messageService.warnUser(TranslatableString.tr("Unexpected error has occurred while uploading statement"), getClass(), "uploadStatement");
+			success = false;
 		}
-		return this;
+		return success;
 	}
 	
 	/**

@@ -156,6 +156,24 @@ public class TransactionService extends AbstractService<Transaction>{
 	
 	@Programmatic
 	public Transaction create(TransactionType type, StatementSource source, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
+		Transaction newTransaction = createNoSave(type, source, transactionDate, amount, narration, reference, rawdata);
+		Transaction transaction = repositoryService.persistAndFlush(newTransaction);
+    	return transaction;
+	}
+
+	/**
+	 * @param type
+	 * @param source
+	 * @param transactionDate
+	 * @param amount
+	 * @param narration
+	 * @param reference
+	 * @param rawdata
+	 * @return
+	 */
+	@Programmatic
+	public Transaction createNoSave(TransactionType type, StatementSource source, Date transactionDate,
+			BigDecimal amount, String narration, String reference, String rawdata) {
 		Transaction newTransaction = Transaction.builder()
 				.type(type)
 				.source(source)
@@ -165,8 +183,7 @@ public class TransactionService extends AbstractService<Transaction>{
 				.reference(reference)
 				.rawdata(rawdata)
 				.build();
-		Transaction transaction = repositoryService.persistAndFlush(newTransaction);
-    	return transaction;
+		return newTransaction;
 	}
 	
 	@Inject

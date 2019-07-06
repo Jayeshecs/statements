@@ -19,25 +19,25 @@ import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureSc
 import org.isisaddons.module.security.seed.scripts.GlobalTenancy;
 import org.isisaddons.module.togglz.glue.seed.TogglzModuleAdminRole;
 
-public class SeedSuperAdministratorRoleAndSvenSuperUser extends FixtureScript {
+public class SeedSuperAdministratorRoleAndAdminUser extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         executionContext.executeChild(this, new DomainAppSuperAdministratorRole());
         executionContext.executeChild(this, new TogglzModuleAdminRole());
-        executionContext.executeChild(this, new SvenSuperUser());
+        executionContext.executeChild(this, new AdminUser());
 
         // workaround ... in case the 'sven' user already exists...
         // (the SvenSuperUser fixture script unfortunately does not currently do an upsert)
-        final ApplicationUser user = applicationUserRepository.findByUsername(SvenSuperUser.USERNAME);
-        SvenSuperUser.roleNames().forEach(roleName -> {
+        final ApplicationUser user = applicationUserRepository.findByUsername(AdminUser.USERNAME);
+        AdminUser.roleNames().forEach(roleName -> {
             final ApplicationRole role = applicationRoleRepository.findByName(roleName);
             if(!user.getRoles().contains(role)) {
                 user.addRole(role);
             }
         });
-        user.updatePassword(SvenSuperUser.PASS);
+        user.updatePassword(AdminUser.PASS);
         user.unlock();
     }
 
@@ -66,12 +66,12 @@ public class SeedSuperAdministratorRoleAndSvenSuperUser extends FixtureScript {
 
     }
 
-    public static class SvenSuperUser extends AbstractUserAndRolesFixtureScript {
+    public static class AdminUser extends AbstractUserAndRolesFixtureScript {
 
-        public static final String USERNAME = "sven";
-        public static final String PASS = "pass";
+        public static final String USERNAME = "admin";
+        public static final String PASS = "admin";
 
-        public SvenSuperUser() {
+        public AdminUser() {
             super(USERNAME, PASS, null,
                     GlobalTenancy.TENANCY_PATH, AccountType.LOCAL,
                     roleNames()

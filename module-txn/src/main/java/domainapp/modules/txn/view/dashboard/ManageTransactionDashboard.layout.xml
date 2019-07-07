@@ -10,6 +10,7 @@
             <cpt:action id="rebuildMetamodel"/>
             <cpt:action id="recentCommands"/>
             <cpt:action id="uploadStatement" cssClass="btn-primary"/>
+            <cpt:action id="uploadBulkStatement" cssClass="btn-primary"/>
         </bs3:col>
     </bs3:row>
     <bs3:row>

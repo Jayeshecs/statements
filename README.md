@@ -40,8 +40,8 @@ mvn -pl webapp jetty:run
 
 - In Web browser open link [http://localhost:8080/wicket](http://localhost:8080/wicket)
 - Use below credentials to login
--- username: `sven`
--- password: `pass`
+-- username: `admin`
+-- password: `admin`
 - Goto menu ``Static Data > Manage Category`` to open dashboard where category and sub-categories can be added/edited/removed
 
 # More advanced use cases

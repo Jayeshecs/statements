@@ -41,15 +41,15 @@ import lombok.ToString;
 			+ "FROM domainapp.modules.txn.dom.Transaction "),
 	@javax.jdo.annotations.Query(name = Transaction.QUERY_FIND_BY_RAWDATA, value = "SELECT "
 			+ "FROM domainapp.modules.txn.dom.Transaction "
-			+ "WHERE rawdata == :rawdata")
+			+ "WHERE rawdata == :rawdata && (rawdataSequence == null || rawdataSequence == :rawdataSequence)")
 })
-@javax.jdo.annotations.Unique(name="Transaction_hash_UNQ", members = {"source", "rawdata"})
+@javax.jdo.annotations.Unique(name="Transaction_hash_UNQ", members = {"source", "rawdata", "rawdataSequence"})
 @DomainObject(
         auditing = Auditing.ENABLED
 ) // objectType inferred from @PersistenceCapable#schema
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
-@EqualsAndHashCode(of = {"source", "type", "transactionDate", "narration", "reference", "amount"})
-@ToString(of = {"source", "type", "transactionDate", "narration", "reference", "amount"})
+@EqualsAndHashCode(of = {"source", "type", "transactionDate", "narration", "reference", "amount", "rawdataSequence"})
+@ToString(of = {"source", "type", "transactionDate", "narration", "reference", "amount", "rawdataSequence"})
 public class Transaction implements Comparable<Transaction> {
 	
 	public static final String QUERY_FIND_BY_RAWDATA = "findByRawdata"; //$NON-NLS-1$
@@ -119,9 +119,15 @@ public class Transaction implements Comparable<Transaction> {
     @PropertyLayout(hidden = Where.EVERYWHERE)
 	@lombok.Getter @lombok.Setter
 	private String rawdata;
+	
+    @javax.jdo.annotations.Column(allowsNull = "true")
+	@Property(editing = Editing.DISABLED)
+    @PropertyLayout(hidden = Where.EVERYWHERE)
+	@lombok.Getter @lombok.Setter
+	private Integer rawdataSequence;
 
     @Builder
-    public Transaction(final StatementSource source, final TransactionType type, final Date transactionDate, final String narration, final String reference, final BigDecimal amount, final String rawdata) {
+    public Transaction(final StatementSource source, final TransactionType type, final Date transactionDate, final String narration, final String reference, final BigDecimal amount, final String rawdata, final Integer rawdataSequence) {
         setSource(source);
         setType(type);
         setTransactionDate(transactionDate);
@@ -129,6 +135,7 @@ public class Transaction implements Comparable<Transaction> {
         setReference(reference);
         setAmount(amount);
         setRawdata(rawdata);
+        setRawdataSequence(rawdataSequence);
     }
 
     @Override

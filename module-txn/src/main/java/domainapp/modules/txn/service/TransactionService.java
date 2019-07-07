@@ -135,12 +135,12 @@ public class TransactionService extends AbstractService<Transaction>{
 	@Programmatic
 	public Transaction credit(String sourceName, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
 		StatementSource statementSource = statementSourceService.getOrCreate(sourceName, StatementSourceType.SAVING_ACCOUNT); // by default it is Saving account if not found
-		return create(TransactionType.CREDIT, statementSource, transactionDate, amount, narration, reference, rawdata);
+		return create(TransactionType.CREDIT, statementSource, transactionDate, amount, narration, reference, rawdata, 1);
 	}
 
 	@Programmatic
 	public Transaction credit(StatementSource statementSource, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
-		return create(TransactionType.CREDIT, statementSource, transactionDate, amount, narration, reference, rawdata);
+		return create(TransactionType.CREDIT, statementSource, transactionDate, amount, narration, reference, rawdata, 1);
 	}
 
 	@Programmatic
@@ -151,12 +151,12 @@ public class TransactionService extends AbstractService<Transaction>{
 
 	@Programmatic
 	public Transaction debit(StatementSource statementSource, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
-		return create(TransactionType.DEBIT, statementSource, transactionDate, amount, narration, reference, rawdata);
+		return create(TransactionType.DEBIT, statementSource, transactionDate, amount, narration, reference, rawdata, 1);
 	}
 	
 	@Programmatic
-	public Transaction create(TransactionType type, StatementSource source, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata) {
-		Transaction newTransaction = createNoSave(type, source, transactionDate, amount, narration, reference, rawdata);
+	public Transaction create(TransactionType type, StatementSource source, Date transactionDate, BigDecimal amount, String narration, String reference, String rawdata, Integer rawdataSequence) {
+		Transaction newTransaction = createNoSave(type, source, transactionDate, amount, narration, reference, rawdata, rawdataSequence);
 		Transaction transaction = repositoryService.persistAndFlush(newTransaction);
     	return transaction;
 	}
@@ -173,7 +173,7 @@ public class TransactionService extends AbstractService<Transaction>{
 	 */
 	@Programmatic
 	public Transaction createNoSave(TransactionType type, StatementSource source, Date transactionDate,
-			BigDecimal amount, String narration, String reference, String rawdata) {
+			BigDecimal amount, String narration, String reference, String rawdata, Integer rawdataSequence) {
 		Transaction newTransaction = Transaction.builder()
 				.type(type)
 				.source(source)
@@ -182,6 +182,7 @@ public class TransactionService extends AbstractService<Transaction>{
 				.narration(narration)
 				.reference(reference)
 				.rawdata(rawdata)
+				.rawdataSequence(rawdataSequence)
 				.build();
 		return newTransaction;
 	}

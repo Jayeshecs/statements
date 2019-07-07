@@ -5,7 +5,9 @@ package domainapp.modules.txn.rdr;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -43,6 +45,11 @@ public class TransactionReaderCallback implements IStatementReaderCallback {
 		 * Get statement source from context
 		 */
 		StatementSource statementSource = context.get(IStatementReaderContext.PARAM_STATEMENT_SOURCE);
+		Map<String, Transaction> transactionByRawdataKey = context.get("transactionByRawdataKey");
+		if (transactionByRawdataKey == null) {
+			// TODO: synchronization
+			context.set("transactionByRawdataKey", transactionByRawdataKey = new HashMap<String, Transaction>());
+		}
 		
 		int existingCount = 0;
 		List<Transaction> transactionToSave = new ArrayList<>();
@@ -51,13 +58,18 @@ public class TransactionReaderCallback implements IStatementReaderCallback {
 				context.addFilteredCount(1);
 				continue;
 			}
+			Integer rawdataSequenceCount = 1;
 			String rawdata = record.get(Field.RAWDATA);
+			while (transactionByRawdataKey.get(rawdata + rawdataSequenceCount) != null) {
+				rawdataSequenceCount++;
+			}
 			if (rawdata != null && !rawdata.trim().isEmpty()) {
-				List<Transaction> result = transactionService.search(Transaction.QUERY_FIND_BY_RAWDATA, "rawdata", rawdata);
+				List<Transaction> result = transactionService.search(Transaction.QUERY_FIND_BY_RAWDATA, "rawdata", rawdata, "rawdataSequence", rawdataSequenceCount);
 				if (result != null && !result.isEmpty()) {
 					// skip transaction because it is already present
 					existingCount++;
 					context.addSkippedCount(1);
+					transactionByRawdataKey.put(rawdata + rawdataSequenceCount, result.get(0));
 					continue ;
 				}
 			}
@@ -70,7 +82,9 @@ public class TransactionReaderCallback implements IStatementReaderCallback {
 					record.get(Field.AMOUNT), 
 					record.get(Field.NARRATION), 
 					record.get(Field.REFERENCE), 
-					rawdata);
+					rawdata,
+					rawdataSequenceCount);
+			transactionByRawdataKey.put(rawdata + rawdataSequenceCount, transaction);
 			transactionToSave.add(transaction);
 		}
 		try {

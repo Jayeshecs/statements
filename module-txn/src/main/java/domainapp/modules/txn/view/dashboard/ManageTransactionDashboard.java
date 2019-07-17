@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionLayout.Position;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.LabelPosition;
@@ -77,10 +78,10 @@ import lombok.extern.slf4j.Slf4j;
 		objectType = "stmt.ManageTransactionDashboard"
 )
 @Slf4j
-public class ManageTransactionDashboard implements HintStore.HintIdProvider{
+public class ManageTransactionDashboard implements HintStore.HintIdProvider {
 	
 	@PropertyLayout(hidden = Where.EVERYWHERE)
-	private GenericlFilter filter;
+	protected GenericlFilter filter;
 	
 	/**
 	 * @return
@@ -372,16 +373,38 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 			Category category, 
 			@Parameter(optionality = Optionality.OPTIONAL)
 			@ParameterLayout(named = "Sub-Category")
-			SubCategory subCategory) {
+			SubCategory subCategory,
+			@Parameter(optionality = Optionality.OPTIONAL)
+			@ParameterLayout(named = "Uncategorized", describedAs = "Exclude selected category and/or sub-category from filter criteria")
+			Boolean uncategorized
+			) {
 		filter = new GenericlFilter();
-		filter.setFilter(transactionService.buildFilter(narration, dateStart, dateEnd, amountFloor, amountCap, type, source, category, subCategory, filter.getParameters()));
+		filter.setFilter(transactionService.buildFilter(narration, dateStart, dateEnd, amountFloor, amountCap, type, source, category, subCategory, uncategorized, filter.getParameters()));
+		return this;
+	}
+	
+	public Boolean default9Filter() {
+		return Boolean.TRUE;
+	}
+	
+	@Action(
+			associateWith = "transactions", 
+			associateWithSequence = "3", 
+			semantics = SemanticsOf.SAFE, 
+			typeOf = Transaction.class)
+	@ActionLayout(
+			named = "Uncategorized", 
+			position = Position.RIGHT)
+	public ManageTransactionDashboard uncategorized() {
+		filter = new GenericlFilter();
+		filter.setFilter(transactionService.buildFilter(null, null, null, null, null, null, null, null, null, Boolean.TRUE, filter.getParameters()));
 		return this;
 	}
 	
 	@Action(
     		domainEvent = Transaction.CreateEvent.class,
 			associateWith = "transactions", 
-			associateWithSequence = "2", 
+			associateWithSequence = "5", 
 			semantics = SemanticsOf.SAFE, 
 			typeOf = Transaction.class
 	)
@@ -413,7 +436,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider{
 	@Action(
     		domainEvent = Transaction.CreateEvent.class,
 			associateWith = "transactions", 
-			associateWithSequence = "3", 
+			associateWithSequence = "10", 
 			semantics = SemanticsOf.SAFE, 
 			typeOf = Transaction.class
 	)

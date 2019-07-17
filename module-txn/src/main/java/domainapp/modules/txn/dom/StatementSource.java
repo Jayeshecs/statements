@@ -1,5 +1,6 @@
 package domainapp.modules.txn.dom;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -76,6 +77,7 @@ public class StatementSource implements Comparable<StatementSource>, WithNameAnd
     private String description;
     
     @javax.jdo.annotations.Column(allowsNull = "false")
+	@Extension(vendorName="datanucleus", key="enum-value-getter", value="id")
     @Property(
             editing = Editing.ENABLED,
             command = CommandReification.ENABLED,

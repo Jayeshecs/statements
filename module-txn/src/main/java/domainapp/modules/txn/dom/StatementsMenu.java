@@ -39,7 +39,7 @@ public class StatementsMenu {
 	/**
 	 * @return
 	 */
-	@MemberOrder(sequence = "2")
+	@MemberOrder(sequence = "3")
 	public ManageReaderDashboard manageStatementReader() {
 		return new ManageReaderDashboard();
 	}

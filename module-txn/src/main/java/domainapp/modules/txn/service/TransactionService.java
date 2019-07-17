@@ -46,9 +46,9 @@ public class TransactionService extends AbstractService<Transaction>{
 	/**
 	 * DO NOT USE THIS INSTEAD USE COMBINATION OF {@link #buildFilter(String, Date, Date, BigDecimal, BigDecimal, TransactionType, StatementSource, Category, SubCategory, Map)} and {@link #search(String, Object...)}
 	 */
-	public List<Transaction> search(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, StatementSource source, TransactionType type, Category category, SubCategory subCategory) {
+	public List<Transaction> search(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, StatementSource source, TransactionType type, Category category, SubCategory subCategory, Boolean uncategorized) {
 		Map<String, Object> parameters = new HashMap<>();		
-		String filter = buildFilter(narration, transactionDateStart, transactionDateEnd, amountMin, amountMax, type, source, category, subCategory, parameters);
+		String filter = buildFilter(narration, transactionDateStart, transactionDateEnd, amountMin, amountMax, type, source, category, subCategory, uncategorized, parameters);
 		return filter(filter.toString(), parameters);
 	}
 
@@ -67,7 +67,7 @@ public class TransactionService extends AbstractService<Transaction>{
 	 */
 	@Programmatic
 	public String buildFilter(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, 
-			TransactionType type, StatementSource source, Category category, SubCategory subCategory, 
+			TransactionType type, StatementSource source, Category category, SubCategory subCategory, Boolean uncategorized,
 			Map<String, Object> parameters) {
 		StringBuilder filter = new StringBuilder();
 		boolean addAnd = false;
@@ -111,16 +111,23 @@ public class TransactionService extends AbstractService<Transaction>{
 			parameters.put("type", type);
 			addAnd = true;
 		}
-		if (category != null) {
+		if ((uncategorized == null || uncategorized == false)) {
+			if (category != null && (uncategorized == null || uncategorized == false)) {
+				ensureAndPrefixed(filter, addAnd);
+				filter.append("category == :category");
+				parameters.put("category", category);
+				addAnd = true;
+			}
+			if (subCategory != null) {
+				ensureAndPrefixed(filter, addAnd);
+				filter.append("subCategory == :subCategory");
+				parameters.put("subCategory", subCategory);
+				addAnd = true;
+			}
+		} 
+		if (uncategorized != null && uncategorized == true) {
 			ensureAndPrefixed(filter, addAnd);
-			filter.append("category == :category");
-			parameters.put("category", category);
-			addAnd = true;
-		}
-		if (subCategory != null) {
-			ensureAndPrefixed(filter, addAnd);
-			filter.append("subCategory == :subCategory");
-			parameters.put("subCategory", subCategory);
+			filter.append("category == null && subCategory == null");
 			addAnd = true;
 		}
 		return filter.toString();

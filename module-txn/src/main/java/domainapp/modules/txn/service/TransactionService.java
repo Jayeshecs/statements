@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -52,6 +54,28 @@ public class TransactionService extends AbstractService<Transaction>{
 		return filter(filter.toString(), parameters);
 	}
 
+	public static final Pattern CSV_REGEX_PATTERN = Pattern.compile("(\"(?:[^\"]|\"\")*\"|[^,\"\\n\\r]*)(,|\\r?\\n|\\r)");
+	
+	/**
+	 * Remove enclosing quotes and ending delimiter.<br>
+	 * "Paid For Order", => Paid For Order<br>
+	 * 
+	 * @param text
+	 * @return
+	 */
+	private static final String sanitizeCsvValue(String text) {
+		if (text == null) {
+			return null;
+		}
+		text = text.trim();
+		if (text.charAt(0) == '"' && text.endsWith("\",")) {
+			return text.substring(1, text.length() - 2).trim();
+		} else if (text.charAt(text.length() - 1) == ',') {
+			return text.substring(0, text.length() - 1).trim();
+		}
+		return text.trim();
+	}
+	
 	/**
 	 * This API is useful for ViewModel where filter string is used as ID of view model
 	 * 
@@ -72,30 +96,41 @@ public class TransactionService extends AbstractService<Transaction>{
 		StringBuilder filter = new StringBuilder();
 		boolean addAnd = false;
 		if (narration != null && !narration.isEmpty()) {
-			filter.append("narration.indexOf('" + narration + "') >= 0");
+			Matcher matcher = CSV_REGEX_PATTERN.matcher(narration + ",");
+			boolean prefixOr = false;
+			filter.append("(");
+			while (matcher.find()) {
+				if (prefixOr) {
+					filter.append(" || ");
+				}
+				String narration2 = sanitizeCsvValue(matcher.group(0));
+				filter.append("narration.indexOf('" + narration2 + "') >= 0");
+				prefixOr = true;
+			}
+			filter.append(")");
 			addAnd = true;
 		}
 		if (transactionDateStart != null) {
 			ensureAndPrefixed(filter, addAnd);
-			filter.append("transactionDate > :transactionDateStart");
+			filter.append("transactionDate >= :transactionDateStart");
 			parameters.put("transactionDateStart", transactionDateStart);
 			addAnd = true;
 		}
 		if (transactionDateEnd != null) {
 			ensureAndPrefixed(filter, addAnd);
-			filter.append("transactionDate < :transactionDateEnd");
+			filter.append("transactionDate <= :transactionDateEnd");
 			parameters.put("transactionDateEnd", transactionDateEnd);
 			addAnd = true;
 		}
 		if (amountMin != null) {
 			ensureAndPrefixed(filter, addAnd);
-			filter.append("amount > :amountMin");
+			filter.append("amount >= :amountMin");
 			parameters.put("amountMin", amountMin);
 			addAnd = true;
 		}
 		if (amountMax != null) {
 			ensureAndPrefixed(filter, addAnd);
-			filter.append("amount < :amountMax");
+			filter.append("amount <= :amountMax");
 			parameters.put("amountMax", amountMax);
 			addAnd = true;
 		}
@@ -112,7 +147,7 @@ public class TransactionService extends AbstractService<Transaction>{
 			addAnd = true;
 		}
 		if ((uncategorized == null || uncategorized == false)) {
-			if (category != null && (uncategorized == null || uncategorized == false)) {
+			if (category != null) {
 				ensureAndPrefixed(filter, addAnd);
 				filter.append("category == :category");
 				parameters.put("category", category);
@@ -127,8 +162,27 @@ public class TransactionService extends AbstractService<Transaction>{
 		} 
 		if (uncategorized != null && uncategorized == true) {
 			ensureAndPrefixed(filter, addAnd);
-			filter.append("category == null && subCategory == null");
+			filter.append("(");
+			filter.append("(category == null && subCategory == null) ");
 			addAnd = true;
+			if (category != null || subCategory != null) {
+				filter.append(" || (");
+			}
+			if (category != null) {
+				filter.append("category == :category");
+				parameters.put("category", category);
+				addAnd = true;
+			}
+			if (subCategory != null) {
+				ensureAndPrefixed(filter, addAnd);
+				filter.append("subCategory == :subCategory");
+				parameters.put("subCategory", subCategory);
+				addAnd = true;
+			}
+			if (category != null || subCategory != null) {
+				filter.append(" ) ");
+			}
+			filter.append(")");
 		}
 		return filter.toString();
 	}

@@ -14,22 +14,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionLayout.Position;
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.applib.annotation.Contributed;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.LabelPosition;
@@ -49,11 +52,14 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Blob;
 
+import com.google.gson.GsonBuilder;
+
 import domainapp.modules.addon.service.AddonService;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
-import domainapp.modules.base.view.GenericlFilter;
+import domainapp.modules.base.service.SessionStoreFactory;
+import domainapp.modules.base.view.GenericFilter;
 import domainapp.modules.rdr.addon.IStatementReaderContext;
 import domainapp.modules.rdr.addon.StatementReaderContext;
 import domainapp.modules.rdr.api.IStatementReader;
@@ -62,11 +68,15 @@ import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.StatementSourceType;
 import domainapp.modules.ref.dom.SubCategory;
 import domainapp.modules.ref.dom.TransactionType;
+import domainapp.modules.ref.service.CategoryService;
+import domainapp.modules.ref.service.SubCategoryService;
 import domainapp.modules.txn.dom.StatementSource;
 import domainapp.modules.txn.dom.Transaction;
 import domainapp.modules.txn.rdr.TransactionReaderCallback;
 import domainapp.modules.txn.service.StatementSourceService;
 import domainapp.modules.txn.service.TransactionService;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -78,10 +88,35 @@ import lombok.extern.slf4j.Slf4j;
 		objectType = "stmt.ManageTransactionDashboard"
 )
 @Slf4j
-public class ManageTransactionDashboard implements HintStore.HintIdProvider {
+public class ManageTransactionDashboard implements HintStore.HintIdProvider, ViewModel {
 	
+	private static final String SESSION_ATTRIBUTE_FILTER = "filter";
+
+	private static final String PARAM_USER_INPUT_VALUES = "userInputValues";
+
+	private static final String USER_INPUT_UNCATEGORIZED = "uncategorized";
+
+	private static final String USER_INPUT_SUB_CATEGORY = "subCategory";
+
+	private static final String USER_INPUT_CATEGORY = "category";
+
+	private static final String USER_INPUT_SOURCE = "source";
+
+	private static final String USER_INPUT_TYPE = "type";
+
+	private static final String USER_INPUT_AMOUNT_CAP = "amountCap";
+
+	private static final String USER_INPUT_AMOUNT_FLOOR = "amountFloor";
+
+	private static final String USER_INPUT_DATE_END = "dateEnd";
+
+	private static final String USER_INPUT_DATE_START = "dateStart";
+
+	private static final String USER_INPUT_NARRATION = "narration";
+
 	@PropertyLayout(hidden = Where.EVERYWHERE)
-	protected GenericlFilter filter;
+	@Getter @Setter
+	protected GenericFilter filter;
 	
 	/**
 	 * @return
@@ -89,17 +124,75 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider {
 	public String title() {
 		return "Manage Transactions";
 	}
+
+	/**
+	 * @return 
+	 * 
+	 */
+	@Programmatic
+	private GenericFilter defaultFilter() {
+		GenericFilter filter = new GenericFilter();
+		filter.setFilter("category == null && subCategory == null");
+		return filter;
+	}
+
+	/**
+	 * @return
+	 */
+	@Programmatic
+	private String filterToJson() {
+		if (getFilter() == null) {
+			setFilter(defaultFilter());
+		}
+		String json = new GsonBuilder().create().toJson(getFilter());
+		return Base64.getUrlEncoder().encodeToString(json.getBytes());
+	}
+
+	/**
+	 * @param jsonUrlEncoded
+	 * @return 
+	 */
+	@Programmatic
+	private GenericFilter jsonToFilter(String jsonUrlEncoded) {
+		String json = new String(Base64.getUrlDecoder().decode(jsonUrlEncoded.getBytes()));
+		return new GsonBuilder().create().fromJson(json, GenericFilter.class);
+	}
 	
 	@Override
 	public String hintId() {
-		return getFilterDescription();
+		String filter = SessionStoreFactory.INSTANCE.getSessionStore().get(SESSION_ATTRIBUTE_FILTER);
+		if (filter != null) {
+			setFilter(jsonToFilter(filter));
+			return filter;
+		}
+		return filterToJson();
+	}
+
+	@Override
+	public String viewModelMemento() {
+		String filter = SessionStoreFactory.INSTANCE.getSessionStore().get(SESSION_ATTRIBUTE_FILTER);
+		if (filter != null) {
+			return filter;
+		}
+		String json = filterToJson();
+		return json;
+	}
+
+	@Override
+	public void viewModelInit(String memento) {
+		String filter = SessionStoreFactory.INSTANCE.getSessionStore().get(SESSION_ATTRIBUTE_FILTER);
+		if (filter == null) {
+			filter = memento;
+		}
+		setFilter(jsonToFilter(filter));
 	}
 	
 	@Property(editing = Editing.DISABLED, editingDisabledReason = "This is read-only field")
-	@PropertyLayout(labelPosition = LabelPosition.TOP, named = "Filter", multiLine = 4)
+	@PropertyLayout(labelPosition = LabelPosition.TOP, named = "Filter", multiLine = 3)
 	@MemberOrder(sequence = "1")
 	public String getFilterDescription() {
-		if (filter == null) {
+		GenericFilter filter = getFilter();
+		if (filter == null || filter.getFilter().trim().isEmpty()) {
 			return "[ Show all transactions ]";
 		}
 		String filterDescription = filter.getFilter();
@@ -300,8 +393,11 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider {
 	@CollectionLayout(defaultView = "table", paged = 100)
 	@MemberOrder(sequence = "3")
 	public List<Transaction> getTransactions() {
+		GenericFilter filter = getFilter();
 		if (filter != null) {
-			return transactionService.filter(filter.getFilter(), filter.getParameters());
+			Map<String, Object> map = new HashMap<>(filter.getParameters());
+			map.remove(PARAM_USER_INPUT_VALUES);
+			return transactionService.filter(filter.getFilter(), map);
 		}
 		return transactionService.all();
 	}
@@ -334,6 +430,65 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider {
 		 * save all transaction records
 		 */
 		transactionService.save(selectedTransactions);
+		return this;
+	}
+
+	@Programmatic
+	private Map<String, Object> prepareUserInputValues(String narration, TransactionType type, StatementSource source,
+			Date dateStart, Date dateEnd, BigDecimal amountFloor, BigDecimal amountCap, Category category,
+			SubCategory subCategory, Boolean uncategorized) {
+		Map<String, Object> userInputValues = new HashMap<String, Object>();
+		if (narration != null && !narration.trim().isEmpty()) {
+			userInputValues.put(USER_INPUT_NARRATION, narration);
+		}
+		if (dateStart != null) {
+			userInputValues.put(USER_INPUT_DATE_START, dateStart);
+		}
+		if (dateEnd != null) {
+			userInputValues.put(USER_INPUT_DATE_END, dateEnd);
+		}
+		if (amountFloor != null) {
+			userInputValues.put(USER_INPUT_AMOUNT_FLOOR, amountFloor);
+		}
+		if (amountCap != null) {
+			userInputValues.put(USER_INPUT_AMOUNT_CAP, amountCap);
+		}
+		if (type != null) {
+			userInputValues.put(USER_INPUT_TYPE, type.name());
+		}
+		if (source != null) {
+			userInputValues.put(USER_INPUT_SOURCE, source.getName());
+		}
+		if (category != null) {
+			userInputValues.put(USER_INPUT_CATEGORY, category.getName());
+		}
+		if (subCategory != null) {
+			userInputValues.put(USER_INPUT_SUB_CATEGORY, subCategory.getName());
+		}
+		if (uncategorized != null) {
+			userInputValues.put(USER_INPUT_UNCATEGORIZED, uncategorized);
+		}
+		return userInputValues;
+	}
+	
+	@Action(
+			associateWith = "transactions", 
+			associateWithSequence = "1", 
+			semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE, 
+			typeOf = Transaction.class)
+	@ActionLayout(
+			named = "Reset", 
+			position = Position.RIGHT, 
+			promptStyle = PromptStyle.INLINE)
+	public ManageTransactionDashboard reset() {
+		GenericFilter filter = new GenericFilter();
+		Map<String, Object> parameters = filter.getParameters();
+		Map<String, Object> userInputValues = prepareUserInputValues(null, null, null, null, null,
+				null, null, null, null, Boolean.FALSE);
+		parameters.put(PARAM_USER_INPUT_VALUES, userInputValues);
+		filter.setFilter(transactionService.buildFilter(null, null, null, null, null, null, null, null, null, Boolean.FALSE, parameters));
+		setFilter(filter);
+		SessionStoreFactory.INSTANCE.getSessionStore().set(SESSION_ATTRIBUTE_FILTER, filterToJson());
 		return this;
 	}
 	
@@ -378,27 +533,107 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider {
 			@ParameterLayout(named = "Uncategorized", describedAs = "Exclude selected category and/or sub-category from filter criteria")
 			Boolean uncategorized
 			) {
-		filter = new GenericlFilter();
-		filter.setFilter(transactionService.buildFilter(narration, dateStart, dateEnd, amountFloor, amountCap, type, source, category, subCategory, uncategorized, filter.getParameters()));
+		GenericFilter filter = new GenericFilter();
+		Map<String, Object> parameters = filter.getParameters();
+		Map<String, Object> userInputValues = prepareUserInputValues(narration, type, source, dateStart, dateEnd,
+				amountFloor, amountCap, category, subCategory, uncategorized);
+		parameters.put(PARAM_USER_INPUT_VALUES, userInputValues);
+		filter.setFilter(transactionService.buildFilter(narration, dateStart, dateEnd, amountFloor, amountCap, type, source, category, subCategory, uncategorized, parameters));
+		setFilter(filter);
+		SessionStoreFactory.INSTANCE.getSessionStore().set(SESSION_ATTRIBUTE_FILTER, filterToJson());
 		return this;
+	}
+
+	/**
+	 * @param key
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> T getUserInputValue(String key) {
+		GenericFilter filter = getFilter();
+		if (filter != null) {
+			Map<String, Object> userInputValues = (Map<String, Object>) filter.getParameters().get(PARAM_USER_INPUT_VALUES);
+			if (userInputValues != null) {
+				return (T) userInputValues.get(key);
+			}
+		}
+		return null;
+	}
+	
+	public String default0Filter() {
+		return getUserInputValue(USER_INPUT_NARRATION);
+	}
+	
+	public TransactionType default1Filter() {
+		String name = getUserInputValue(USER_INPUT_TYPE);
+		return name != null ? TransactionType.valueOf(name) : null;
+	}
+
+	/**
+	 * @param name
+	 * @param list
+	 */
+	private <T extends WithName> T matchingExactName(final String name, List<T> list) {
+		if (list != null && !list.isEmpty()) {
+			Optional<T> result = list.stream().filter(t -> {
+				return t.getName().equals(name);
+			}).findFirst();
+			if (result.isPresent()) {
+				return result.get();
+			}
+		}
+		return null;
+	}
+	
+	public StatementSource default2Filter() {
+		String name = getUserInputValue(USER_INPUT_SOURCE);
+		if (name == null) {
+			return null;
+		}
+		List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", name);
+		StatementSource source = matchingExactName(name, list);
+		return source;
+	}
+	
+	public Date default3Filter() {
+		return getUserInputValue(USER_INPUT_DATE_START);
+	}
+	
+	public Date default4Filter() {
+		return getUserInputValue(USER_INPUT_DATE_END);
+	}
+	
+	public BigDecimal default5Filter() {
+		return getUserInputValue(USER_INPUT_AMOUNT_FLOOR);
+	}
+	
+	public BigDecimal default6Filter() {
+		return getUserInputValue(USER_INPUT_AMOUNT_CAP);
+	}
+	
+	public Category default7Filter() {
+		String name = getUserInputValue(USER_INPUT_CATEGORY);
+		if (name == null) {
+			return null;
+		}
+		List<Category> list = categoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", name);
+		Category category = matchingExactName(name, list);
+		return category;
+	}
+	
+	public SubCategory default8Filter() {
+		String name = getUserInputValue(USER_INPUT_SUB_CATEGORY);
+		if (name == null) {
+			return null;
+		}
+		List<SubCategory> list = subCategoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", name);
+		SubCategory subCategory = matchingExactName(name, list);
+		return subCategory;
 	}
 	
 	public Boolean default9Filter() {
-		return Boolean.TRUE;
-	}
-	
-	@Action(
-			associateWith = "transactions", 
-			associateWithSequence = "3", 
-			semantics = SemanticsOf.SAFE, 
-			typeOf = Transaction.class)
-	@ActionLayout(
-			named = "Uncategorized", 
-			position = Position.RIGHT)
-	public ManageTransactionDashboard uncategorized() {
-		filter = new GenericlFilter();
-		filter.setFilter(transactionService.buildFilter(null, null, null, null, null, null, null, null, null, Boolean.TRUE, filter.getParameters()));
-		return this;
+		Boolean uncategorized = getUserInputValue(USER_INPUT_UNCATEGORIZED);
+		return uncategorized == null ? Boolean.TRUE : uncategorized;
 	}
 	
 	@Action(
@@ -464,6 +699,12 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider {
 		transactionService.credit(statementSource, transactionDate, amount, narration, reference, rawdata);
 		return this;
 	}
+
+	@Inject
+	CategoryService categoryService;
+
+	@Inject
+	SubCategoryService subCategoryService;
 
 	@Inject
 	TransactionService transactionService;

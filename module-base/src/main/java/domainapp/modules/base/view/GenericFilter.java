@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @EqualsAndHashCode
 @ToString(of = {"filter", "parameters"})
-public class GenericlFilter implements Serializable {
+public class GenericFilter implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

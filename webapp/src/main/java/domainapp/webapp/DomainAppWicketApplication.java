@@ -14,6 +14,8 @@ import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
+import domainapp.modules.base.service.SessionStoreFactory;
+import domainapp.webapp.service.WicketSessionStore;
 
 /**
  * As specified in <tt>web.xml</tt>.
@@ -42,6 +44,8 @@ public class DomainAppWicketApplication extends IsisWicketApplication {
 
         IBootstrapSettings settings = Bootstrap.getSettings();
         settings.setThemeProvider(new BootswatchThemeProvider(BootswatchTheme.Flatly));
+        
+        SessionStoreFactory.INSTANCE.registerSessionStore(new WicketSessionStore());
     }
 
     private static final String APP_NAME = "Statements Manager";

@@ -14,6 +14,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
  */
 public interface WithName {
 	
+	String FIELD_NAME = "name";
+	
 	int MAX_LEN = 40;
 
 	/**

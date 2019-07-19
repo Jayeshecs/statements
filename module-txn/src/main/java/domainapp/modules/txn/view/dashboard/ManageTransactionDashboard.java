@@ -90,15 +90,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ManageTransactionDashboard implements HintStore.HintIdProvider, ViewModel {
 	
+	private static final String PARAM_SUB_CATEGORY = "subCategory";
+
+	private static final String PARAM_CATEGORY = "category";
+
+	private static final String PARAM_STATEMENT_SOURCE = "statementSource";
+
 	private static final String SESSION_ATTRIBUTE_FILTER = "filter";
 
 	private static final String PARAM_USER_INPUT_VALUES = "userInputValues";
 
 	private static final String USER_INPUT_UNCATEGORIZED = "uncategorized";
 
-	private static final String USER_INPUT_SUB_CATEGORY = "subCategory";
+	private static final String USER_INPUT_SUB_CATEGORY = PARAM_SUB_CATEGORY;
 
-	private static final String USER_INPUT_CATEGORY = "category";
+	private static final String USER_INPUT_CATEGORY = PARAM_CATEGORY;
 
 	private static final String USER_INPUT_SOURCE = "source";
 
@@ -152,10 +158,55 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	 * @param jsonUrlEncoded
 	 * @return 
 	 */
+	@SuppressWarnings("rawtypes")
 	@Programmatic
 	private GenericFilter jsonToFilter(String jsonUrlEncoded) {
 		String json = new String(Base64.getUrlDecoder().decode(jsonUrlEncoded.getBytes()));
-		return new GsonBuilder().create().fromJson(json, GenericFilter.class);
+		GenericFilter genericFilter = new GsonBuilder().create().fromJson(json, GenericFilter.class);
+		Map<String, Object> parameters = genericFilter.getParameters();
+		if (parameters.containsKey(PARAM_STATEMENT_SOURCE)) {
+			Object sourceObj = parameters.get(PARAM_STATEMENT_SOURCE);
+			if (sourceObj instanceof Map) {
+				String sourceName = (String) ((Map)sourceObj).get(WithName.FIELD_NAME);
+				List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, sourceName);
+				Optional<StatementSource> result = list.stream().filter(t -> {
+					return t.getName().equals(sourceName);
+				}).findFirst();
+				parameters.remove(PARAM_STATEMENT_SOURCE);
+				if (result.isPresent()) {
+					parameters.put(PARAM_STATEMENT_SOURCE, result.get());
+				}
+			}
+		}
+		if (parameters.containsKey(PARAM_CATEGORY)) {
+			Object sourceObj = parameters.get(PARAM_CATEGORY);
+			if (sourceObj instanceof Map) {
+				String sourceName = (String) ((Map)sourceObj).get(WithName.FIELD_NAME);
+				List<Category> list = categoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, sourceName);
+				Optional<Category> result = list.stream().filter(t -> {
+					return t.getName().equals(sourceName);
+				}).findFirst();
+				parameters.remove(PARAM_CATEGORY);
+				if (result.isPresent()) {
+					parameters.put(PARAM_CATEGORY, result.get());
+				}
+			}
+		}
+		if (parameters.containsKey(PARAM_SUB_CATEGORY)) {
+			Object sourceObj = parameters.get(PARAM_SUB_CATEGORY);
+			if (sourceObj instanceof Map) {
+				String sourceName = (String) ((Map)sourceObj).get(WithName.FIELD_NAME);
+				List<SubCategory> list = subCategoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, sourceName);
+				Optional<SubCategory> result = list.stream().filter(t -> {
+					return t.getName().equals(sourceName);
+				}).findFirst();
+				parameters.remove(PARAM_SUB_CATEGORY);
+				if (result.isPresent()) {
+					parameters.put(PARAM_SUB_CATEGORY, result.get());
+				}
+			}
+		}
+		return genericFilter;
 	}
 	
 	@Override
@@ -233,7 +284,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 			@ParameterLayout(named = "Source Type", describedAs = "Description of statement source to be created")
 			String sourceType,
 			@Parameter(optionality = Optionality.MANDATORY, maxLength = WithName.MAX_LEN)
-			@ParameterLayout(named = "Name", describedAs = "Unique name of statement source to be created")
+			@ParameterLayout(named = WithName.FIELD_NAME, describedAs = "Unique name of statement source to be created")
 			String name,
 			@Parameter(optionality = Optionality.OPTIONAL, maxLength = WithDescription.MAX_LEN)
 			@ParameterLayout(named = "Description", multiLine = 4, labelPosition = LabelPosition.TOP, describedAs = "Description of statement source to be created")
@@ -241,7 +292,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 			) {
 		StatementSourceType type = StatementSourceType.valueOf(sourceType);
 		StatementSource statementSource = null;
-		List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", name);
+		List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, name);
 		if (list != null && !list.isEmpty()) {
 			for (StatementSource ss : list) {
 				if (ss.getName().equals(name)) {
@@ -590,7 +641,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 		if (name == null) {
 			return null;
 		}
-		List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", name);
+		List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, name);
 		StatementSource source = matchingExactName(name, list);
 		return source;
 	}
@@ -616,7 +667,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 		if (name == null) {
 			return null;
 		}
-		List<Category> list = categoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", name);
+		List<Category> list = categoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, name);
 		Category category = matchingExactName(name, list);
 		return category;
 	}
@@ -626,7 +677,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 		if (name == null) {
 			return null;
 		}
-		List<SubCategory> list = subCategoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", name);
+		List<SubCategory> list = subCategoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, name);
 		SubCategory subCategory = matchingExactName(name, list);
 		return subCategory;
 	}

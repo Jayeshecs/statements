@@ -41,10 +41,21 @@ public abstract class AbstractService<T> {
 	 * @param filter
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<T> filter(String filter, Map<String, Object> parameters) {
+		return filter(filter, null, parameters);
+	}
+	
+	/**
+	 * @param filter
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> filter(String filter, OrderBy orderBy, Map<String, Object> parameters) {
 		Query query = isisJdoSupport.getJdoPersistenceManager().newQuery(entityClass);
 		query.setFilter(filter);
+		if (orderBy != null) {
+			query.setOrdering(orderBy.getOrdering());
+		}
 		return (parameters != null && !parameters.isEmpty())
 					? (List<T>) query.executeWithMap(parameters) 
 							: (List<T>) query.execute();

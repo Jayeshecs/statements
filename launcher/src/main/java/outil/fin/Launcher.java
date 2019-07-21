@@ -19,7 +19,7 @@ public class Launcher {
 	public static void main(String[] args) {
 		final Display display = new Display();
 		Shell shell = new Shell(display);
-		shell.setText(/*"Snippet 148"*/"SWT Browser");
+		shell.setText("Statements Manager");
 		shell.setLayout(new FillLayout());
 		Browser browser = null;
 		try {
@@ -32,6 +32,7 @@ public class Launcher {
 			 * Platform requirements for the SWT Browser widget are available
 			 * from the SWT FAQ website.
 			 */
+			e.printStackTrace();
 		}
 		if (browser != null) {
 			/* The Browser widget can be used */

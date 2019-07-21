@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
+import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.xactn.TransactionService;
 import org.junit.Test;
 
@@ -23,6 +24,8 @@ public class Smoke_IntegTest extends DomainAppIntegTestAbstract {
     TransactionService transactionService;
     @Inject
     StatementsMenu menu;
+    @Inject
+    ServiceRegistry2 serviceRegistry;
 
 
     @Test
@@ -36,11 +39,11 @@ public class Smoke_IntegTest extends DomainAppIntegTestAbstract {
 
         // when
         // TODO: [JP]
-        ManageTransactionDashboard manageTransaction = wrap(menu).manageTransaction();
-
+        ManageTransactionDashboard manageTransaction = menu.manageTransaction();
+        serviceRegistry.injectServicesInto(manageTransaction);
+        
         // then
         assertThat(manageTransaction).isNotNull();
-        
         List<Transaction> transactions = manageTransaction.getTransactions();
 
         // then

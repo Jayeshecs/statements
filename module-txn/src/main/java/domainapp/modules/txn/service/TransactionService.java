@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.service.AbstractService;
+import domainapp.modules.base.service.OrderBy;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.StatementSourceType;
 import domainapp.modules.ref.dom.SubCategory;
@@ -51,7 +52,9 @@ public class TransactionService extends AbstractService<Transaction>{
 	public List<Transaction> search(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, StatementSource source, TransactionType type, Category category, SubCategory subCategory, Boolean uncategorized) {
 		Map<String, Object> parameters = new HashMap<>();		
 		String filter = buildFilter(narration, transactionDateStart, transactionDateEnd, amountMin, amountMax, type, source, category, subCategory, uncategorized, parameters);
-		return filter(filter.toString(), parameters);
+		OrderBy orderBy = new OrderBy();
+		orderBy.add("transactionDate", true);
+		return filter(filter.toString(), orderBy, parameters);
 	}
 
 	public static final Pattern CSV_REGEX_PATTERN = Pattern.compile("(\"(?:[^\"]|\"\")*\"|[^,\"\\n\\r]*)(,|\\r?\\n|\\r)");
@@ -174,7 +177,9 @@ public class TransactionService extends AbstractService<Transaction>{
 				addAnd = true;
 			}
 			if (subCategory != null) {
-				ensureAndPrefixed(filter, addAnd);
+				if (category != null) {
+					ensureAndPrefixed(filter, true);
+				}
 				filter.append("subCategory == :subCategory");
 				parameters.put("subCategory", subCategory);
 				addAnd = true;

@@ -58,6 +58,7 @@ import domainapp.modules.addon.service.AddonService;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
+import domainapp.modules.base.service.OrderBy;
 import domainapp.modules.base.service.SessionStoreFactory;
 import domainapp.modules.base.view.GenericFilter;
 import domainapp.modules.rdr.addon.IStatementReaderContext;
@@ -448,7 +449,9 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 		if (filter != null) {
 			Map<String, Object> map = new HashMap<>(filter.getParameters());
 			map.remove(PARAM_USER_INPUT_VALUES);
-			return transactionService.filter(filter.getFilter(), map);
+			OrderBy orderBy = new OrderBy();
+			orderBy.add("transactionDate", true);
+			return transactionService.filter(filter.getFilter(), orderBy, map);
 		}
 		return transactionService.all();
 	}
@@ -655,11 +658,19 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	}
 	
 	public BigDecimal default5Filter() {
-		return getUserInputValue(USER_INPUT_AMOUNT_FLOOR);
+		Number userInputValue = getUserInputValue(USER_INPUT_AMOUNT_FLOOR);
+		if (userInputValue == null) {
+			return null;
+		}
+		return new BigDecimal(String.valueOf(userInputValue));
 	}
 	
 	public BigDecimal default6Filter() {
-		return getUserInputValue(USER_INPUT_AMOUNT_CAP);
+		Number userInputValue = getUserInputValue(USER_INPUT_AMOUNT_CAP);
+		if (userInputValue == null) {
+			return null;
+		}
+		return new BigDecimal(String.valueOf(userInputValue));
 	}
 	
 	public Category default7Filter() {

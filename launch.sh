@@ -1,3 +1,5 @@
 #/bin/sh
-java -jar launcher.jar
+nohup javaw -jar launcher.jar 2>&1 > ./logs/launcher.log &
+
+
 

@@ -587,6 +587,28 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 			@ParameterLayout(named = "Uncategorized", describedAs = "Exclude selected category and/or sub-category from filter criteria")
 			Boolean uncategorized
 			) {
+		internalFilter(narration, type, source, dateStart, dateEnd, amountFloor, amountCap, category, subCategory, uncategorized);
+		SessionStoreFactory.INSTANCE.getSessionStore().set(SESSION_ATTRIBUTE_FILTER, filterToJson());
+		return this;
+	}
+
+	/**
+	 * @param narration
+	 * @param type
+	 * @param source
+	 * @param dateStart
+	 * @param dateEnd
+	 * @param amountFloor
+	 * @param amountCap
+	 * @param category
+	 * @param subCategory
+	 * @param uncategorized
+	 * @return 
+	 */
+	@Programmatic
+	public ManageTransactionDashboard internalFilter(String narration, TransactionType type, StatementSource source, Date dateStart,
+			Date dateEnd, BigDecimal amountFloor, BigDecimal amountCap, Category category, SubCategory subCategory,
+			Boolean uncategorized) {
 		GenericFilter filter = new GenericFilter();
 		Map<String, Object> parameters = filter.getParameters();
 		Map<String, Object> userInputValues = prepareUserInputValues(narration, type, source, dateStart, dateEnd,
@@ -594,7 +616,6 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 		parameters.put(PARAM_USER_INPUT_VALUES, userInputValues);
 		filter.setFilter(transactionService.buildFilter(narration, dateStart, dateEnd, amountFloor, amountCap, type, source, category, subCategory, uncategorized, parameters));
 		setFilter(filter);
-		SessionStoreFactory.INSTANCE.getSessionStore().set(SESSION_ATTRIBUTE_FILTER, filterToJson());
 		return this;
 	}
 

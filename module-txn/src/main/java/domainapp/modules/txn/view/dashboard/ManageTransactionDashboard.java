@@ -52,6 +52,7 @@ import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Blob;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import domainapp.modules.addon.service.AddonService;
@@ -90,6 +91,8 @@ import lombok.extern.slf4j.Slf4j;
 )
 @Slf4j
 public class ManageTransactionDashboard implements HintStore.HintIdProvider, ViewModel {
+
+	private static final String PARAM_TRANSACTION_TYPE = "type";
 	
 	private static final String PARAM_SUB_CATEGORY = "subCategory";
 
@@ -151,31 +154,50 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 		if (getFilter() == null) {
 			setFilter(defaultFilter());
 		}
-		String json = new GsonBuilder().create().toJson(getFilter());
+		String json = createGsonBuilder().toJson(getFilter());
 		return Base64.getUrlEncoder().encodeToString(json.getBytes());
+	}
+
+	/**
+	 * @return
+	 */
+	private Gson createGsonBuilder() {
+		GsonBuilder builder = new GsonBuilder();
+//		builder.setPrettyPrinting();
+		return builder.create();
 	}
 
 	/**
 	 * @param jsonUrlEncoded
 	 * @return 
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Programmatic
 	private GenericFilter jsonToFilter(String jsonUrlEncoded) {
 		String json = new String(Base64.getUrlDecoder().decode(jsonUrlEncoded.getBytes()));
-		GenericFilter genericFilter = new GsonBuilder().create().fromJson(json, GenericFilter.class);
+		GenericFilter genericFilter = createGsonBuilder().fromJson(json, GenericFilter.class);
 		Map<String, Object> parameters = genericFilter.getParameters();
+		if (parameters.containsKey(PARAM_TRANSACTION_TYPE)) {
+			Object sourceObj = parameters.get(PARAM_TRANSACTION_TYPE);
+			parameters.put(PARAM_TRANSACTION_TYPE, TransactionType.valueOf(String.valueOf(sourceObj)));
+		}
 		if (parameters.containsKey(PARAM_STATEMENT_SOURCE)) {
 			Object sourceObj = parameters.get(PARAM_STATEMENT_SOURCE);
-			if (sourceObj instanceof Map) {
-				String sourceName = (String) ((Map)sourceObj).get(WithName.FIELD_NAME);
-				List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, sourceName);
-				Optional<StatementSource> result = list.stream().filter(t -> {
-					return t.getName().equals(sourceName);
-				}).findFirst();
+			if (sourceObj instanceof List) {
+				List<StatementSource> statementSourceList = new ArrayList<>();
+				((List<Map<String, Object>>)sourceObj).stream().forEach(m -> {
+					String sourceName = (String) ((Map)m).get(WithName.FIELD_NAME);
+					List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, sourceName);
+					Optional<StatementSource> result = list.stream().filter(t -> {
+						return t.getName().equals(sourceName);
+					}).findFirst();
+					if (result.isPresent()) {
+						statementSourceList.add(result.get());
+					}
+				});
 				parameters.remove(PARAM_STATEMENT_SOURCE);
-				if (result.isPresent()) {
-					parameters.put(PARAM_STATEMENT_SOURCE, result.get());
+				if (!statementSourceList.isEmpty()) {
+					parameters.put(PARAM_STATEMENT_SOURCE, statementSourceList);
 				}
 			}
 		}
@@ -488,7 +510,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	}
 
 	@Programmatic
-	private Map<String, Object> prepareUserInputValues(String narration, TransactionType type, StatementSource source,
+	private Map<String, Object> prepareUserInputValues(String narration, TransactionType type, List<StatementSource> source,
 			Date dateStart, Date dateEnd, BigDecimal amountFloor, BigDecimal amountCap, Category category,
 			SubCategory subCategory, Boolean uncategorized) {
 		Map<String, Object> userInputValues = new HashMap<String, Object>();
@@ -508,10 +530,15 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 			userInputValues.put(USER_INPUT_AMOUNT_CAP, amountCap);
 		}
 		if (type != null) {
-			userInputValues.put(USER_INPUT_TYPE, type.name());
+			userInputValues.put(USER_INPUT_TYPE, type);
 		}
 		if (source != null) {
-			userInputValues.put(USER_INPUT_SOURCE, source.getName());
+			final StringBuilder sb = new StringBuilder();
+			source.stream().forEach(s -> {
+				sb.append(s.getName());
+				sb.append(';');
+			});
+			userInputValues.put(USER_INPUT_SOURCE, sb.toString());
 		}
 		if (category != null) {
 			userInputValues.put(USER_INPUT_CATEGORY, category.getName());
@@ -564,7 +591,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 			TransactionType type, 
 			@Parameter(optionality = Optionality.OPTIONAL)
 			@ParameterLayout(named = "Statement Source")
-			StatementSource source, 
+			List<StatementSource> source, 
 			@Parameter(optionality = Optionality.OPTIONAL)
 			@ParameterLayout(named = "Start date")
 			Date dateStart, 
@@ -606,7 +633,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	 * @return 
 	 */
 	@Programmatic
-	public ManageTransactionDashboard internalFilter(String narration, TransactionType type, StatementSource source, Date dateStart,
+	public ManageTransactionDashboard internalFilter(String narration, TransactionType type, List<StatementSource> source, Date dateStart,
 			Date dateEnd, BigDecimal amountFloor, BigDecimal amountCap, Category category, SubCategory subCategory,
 			Boolean uncategorized) {
 		GenericFilter filter = new GenericFilter();
@@ -660,14 +687,27 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 		return null;
 	}
 	
-	public StatementSource default2Filter() {
+	public List<StatementSource> default2Filter() {
 		String name = getUserInputValue(USER_INPUT_SOURCE);
 		if (name == null) {
 			return null;
 		}
-		List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, name);
-		StatementSource source = matchingExactName(name, list);
-		return source;
+		List<StatementSource> result = new ArrayList<StatementSource>();
+		for (String source : name.split(";")) {
+			if (source.trim().length() == 0) {
+				continue ;
+			}
+			List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, source);
+			StatementSource statementSource = matchingExactName(source, list);
+			if (statementSource != null) {
+				result.add(statementSource);
+			}
+		}
+		return result;
+	}
+	
+	public List<StatementSource> choices2Filter() {
+		return statementSourceService.all();
 	}
 	
 	public Date default3Filter() {

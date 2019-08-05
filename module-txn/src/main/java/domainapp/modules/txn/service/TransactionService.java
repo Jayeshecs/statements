@@ -49,7 +49,8 @@ public class TransactionService extends AbstractService<Transaction>{
 	/**
 	 * DO NOT USE THIS INSTEAD USE COMBINATION OF {@link #buildFilter(String, Date, Date, BigDecimal, BigDecimal, TransactionType, StatementSource, Category, SubCategory, Map)} and {@link #search(String, Object...)}
 	 */
-	public List<Transaction> search(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, StatementSource source, TransactionType type, Category category, SubCategory subCategory, Boolean uncategorized) {
+	@Programmatic
+	public List<Transaction> search(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, List<StatementSource> source, TransactionType type, Category category, SubCategory subCategory, Boolean uncategorized) {
 		Map<String, Object> parameters = new HashMap<>();		
 		String filter = buildFilter(narration, transactionDateStart, transactionDateEnd, amountMin, amountMax, type, source, category, subCategory, uncategorized, parameters);
 		OrderBy orderBy = new OrderBy();
@@ -94,7 +95,7 @@ public class TransactionService extends AbstractService<Transaction>{
 	 */
 	@Programmatic
 	public String buildFilter(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, 
-			TransactionType type, StatementSource source, Category category, SubCategory subCategory, Boolean uncategorized,
+			TransactionType type, List<StatementSource> sources, Category category, SubCategory subCategory, Boolean uncategorized,
 			Map<String, Object> parameters) {
 		StringBuilder filter = new StringBuilder();
 		boolean addAnd = false;
@@ -137,10 +138,10 @@ public class TransactionService extends AbstractService<Transaction>{
 			parameters.put("amountMax", amountMax);
 			addAnd = true;
 		}
-		if (source != null) {
+		if (sources != null && !sources.isEmpty()) {
 			ensureAndPrefixed(filter, addAnd);
-			filter.append("source == :statementSource");
-			parameters.put("statementSource", source);
+			filter.append(":statementSource.contains(source)");
+			parameters.put("statementSource", sources);
 			addAnd = true;
 		}
 		if (type != null) {

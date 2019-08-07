@@ -7,6 +7,7 @@ install: /bin/true
 
 #script:
 #- mvn clean install
+	- mvn clean install -Dmavenmixin-jettyconsole
 
 cache:
   directories:

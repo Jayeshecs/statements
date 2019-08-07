@@ -1,13 +1,16 @@
 language: java
+
+# https://travis-ci.community/t/error-installing-oraclejdk8-expected-feature-release-number-in-range-of-9-to-14-but-got-8/3766
+dist: trusty
+
 jdk:
 - oraclejdk8
 
 # Build everything in 'script' phase
 install: /bin/true
 
-#script:
-#- mvn clean install
-	- mvn clean install -Dmavenmixin-jettyconsole
+script:
+- mvn clean install -Dmavenmixin-jettyconsole
 
 cache:
   directories:

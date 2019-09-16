@@ -19,5 +19,5 @@ public class GenericFilter implements Serializable {
 	private String filter = "";
 	
 	@Getter @Setter
-	private Map<String, Object> parameters = new HashMap<>();
+	private Map<String, Value> parameters = new HashMap<>();
 }

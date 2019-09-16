@@ -62,10 +62,12 @@ import domainapp.modules.base.entity.WithName;
 import domainapp.modules.base.service.OrderBy;
 import domainapp.modules.base.service.SessionStoreFactory;
 import domainapp.modules.base.view.GenericFilter;
+import domainapp.modules.base.view.Value;
 import domainapp.modules.rdr.addon.IStatementReaderContext;
 import domainapp.modules.rdr.addon.StatementReaderContext;
 import domainapp.modules.rdr.api.IStatementReader;
 import domainapp.modules.rdr.dom.StatementReader;
+import domainapp.modules.ref.datatype.StaticDataDataType;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.StatementSourceType;
 import domainapp.modules.ref.dom.SubCategory;
@@ -176,10 +178,10 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	private GenericFilter jsonToFilter(String jsonUrlEncoded) {
 		String json = new String(Base64.getUrlDecoder().decode(jsonUrlEncoded.getBytes()));
 		GenericFilter genericFilter = createGsonBuilder().fromJson(json, GenericFilter.class);
-		Map<String, Object> parameters = genericFilter.getParameters();
+		Map<String, Value> parameters = genericFilter.getParameters();
 		if (parameters.containsKey(PARAM_TRANSACTION_TYPE)) {
 			Object sourceObj = parameters.get(PARAM_TRANSACTION_TYPE);
-			parameters.put(PARAM_TRANSACTION_TYPE, TransactionType.valueOf(String.valueOf(sourceObj)));
+			parameters.put(PARAM_TRANSACTION_TYPE, new Value(StaticDataDataType.TRANSACTION_TYPE DataTyTransactionType.valueOf(String.valueOf(sourceObj)));
 		}
 		if (parameters.containsKey(PARAM_STATEMENT_SOURCE)) {
 			Object sourceObj = parameters.get(PARAM_STATEMENT_SOURCE);

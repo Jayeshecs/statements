@@ -15,6 +15,8 @@ import java.util.List;
  */
 public interface IDataTypeDefinition<T> {
 	
+	String VALUE_DELIMITER = "$#";
+	
 	/**
 	 * @param values
 	 * @return List of T parsed from given values

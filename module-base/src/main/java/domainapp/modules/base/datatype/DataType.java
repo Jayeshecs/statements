@@ -7,6 +7,7 @@ import domainapp.modules.base.datatype.definition.DataTypeDefinitionRegistry;
 import domainapp.modules.base.datatype.definition.DateDataTypeDefinition;
 import domainapp.modules.base.datatype.definition.NumberDataTypeDefinition;
 import domainapp.modules.base.datatype.definition.TextDataTypeDefinition;
+import domainapp.modules.base.datatype.definition.YesNoDataTypeDefinition;
 
 /**
  * Common data type enumeration
@@ -17,7 +18,8 @@ public enum DataType implements IDataType {
 	TEXT,
 	DATE,
 	AMOUNT,
-	NUMBER;
+	NUMBER,
+	YESNO;
 
 	@Override
 	public String getName() {
@@ -29,5 +31,6 @@ public enum DataType implements IDataType {
         DataTypeDefinitionRegistry.INSTANCE.register(DATE, new DateDataTypeDefinition());
         DataTypeDefinitionRegistry.INSTANCE.register(AMOUNT, new AmountDataTypeDefinition());
         DataTypeDefinitionRegistry.INSTANCE.register(NUMBER, new NumberDataTypeDefinition());
+        DataTypeDefinitionRegistry.INSTANCE.register(YESNO, new YesNoDataTypeDefinition());
 	}
 }

@@ -23,7 +23,7 @@ public abstract class BaseDataTypeDefinition<T> implements IDataTypeDefinition<T
 			return null;
 		}
 		List<T> result = new ArrayList<>();
-		for (String value : values.split(",")) {
+		for (String value : values.split(VALUE_DELIMITER)) {
 			result.add(stringToValue(value));
 		}
 		return result;
@@ -44,9 +44,9 @@ public abstract class BaseDataTypeDefinition<T> implements IDataTypeDefinition<T
 		}
 		StringBuilder result = new StringBuilder();
 		values.forEach(value -> {
-			result.append(valueToString(value)).append(",");
+			result.append(valueToString(value)).append(VALUE_DELIMITER);
 		});
-		result.setLength(result.length() - 1);
+		result.setLength(result.length() - VALUE_DELIMITER.length());
 		return result.toString();
 	}
 
@@ -58,5 +58,5 @@ public abstract class BaseDataTypeDefinition<T> implements IDataTypeDefinition<T
 	 */
 	protected String valueToString(T value) {
 		return String.valueOf(value);
-	}	
+	}
 }

@@ -52,6 +52,19 @@ import lombok.ToString;
 @ToString(of = {"source", "type", "transactionDate", "narration", "reference", "amount", "rawdataSequence"})
 public class Transaction implements Comparable<Transaction> {
 	
+	public interface FieldConstants {
+		String SOURCE = "source";
+		String TYPE = "type";
+		String CATEGORY = "category";
+		String SUB_CATEGORY = "subCategory";
+		String AMOUNT = "amount";
+		String TRANSACTION_DATE = "transactionDate";
+		String NARRATION = "narration";
+		String REFERENCE = "reference";
+		String RAWDATA = "rawdata";
+		String RAWDATA_SEQUENCE = "rawdataSequence";
+	}
+	
 	public static final String QUERY_FIND_BY_RAWDATA = "findByRawdata"; //$NON-NLS-1$
     
     public static class CreateEvent extends ActionDomainEvent<Transaction> {

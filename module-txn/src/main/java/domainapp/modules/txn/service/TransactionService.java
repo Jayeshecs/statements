@@ -4,6 +4,7 @@
 package domainapp.modules.txn.service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +18,18 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import domainapp.modules.base.datatype.DataType;
+import domainapp.modules.base.datatype.DataTypeUtil;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.service.AbstractService;
 import domainapp.modules.base.service.OrderBy;
+import domainapp.modules.base.view.Value;
+import domainapp.modules.ref.datatype.StaticDataDataType;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.StatementSourceType;
 import domainapp.modules.ref.dom.SubCategory;
 import domainapp.modules.ref.dom.TransactionType;
+import domainapp.modules.txn.datatype.TransactionDataType;
 import domainapp.modules.txn.dom.StatementSource;
 import domainapp.modules.txn.dom.Transaction;
 
@@ -50,12 +56,13 @@ public class TransactionService extends AbstractService<Transaction>{
 	 * DO NOT USE THIS INSTEAD USE COMBINATION OF {@link #buildFilter(String, Date, Date, BigDecimal, BigDecimal, TransactionType, StatementSource, Category, SubCategory, Map)} and {@link #search(String, Object...)}
 	 */
 	@Programmatic
-	public List<Transaction> search(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, List<StatementSource> source, TransactionType type, Category category, SubCategory subCategory, Boolean uncategorized) {
-		Map<String, Object> parameters = new HashMap<>();		
-		String filter = buildFilter(narration, transactionDateStart, transactionDateEnd, amountMin, amountMax, type, source, category, subCategory, uncategorized, parameters);
+	public List<Transaction> search(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, List<StatementSource> source, List<TransactionType> transactionTypes, List<Category> categories, List<SubCategory> subCategories, Boolean uncategorized) {
+		Map<String, Value> parameters = new HashMap<>();
+		String filter = buildFilter(narration, transactionDateStart, transactionDateEnd, amountMin, amountMax, transactionTypes, source, categories, subCategories, uncategorized, parameters);
+		parameters.remove("uncategorized");
 		OrderBy orderBy = new OrderBy();
 		orderBy.add("transactionDate", true);
-		return filter(filter.toString(), orderBy, parameters);
+		return filter(filter.toString(), orderBy, DataTypeUtil.toMapOfObject(parameters));
 	}
 
 	public static final Pattern CSV_REGEX_PATTERN = Pattern.compile("(\"(?:[^\"]|\"\")*\"|[^,\"\\n\\r]*)(,|\\r?\\n|\\r)");
@@ -89,14 +96,14 @@ public class TransactionService extends AbstractService<Transaction>{
 	 * @param amountMin
 	 * @param amountMax
 	 * @param source
-	 * @param type
+	 * @param transactionTypes
 	 * @param parameters
 	 * @return
 	 */
 	@Programmatic
 	public String buildFilter(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, 
-			TransactionType type, List<StatementSource> sources, Category category, SubCategory subCategory, Boolean uncategorized,
-			Map<String, Object> parameters) {
+			List<TransactionType> transactionTypes, List<StatementSource> sources, List<Category> categories, List<SubCategory> subCategories, Boolean uncategorized,
+			Map<String, Value> parameters) {
 		StringBuilder filter = new StringBuilder();
 		boolean addAnd = false;
 		if (narration != null && !narration.isEmpty()) {
@@ -113,79 +120,81 @@ public class TransactionService extends AbstractService<Transaction>{
 			}
 			filter.append(")");
 			addAnd = true;
+			parameters.put("narration", DataTypeUtil.createValue(DataType.TEXT, Arrays.asList(narration)));
 		}
 		if (transactionDateStart != null) {
 			ensureAndPrefixed(filter, addAnd);
 			filter.append("transactionDate >= :transactionDateStart");
-			parameters.put("transactionDateStart", transactionDateStart);
+			parameters.put("transactionDateStart", DataTypeUtil.createValue(DataType.DATE, Arrays.asList(transactionDateStart)));
 			addAnd = true;
 		}
 		if (transactionDateEnd != null) {
 			ensureAndPrefixed(filter, addAnd);
 			filter.append("transactionDate <= :transactionDateEnd");
-			parameters.put("transactionDateEnd", transactionDateEnd);
+			parameters.put("transactionDateEnd", DataTypeUtil.createValue(DataType.DATE, Arrays.asList(transactionDateEnd)));
 			addAnd = true;
 		}
 		if (amountMin != null) {
 			ensureAndPrefixed(filter, addAnd);
 			filter.append("amount >= :amountMin");
-			parameters.put("amountMin", amountMin);
+			parameters.put("amountMin", DataTypeUtil.createValue(DataType.AMOUNT, Arrays.asList(amountMin)));
 			addAnd = true;
 		}
 		if (amountMax != null) {
 			ensureAndPrefixed(filter, addAnd);
 			filter.append("amount <= :amountMax");
-			parameters.put("amountMax", amountMax);
+			parameters.put("amountMax", DataTypeUtil.createValue(DataType.AMOUNT, Arrays.asList(amountMax)));
 			addAnd = true;
 		}
 		if (sources != null && !sources.isEmpty()) {
 			ensureAndPrefixed(filter, addAnd);
 			filter.append(":statementSource.contains(source)");
-			parameters.put("statementSource", sources);
+			parameters.put("statementSource", DataTypeUtil.createValue(TransactionDataType.STATEMENT_SOURCE, sources));
 			addAnd = true;
 		}
-		if (type != null) {
+		if (transactionTypes != null && !transactionTypes.isEmpty()) {
 			ensureAndPrefixed(filter, addAnd);
-			filter.append("type == :type");
-			parameters.put("type", type);
+			filter.append(":type.contains(type)");
+			parameters.put("type", DataTypeUtil.createValue(StaticDataDataType.TRANSACTION_TYPE, transactionTypes));
 			addAnd = true;
 		}
 		if ((uncategorized == null || uncategorized == false)) {
-			if (category != null) {
+			if (categories != null) {
 				ensureAndPrefixed(filter, addAnd);
-				filter.append("category == :category");
-				parameters.put("category", category);
+				filter.append(":category.contains(category)");
+				parameters.put("category", DataTypeUtil.createValue(StaticDataDataType.CATEGORY, categories));
 				addAnd = true;
 			}
-			if (subCategory != null) {
+			if (subCategories != null) {
 				ensureAndPrefixed(filter, addAnd);
-				filter.append("subCategory == :subCategory");
-				parameters.put("subCategory", subCategory);
+				filter.append(":subCategory.contains(subCategory)");
+				parameters.put("subCategory", DataTypeUtil.createValue(StaticDataDataType.SUB_CATEGORY, subCategories));
 				addAnd = true;
 			}
 		} 
 		if (uncategorized != null && uncategorized == true) {
 			ensureAndPrefixed(filter, addAnd);
+			parameters.put("uncategorized", DataTypeUtil.createValue(DataType.YESNO, Arrays.asList(Boolean.TRUE)));
 			filter.append("(");
 			filter.append("(category == null && subCategory == null) ");
 			addAnd = true;
-			if (category != null || subCategory != null) {
+			if ((categories != null && !categories.isEmpty()) || (subCategories != null && !subCategories.isEmpty())) {
 				filter.append(" || (");
 			}
-			if (category != null) {
-				filter.append("category == :category");
-				parameters.put("category", category);
+			if (categories != null && !categories.isEmpty()) {
+				filter.append(":category.contains(category)");
+				parameters.put("category", DataTypeUtil.createValue(StaticDataDataType.CATEGORY, categories));
 				addAnd = true;
 			}
-			if (subCategory != null) {
-				if (category != null) {
+			if (subCategories != null && !subCategories.isEmpty()) {
+				if (categories != null) {
 					ensureAndPrefixed(filter, true);
 				}
-				filter.append("subCategory == :subCategory");
-				parameters.put("subCategory", subCategory);
+				filter.append(":subCategory.contains(subCategory)");
+				parameters.put("subCategory", DataTypeUtil.createValue(StaticDataDataType.SUB_CATEGORY, subCategories));
 				addAnd = true;
 			}
-			if (category != null || subCategory != null) {
+			if ((categories != null && !categories.isEmpty()) || (subCategories != null && !subCategories.isEmpty())) {
 				filter.append(" ) ");
 			}
 			filter.append(")");

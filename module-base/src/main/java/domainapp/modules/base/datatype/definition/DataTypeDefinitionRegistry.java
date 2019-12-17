@@ -17,8 +17,11 @@ public class DataTypeDefinitionRegistry {
 	
 	private Map<IDataType, IDataTypeDefinition<?>> REGISTRY;
 	
+	private Map<String, IDataType> mapDataType;
+	
 	private DataTypeDefinitionRegistry() {
 		REGISTRY = new HashMap<>();
+		mapDataType = new HashMap<>();
 	}
 	
 	/**
@@ -29,6 +32,27 @@ public class DataTypeDefinitionRegistry {
 	 */
 	public void register(IDataType dataType, IDataTypeDefinition<?> dataTypeDefinition) {
 		REGISTRY.put(dataType, dataTypeDefinition);
+		mapDataType.put(dataType.getName(), dataType);
+	}
+	
+	/**
+	 * @param dataTypeName {@link String}
+	 * @return to get {@link IDataType} registered with given dataTypeName
+	 */
+	public IDataType getDataType(String dataTypeName) {
+		return mapDataType.get(dataTypeName);
+	}
+	
+	/**
+	 * @param dataTypeName {@link String}
+	 * @return to get {@link IDataTypeDefinition} registered with {@link IDataType} corresponding to given dataTypeName
+	 */
+	public <T> IDataTypeDefinition<T> get(String dataTypeName) {
+		IDataType dataType = getDataType(dataTypeName);
+		if (dataType == null) {
+			return null;
+		}
+		return get(dataType);
 	}
 	
 	/**
@@ -36,7 +60,7 @@ public class DataTypeDefinitionRegistry {
 	 * @return to get {@link IDataTypeDefinition} registered with given {@link IDataType}
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> IDataTypeDefinition<T> get(DataType dataType) {
+	public <T> IDataTypeDefinition<T> get(IDataType dataType) {
 		return (IDataTypeDefinition<T>) REGISTRY.get(dataType);
 	}
 }

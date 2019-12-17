@@ -25,7 +25,7 @@ public abstract class WithNameDataTypeDefinition<T extends WithName> implements 
 			return null;
 		}
 		final List<T> result = new ArrayList<>();
-		for (String value : values.split(",")) {
+		for (String value : values.split(VALUE_DELIMITER)) {
 			List<T> records = getService().search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, value);
 			Optional<T> record = records.stream().filter(p -> {
 				return p.getName().equals(values);
@@ -47,9 +47,9 @@ public abstract class WithNameDataTypeDefinition<T extends WithName> implements 
 		}
 		StringBuilder result = new StringBuilder();
 		values.forEach(record -> {
-			result.append(record.getName()).append(",");
+			result.append(record.getName()).append(VALUE_DELIMITER);
 		});
-		result.setLength(result.length() - 1);
+		result.setLength(result.length() - VALUE_DELIMITER.length());
 		return result.toString();
 	}
 

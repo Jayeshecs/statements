@@ -15,5 +15,4 @@ public class StaticModuleManifest extends AppManifestAbstract {
         super(BUILDER);
     }
 
-
 }

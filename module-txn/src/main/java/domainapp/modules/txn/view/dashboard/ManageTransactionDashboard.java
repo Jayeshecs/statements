@@ -642,15 +642,32 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T getUserInputValue(String key) {
+	private <T> List<T> getUserInputValueAsList(String key) {
 		GenericFilter filter = getFilter();
 		if (filter != null) {
 			Value value = filter.getParameters().get(key);
 			if (value != null) {
-				return (T) DataTypeUtil.valueToObject(value);
+				Object object = DataTypeUtil.valueToObject(value);
+				if (object instanceof List) {
+					return (List<T>)object;
+				}
+				return Arrays.asList((T)object);
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param key
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> T getUserInputValue(String key) {
+		List<Object> userInputValueAsList = getUserInputValueAsList(key);
+		if (userInputValueAsList == null || userInputValueAsList.isEmpty()) {
+			return null;
+		}
+		return (T)userInputValueAsList.get(0);
 	}
 	
 	public String default0Filter() {
@@ -658,7 +675,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	}
 	
 	public List<TransactionType> default1Filter() {
-		return getUserInputValue(FieldConstants.TYPE);
+		return getUserInputValueAsList(FieldConstants.TYPE);
 	}
 
 	/**
@@ -678,22 +695,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	}
 	
 	public List<StatementSource> default2Filter() {
-		String name = getUserInputValue(FieldConstants.SOURCE);
-		if (name == null) {
-			return null;
-		}
-		List<StatementSource> result = new ArrayList<StatementSource>();
-		for (String source : name.split(";")) {
-			if (source.trim().length() == 0) {
-				continue ;
-			}
-			List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, source);
-			StatementSource statementSource = matchingExactName(source, list);
-			if (statementSource != null) {
-				result.add(statementSource);
-			}
-		}
-		return result;
+		return getUserInputValueAsList(PARAM_STATEMENT_SOURCE);
 	}
 	
 	public List<StatementSource> choices2Filter() {
@@ -737,41 +739,11 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	}
 	
 	public List<Category> default7Filter() {
-		String name = getUserInputValue(FieldConstants.CATEGORY);
-		if (name == null) {
-			return null;
-		}
-		List<Category> result = new ArrayList<>();
-		for (String source : name.split(";")) {
-			if (source.trim().length() == 0) {
-				continue ;
-			}
-			List<Category> list = categoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, source);
-			Category category = matchingExactName(source, list);
-			if (category != null) {
-				result.add(category);
-			}
-		}
-		return result;
+		return getUserInputValueAsList(FieldConstants.CATEGORY);
 	}
 	
 	public List<SubCategory> default8Filter() {
-		String name = getUserInputValue(FieldConstants.SUB_CATEGORY);
-		if (name == null) {
-			return null;
-		}
-		List<SubCategory> result = new ArrayList<>();
-		for (String source : name.split(";")) {
-			if (source.trim().length() == 0) {
-				continue ;
-			}
-			List<SubCategory> list = subCategoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, source);
-			SubCategory subCategory = matchingExactName(source, list);
-			if (subCategory != null) {
-				result.add(subCategory);
-			}
-		}
-		return result;
+		return getUserInputValueAsList(FieldConstants.SUB_CATEGORY);
 	}
 	
 	public Boolean default9Filter() {

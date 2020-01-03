@@ -18,7 +18,15 @@ import domainapp.modules.base.datatype.DataType;
 public abstract class BaseDataTypeDefinition<T> implements IDataTypeDefinition<T> {
 
 	@Override
-	public List<T> parse(String values) {
+	public T parse(String value) {
+		if (value == null) {
+			return null;
+		}
+		return stringToValue(value);
+	}
+	
+	@Override
+	public List<T> parseAsList(String values) {
 		if (values == null) {
 			return null;
 		}
@@ -38,8 +46,16 @@ public abstract class BaseDataTypeDefinition<T> implements IDataTypeDefinition<T
 	protected abstract T stringToValue(String value);
 
 	@Override
+	public String format(T value) {
+		if (value == null) {
+			return null;
+		}
+		return valueToString(value);
+	}
+
+	@Override
 	public String format(List<T> values) {
-		if (values == null) {
+		if (values == null || values.isEmpty()) {
 			return null;
 		}
 		StringBuilder result = new StringBuilder();
@@ -48,6 +64,19 @@ public abstract class BaseDataTypeDefinition<T> implements IDataTypeDefinition<T
 		});
 		result.setLength(result.length() - VALUE_DELIMITER.length());
 		return result.toString();
+	}
+
+	@Override
+	public String[] formatAsArray(List<T> values) {
+		if (values == null || values.isEmpty()) {
+			return null;
+		}
+		String[] result = new String[values.size()];
+		int[] counter = new int[] {0};
+		values.forEach(value -> {
+			result[counter[0]++] = valueToString(value);
+		});
+		return result;
 	}
 
 	/**

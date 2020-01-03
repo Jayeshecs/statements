@@ -11,7 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @EqualsAndHashCode
-@ToString(of = {"dataType", "value"})
+@ToString(of = {"dataType", "list", "values"})
 public class Value implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -20,24 +20,21 @@ public class Value implements Serializable {
 	private String dataType;
 	
 	@Getter @Setter
-	private String value;
+	private Boolean list;
 	
 	@Getter @Setter
-	private List<String> list;
+	private List<String> values;
 	
 	@Builder
-	public Value(String dataType, String... values) {
+	public Value(String dataType, boolean list, String... values) {
 		this.dataType = dataType;
 		if (values != null) {
-			if (values.length > 1) {
-				list = Arrays.asList(values);
-			} else {
-				this.value = values[0];
-			}
+			this.values = Arrays.asList(values[0]);
 		}
+		this.list = list;
 	}
 	
 	public boolean isList() {
-		return list != null && !list.isEmpty();
+		return list;
 	}
 }

@@ -3,6 +3,7 @@
  */
 package domainapp.modules.base.datatype;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +30,20 @@ public class DataTypeUtil {
 		return result;
 	}
 
+	public static String valueToText(Value value) {
+		IDataTypeDefinition<Object> definition = DataTypeDefinitionRegistry.INSTANCE.get(value.getDataType());
+		if (value.isList()) {
+			return definition.format(definition.parseAsList(toDelimitedValue(value.getValues()))).replaceAll(IDataTypeDefinition.VALUE_DELIMITER, ", ");
+		}
+		return definition.format(definition.parse(value.getValues().get(0))).replaceAll(IDataTypeDefinition.VALUE_DELIMITER, ", ");
+	}
+
 	public static Object valueToObject(Value value) {
 		IDataTypeDefinition<Object> definition = DataTypeDefinitionRegistry.INSTANCE.get(value.getDataType());
-		return definition.parse(
-				(value.isList() 
-						? toDelimitedValue(value.getList()) 
-								: value.getValue()));
+		if (value.isList()) {
+			return definition.parseAsList(toDelimitedValue(value.getValues()));
+		}
+		return definition.parse(value.getValues().get(0));
 	}
 
 	/**
@@ -54,8 +63,19 @@ public class DataTypeUtil {
 	 * @param values
 	 * @return
 	 */
+	public static <T> Value createValue(IDataType dataType, T value) {
+		IDataTypeDefinition<T> dataTypeDefinition = DataTypeDefinitionRegistry.INSTANCE.get(dataType);
+		String[] values = dataTypeDefinition.formatAsArray(Arrays.asList(value));
+		return new Value(dataType.getName(), false, values);
+	}
+	
+	/**
+	 * @param dataType
+	 * @param values
+	 * @return
+	 */
 	public static <T> Value createValue(IDataType dataType, List<T> values) {
 		IDataTypeDefinition<T> dataTypeDefinition = DataTypeDefinitionRegistry.INSTANCE.get(dataType);
-		return new Value(dataType.getName(), dataTypeDefinition.format(values));
+		return new Value(dataType.getName(), true, dataTypeDefinition.format(values));
 	}
 }

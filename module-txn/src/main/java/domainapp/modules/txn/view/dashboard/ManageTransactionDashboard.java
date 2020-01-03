@@ -17,11 +17,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -69,20 +70,19 @@ import domainapp.modules.rdr.addon.IStatementReaderContext;
 import domainapp.modules.rdr.addon.StatementReaderContext;
 import domainapp.modules.rdr.api.IStatementReader;
 import domainapp.modules.rdr.dom.StatementReader;
-import domainapp.modules.ref.datatype.StaticDataDataType;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.StatementSourceType;
 import domainapp.modules.ref.dom.SubCategory;
 import domainapp.modules.ref.dom.TransactionType;
 import domainapp.modules.ref.service.CategoryService;
 import domainapp.modules.ref.service.SubCategoryService;
-import domainapp.modules.txn.datatype.TransactionDataType;
 import domainapp.modules.txn.dom.StatementSource;
 import domainapp.modules.txn.dom.Transaction;
 import domainapp.modules.txn.dom.Transaction.FieldConstants;
 import domainapp.modules.txn.rdr.TransactionReaderCallback;
 import domainapp.modules.txn.service.StatementSourceService;
 import domainapp.modules.txn.service.TransactionService;
+import domainapp.modules.txn.service.TransactionService.TransactionFilterFields;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -98,25 +98,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ManageTransactionDashboard implements HintStore.HintIdProvider, ViewModel {
 
-	private static final String PARAM_TRANSACTION_TYPE = "type";
-	
-	private static final String PARAM_SUB_CATEGORY = "subCategory";
-
-	private static final String PARAM_CATEGORY = "category";
-
-	private static final String PARAM_STATEMENT_SOURCE = "statementSource";
-
 	private static final String SESSION_ATTRIBUTE_FILTER = "filter";
-
-	private static final String USER_INPUT_UNCATEGORIZED = "uncategorized";
-
-	private static final String USER_INPUT_AMOUNT_CAP = "amountCap";
-
-	private static final String USER_INPUT_AMOUNT_FLOOR = "amountFloor";
-
-	private static final String USER_INPUT_DATE_END = "dateEnd";
-
-	private static final String USER_INPUT_DATE_START = "dateStart";
 
 	@PropertyLayout(hidden = Where.EVERYWHERE)
 	@Getter @Setter
@@ -137,7 +119,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	private GenericFilter defaultFilter() {
 		GenericFilter filter = new GenericFilter();
 		filter.setFilter(FieldConstants.CATEGORY + " == null && " + FieldConstants.SUB_CATEGORY + " == null");
-		filter.setExclude(new HashSet<String>(Arrays.asList("uncategorized")));
+		filter.setExclude(new HashSet<String>(Arrays.asList(TransactionService.TransactionFilterFields.UNCATEGORIZED, TransactionService.TransactionFilterFields.NARRATION)));
 		return filter;
 	}
 
@@ -158,7 +140,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	 */
 	private Gson createGsonBuilder() {
 		GsonBuilder builder = new GsonBuilder();
-//		builder.setPrettyPrinting();
+		builder.setPrettyPrinting();
 		return builder.create();
 	}
 
@@ -166,105 +148,10 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	 * @param jsonUrlEncoded
 	 * @return 
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Programmatic
 	private GenericFilter jsonToFilter(String jsonUrlEncoded) {
 		String json = new String(Base64.getUrlDecoder().decode(jsonUrlEncoded.getBytes()));
 		GenericFilter genericFilter = createGsonBuilder().fromJson(json, GenericFilter.class);
-		Map<String, Value> parameters = genericFilter.getParameters();
-		if (parameters.containsKey(PARAM_TRANSACTION_TYPE)) {
-			Value value = null;
-			Object sourceObj = parameters.get(PARAM_TRANSACTION_TYPE);
-			if (sourceObj instanceof Value) {
-				value = (Value) sourceObj;
-			}
-			if (value == null) { // this means sourceObj is not an instance of Value so we need to create new Value instance
-				value = DataTypeUtil.createValue(StaticDataDataType.TRANSACTION_TYPE, Arrays.asList(TransactionType.valueOf(String.valueOf(sourceObj))));
-			}
-			parameters.put(PARAM_TRANSACTION_TYPE, value);
-		}
-		if (parameters.containsKey(PARAM_STATEMENT_SOURCE)) {
-			Object sourceObj = parameters.get(PARAM_STATEMENT_SOURCE);
-			if (sourceObj instanceof List) {
-				List<String> statementSourceList = new ArrayList<>();
-				((List<Map<String, Object>>)sourceObj).stream().forEach(m -> {
-					String sourceName = (String) ((Map)m).get(WithName.FIELD_NAME);
-					List<StatementSource> list = statementSourceService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, sourceName);
-					Optional<StatementSource> result = list.stream().filter(t -> {
-						return t.getName().equals(sourceName);
-					}).findFirst();
-					if (result.isPresent()) {
-						statementSourceList.add(result.get().getName());
-					}
-				});
-				parameters.remove(PARAM_STATEMENT_SOURCE);
-				if (!statementSourceList.isEmpty()) {
-					parameters.put(PARAM_STATEMENT_SOURCE, DataTypeUtil.createValue(TransactionDataType.STATEMENT_SOURCE, statementSourceList));
-				}
-			}
-		}
-		if (parameters.containsKey(PARAM_CATEGORY)) {
-			Object sourceObj = parameters.get(PARAM_CATEGORY);
-			if (sourceObj instanceof List) {
-				List<String> categoryList = new ArrayList<>();
-				((List<Map<String, Object>>)sourceObj).stream().forEach(m -> {
-					String categoryName = (String) ((Map)m).get(WithName.FIELD_NAME);
-					List<Category> list = categoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, categoryName);
-					Optional<Category> result = list.stream().filter(t -> {
-						return t.getName().equals(categoryName);
-					}).findFirst();
-					if (result.isPresent()) {
-						categoryList.add(result.get().getName());
-					}
-				});
-				parameters.remove(PARAM_CATEGORY);
-				if (!categoryList.isEmpty()) {
-					parameters.put(PARAM_CATEGORY, DataTypeUtil.createValue(StaticDataDataType.CATEGORY, categoryList));
-				}
-			}
-			if (sourceObj instanceof Map) {
-				String sourceName = (String) ((Map)sourceObj).get(WithName.FIELD_NAME);
-				List<Category> list = categoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, sourceName);
-				Optional<Category> result = list.stream().filter(t -> {
-					return t.getName().equals(sourceName);
-				}).findFirst();
-				parameters.remove(PARAM_CATEGORY);
-				if (result.isPresent()) {
-					parameters.put(PARAM_CATEGORY, DataTypeUtil.createValue(StaticDataDataType.CATEGORY, Arrays.asList(result.get())));
-				}
-			}
-		}
-		if (parameters.containsKey(PARAM_SUB_CATEGORY)) {
-			Object sourceObj = parameters.get(PARAM_SUB_CATEGORY);
-			if (sourceObj instanceof List) {
-				List<String> subCategoryList = new ArrayList<>();
-				((List<Map<String, Object>>)sourceObj).stream().forEach(m -> {
-					String subCategoryName = (String) ((Map)m).get(WithName.FIELD_NAME);
-					List<SubCategory> list = subCategoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, subCategoryName);
-					Optional<SubCategory> result = list.stream().filter(t -> {
-						return t.getName().equals(subCategoryName);
-					}).findFirst();
-					if (result.isPresent()) {
-						subCategoryList.add(result.get().getName());
-					}
-				});
-				parameters.remove(PARAM_SUB_CATEGORY);
-				if (!subCategoryList.isEmpty()) {
-					parameters.put(PARAM_SUB_CATEGORY, DataTypeUtil.createValue(StaticDataDataType.SUB_CATEGORY, subCategoryList));
-				}
-			}
-			if (sourceObj instanceof Map) {
-				String sourceName = (String) ((Map)sourceObj).get(WithName.FIELD_NAME);
-				List<SubCategory> list = subCategoryService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, sourceName);
-				Optional<SubCategory> result = list.stream().filter(t -> {
-					return t.getName().equals(sourceName);
-				}).findFirst();
-				parameters.remove(PARAM_SUB_CATEGORY);
-				if (result.isPresent()) {
-					parameters.put(PARAM_SUB_CATEGORY, DataTypeUtil.createValue(StaticDataDataType.SUB_CATEGORY, Arrays.asList(result.get())));
-				}
-			}
-		}
 		return genericFilter;
 	}
 	
@@ -311,8 +198,10 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 			return filterDescription;
 		}
 		for (Entry<String, Value> entry : parameters.entrySet()) {
-			filterDescription = filterDescription.replaceAll(":" + entry.getKey(), entry.getValue().getValue());
+			filterDescription = filterDescription.replaceAll(":" + entry.getKey(), String.valueOf(DataTypeUtil.valueToObject(entry.getValue())));
 		}
+		filterDescription = filterDescription.replaceAll("\\.indexOf\\(", " ~ ");
+		filterDescription = filterDescription.replaceAll("\\) >= 0", " ");
 		return filterDescription;
 	}
 	
@@ -510,7 +399,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 				map.remove(param);
 			});
 			OrderBy orderBy = new OrderBy();
-			orderBy.add("transactionDate", true);
+			orderBy.add(Transaction.FieldConstants.TRANSACTION_DATE, true);
 			return transactionService.filter(filter.getFilter(), orderBy, map);
 		}
 		return transactionService.all();
@@ -558,9 +447,12 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 			promptStyle = PromptStyle.INLINE)
 	public ManageTransactionDashboard reset() {
 		GenericFilter filter = new GenericFilter();
-		filter.setExclude(new HashSet<String>(Arrays.asList("uncategorized")));
+		filter.setExclude(new HashSet<String>(Arrays.asList(TransactionService.TransactionFilterFields.UNCATEGORIZED, TransactionService.TransactionFilterFields.NARRATION)));
 		Map<String, Value> parameters = filter.getParameters();
-		filter.setFilter(transactionService.buildFilter(null, null, null, null, null, null, null, null, null, Boolean.FALSE, parameters));
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put("uncategorized", Boolean.FALSE);
+		filter.setFilter(transactionService.buildFilter(criteria, parameters));
+//		filter.setFilter(transactionService.buildFilter(null, null, null, null, null, null, null, null, null, Boolean.FALSE, parameters));
 		setFilter(filter);
 		SessionStoreFactory.INSTANCE.getSessionStore().set(SESSION_ATTRIBUTE_FILTER, filterToJson());
 		return this;
@@ -630,9 +522,20 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 			Date dateEnd, BigDecimal amountFloor, BigDecimal amountCap, List<Category> categories, List<SubCategory> subCategories,
 			Boolean uncategorized) {
 		GenericFilter filter = new GenericFilter();
-		filter.setExclude(new HashSet<String>(Arrays.asList("uncategorized")));
+		filter.setExclude(new HashSet<String>(Arrays.asList(TransactionService.TransactionFilterFields.UNCATEGORIZED, TransactionService.TransactionFilterFields.NARRATION)));
 		Map<String, Value> parameters = filter.getParameters();
-		filter.setFilter(transactionService.buildFilter(narration, dateStart, dateEnd, amountFloor, amountCap, transactionTypes, source, categories, subCategories, uncategorized, parameters));
+		Map<String, Object> criteria = new LinkedHashMap<String, Object>();
+		criteria.put(TransactionFilterFields.NARRATION, narration);
+		criteria.put(TransactionFilterFields.TRANSACTION_DATE_MIN, dateStart);
+		criteria.put(TransactionFilterFields.TRANSACTION_DATE_MAX, dateEnd);
+		criteria.put(TransactionFilterFields.AMOUNT_MIN, amountFloor);
+		criteria.put(TransactionFilterFields.AMOUNT_MAX, amountCap);
+		criteria.put(TransactionFilterFields.STATEMENT_SOURCE, source);
+		criteria.put(TransactionFilterFields.TRANSACTION_TYPE, transactionTypes);
+		criteria.put(TransactionFilterFields.CATEGORY, categories);
+		criteria.put(TransactionFilterFields.SUB_CATEGORY, subCategories);
+		criteria.put(TransactionFilterFields.UNCATEGORIZED, uncategorized);
+		filter.setFilter(transactionService.buildFilter(criteria, parameters));
 		setFilter(filter);
 		return this;
 	}
@@ -671,31 +574,15 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	}
 	
 	public String default0Filter() {
-		return getUserInputValue(FieldConstants.NARRATION);
+		return getUserInputValue(TransactionService.TransactionFilterFields.NARRATION);
 	}
 	
 	public List<TransactionType> default1Filter() {
-		return getUserInputValueAsList(FieldConstants.TYPE);
-	}
-
-	/**
-	 * @param name
-	 * @param list
-	 */
-	private <T extends WithName> T matchingExactName(final String name, List<T> list) {
-		if (list != null && !list.isEmpty()) {
-			Optional<T> result = list.stream().filter(t -> {
-				return t.getName().equals(name);
-			}).findFirst();
-			if (result.isPresent()) {
-				return result.get();
-			}
-		}
-		return null;
+		return getUserInputValueAsList(TransactionService.TransactionFilterFields.TRANSACTION_TYPE);
 	}
 	
 	public List<StatementSource> default2Filter() {
-		return getUserInputValueAsList(PARAM_STATEMENT_SOURCE);
+		return getUserInputValueAsList(TransactionService.TransactionFilterFields.STATEMENT_SOURCE);
 	}
 	
 	public List<StatementSource> choices2Filter() {
@@ -715,15 +602,15 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	}
 	
 	public Date default3Filter() {
-		return getUserInputValue(USER_INPUT_DATE_START);
+		return getUserInputValue(TransactionService.TransactionFilterFields.TRANSACTION_DATE_MIN);
 	}
 	
 	public Date default4Filter() {
-		return getUserInputValue(USER_INPUT_DATE_END);
+		return getUserInputValue(TransactionService.TransactionFilterFields.TRANSACTION_DATE_MAX);
 	}
 	
 	public BigDecimal default5Filter() {
-		Number userInputValue = getUserInputValue(USER_INPUT_AMOUNT_FLOOR);
+		Number userInputValue = getUserInputValue(TransactionService.TransactionFilterFields.AMOUNT_MIN);
 		if (userInputValue == null) {
 			return null;
 		}
@@ -731,7 +618,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	}
 	
 	public BigDecimal default6Filter() {
-		Number userInputValue = getUserInputValue(USER_INPUT_AMOUNT_CAP);
+		Number userInputValue = getUserInputValue(TransactionService.TransactionFilterFields.AMOUNT_MAX);
 		if (userInputValue == null) {
 			return null;
 		}
@@ -739,16 +626,16 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	}
 	
 	public List<Category> default7Filter() {
-		return getUserInputValueAsList(FieldConstants.CATEGORY);
+		return getUserInputValueAsList(TransactionService.TransactionFilterFields.CATEGORY);
 	}
 	
 	public List<SubCategory> default8Filter() {
-		return getUserInputValueAsList(FieldConstants.SUB_CATEGORY);
+		return getUserInputValueAsList(TransactionService.TransactionFilterFields.SUB_CATEGORY);
 	}
 	
 	public Boolean default9Filter() {
-		Boolean uncategorized = getUserInputValue(USER_INPUT_UNCATEGORIZED);
-		return uncategorized == null ? Boolean.TRUE : uncategorized;
+		Boolean uncategorized = getUserInputValue(TransactionService.TransactionFilterFields.UNCATEGORIZED);
+		return uncategorized == null ? Boolean.FALSE : uncategorized;
 	}
 	
 	@Action(

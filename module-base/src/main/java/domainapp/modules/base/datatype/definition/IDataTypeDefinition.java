@@ -15,18 +15,36 @@ import java.util.List;
  */
 public interface IDataTypeDefinition<T> {
 	
-	String VALUE_DELIMITER = "$#";
+	String VALUE_DELIMITER = "#_#";
+	
+	/**
+	 * @param value
+	 * @return T parsed from given value
+	 */
+	T parse(String value);
 	
 	/**
 	 * @param values
 	 * @return List of T parsed from given values
 	 */
-	List<T> parse(String values);
+	List<T> parseAsList(String values);
+	
+	/**
+	 * @param values
+	 * @return Comma separated values in String format
+	 */
+	String format(T value);
 	
 	/**
 	 * @param values
 	 * @return Comma separated values in String format
 	 */
 	String format(List<T> values);
+	
+	/**
+	 * @param values
+	 * @return Comma separated values in String format
+	 */
+	String[] formatAsArray(List<T> values);
 	
 }

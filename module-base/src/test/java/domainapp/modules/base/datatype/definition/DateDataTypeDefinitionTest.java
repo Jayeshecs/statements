@@ -3,8 +3,6 @@
  */
 package domainapp.modules.base.datatype.definition;
 
-import static org.junit.Assert.fail;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -41,18 +39,25 @@ public class DateDataTypeDefinitionTest {
 
 	/**
 	 * Test method for {@link domainapp.modules.base.datatype.definition.DateDataTypeDefinition#stringToValue(java.lang.String)}.
+	 * @throws ParseException 
 	 */
 	@Test
-	public void testStringToValueString() {
-		fail("Not yet implemented"); // TODO
+	public void testStringToValueString() throws ParseException {
+		Date date = definition.stringToValue("2019-01-01");
+		Assert.assertNotNull(date);
+		Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").parse("2019-01-01"), date);
 	}
 
 	/**
 	 * Test method for {@link domainapp.modules.base.datatype.definition.DateDataTypeDefinition#valueToString(java.util.Date)}.
+	 * @throws ParseException 
 	 */
 	@Test
-	public void testValueToStringDate() {
-		fail("Not yet implemented"); // TODO
+	public void testValueToStringDate() throws ParseException {
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2019-01-01");
+		String value = definition.valueToString(date);
+		Assert.assertNotNull(value);
+		Assert.assertEquals("2019-01-01", value);
 	}
 
 	/**

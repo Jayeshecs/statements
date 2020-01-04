@@ -24,5 +24,10 @@ public interface NamedQueryConstants {
 	 * Named query constant for getting all active or enabled records
 	 */
 	String QUERY_ALL_ACTIVE = "allActive"; //$NON-NLS-1$
+
+	/**
+	 * Named query constant for getting record by ID
+	 */
+	String QUERY_FIND_BY_ID = "findById";
 	
 }

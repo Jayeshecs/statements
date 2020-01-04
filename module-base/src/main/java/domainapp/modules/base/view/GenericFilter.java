@@ -2,7 +2,9 @@ package domainapp.modules.base.view;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,5 +21,9 @@ public class GenericFilter implements Serializable {
 	private String filter = "";
 	
 	@Getter @Setter
-	private Map<String, Object> parameters = new HashMap<>();
+	private Map<String, Value> parameters = new HashMap<>();
+	
+	@Getter @Setter
+	private Set<String> exclude = new HashSet<>();
+	
 }

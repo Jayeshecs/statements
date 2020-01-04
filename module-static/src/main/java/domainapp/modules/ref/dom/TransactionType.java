@@ -18,7 +18,7 @@ import domainapp.modules.base.IEntityEnum;
 		nature = Nature.EXTERNAL_ENTITY,
 		objectType = "ref.TransactionType"
 )
-@DomainObjectLayout(named = "Transaction type", plural = "Transaction types", describedAs = "Transaction types e.g. Debut and Credit")
+@DomainObjectLayout(named = "Transaction type", plural = "Transaction types", describedAs = "Transaction types e.g. Debit and Credit")
 public enum TransactionType implements IEntityEnum {
 
 	CREDIT(1),

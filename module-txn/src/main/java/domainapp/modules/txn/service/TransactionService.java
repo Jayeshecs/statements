@@ -5,11 +5,7 @@ package domainapp.modules.txn.service;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -17,15 +13,20 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import domainapp.modules.base.datatype.DataType;
 import domainapp.modules.base.entity.NamedQueryConstants;
-import domainapp.modules.base.service.AbstractService;
-import domainapp.modules.base.service.OrderBy;
-import domainapp.modules.ref.dom.Category;
+import domainapp.modules.base.filter.ListFilterBuilder;
+import domainapp.modules.base.filter.MaxFilterBuilder;
+import domainapp.modules.base.filter.MinFilterBuilder;
+import domainapp.modules.base.filter.TextFilterBuilder;
+import domainapp.modules.base.service.AbstractFilterableService;
+import domainapp.modules.ref.datatype.StaticDataDataType;
 import domainapp.modules.ref.dom.StatementSourceType;
-import domainapp.modules.ref.dom.SubCategory;
 import domainapp.modules.ref.dom.TransactionType;
+import domainapp.modules.txn.datatype.TransactionDataType;
 import domainapp.modules.txn.dom.StatementSource;
 import domainapp.modules.txn.dom.Transaction;
+import domainapp.modules.txn.dom.Transaction.FieldConstants;
 
 /**
  * @author jayeshecs
@@ -35,168 +36,51 @@ import domainapp.modules.txn.dom.Transaction;
 		nature = NatureOfService.DOMAIN,
 		repositoryFor = Transaction.class
 )
-public class TransactionService extends AbstractService<Transaction>{
-
+public class TransactionService extends AbstractFilterableService<Transaction> {
+	
+	public interface TransactionFilterFields {
+		String NARRATION = FieldConstants.NARRATION;
+		
+		String CATEGORY = FieldConstants.CATEGORY;
+		String SUB_CATEGORY = FieldConstants.SUB_CATEGORY;
+		String UNCATEGORIZED = "uncategorized";
+		
+		String AMOUNT_MIN = FieldConstants.AMOUNT + "Min";
+		String AMOUNT_MAX = FieldConstants.AMOUNT + "Max";
+		
+		String TRANSACTION_DATE_MIN = FieldConstants.TRANSACTION_DATE + "Min";
+		String TRANSACTION_DATE_MAX = FieldConstants.TRANSACTION_DATE + "Max";
+		
+		String TRANSACTION_TYPE = FieldConstants.TYPE;
+		String STATEMENT_SOURCE = FieldConstants.SOURCE;
+	}
+	
 	public TransactionService() {
 		super(Transaction.class);
+	}
+	
+	@Override
+	protected void registerFieldFilterBuilders() {
+		
+		registerFieldFilter(TransactionFilterFields.NARRATION, new TextFilterBuilder(FieldConstants.NARRATION));
+		
+		registerFieldFilter(TransactionFilterFields.AMOUNT_MIN, new MinFilterBuilder(FieldConstants.AMOUNT, DataType.AMOUNT));
+		registerFieldFilter(TransactionFilterFields.AMOUNT_MAX, new MaxFilterBuilder(FieldConstants.AMOUNT, DataType.AMOUNT));
+		registerFieldFilter(TransactionFilterFields.TRANSACTION_DATE_MIN, new MinFilterBuilder(FieldConstants.TRANSACTION_DATE, DataType.DATE));
+		registerFieldFilter(TransactionFilterFields.TRANSACTION_DATE_MAX, new MaxFilterBuilder(FieldConstants.TRANSACTION_DATE, DataType.DATE));
+		
+		registerFieldFilter(TransactionFilterFields.TRANSACTION_TYPE, new ListFilterBuilder(FieldConstants.TYPE, StaticDataDataType.TRANSACTION_TYPE));
+		registerFieldFilter(TransactionFilterFields.CATEGORY, new ListFilterBuilder(FieldConstants.CATEGORY, StaticDataDataType.CATEGORY));
+		registerFieldFilter(TransactionFilterFields.SUB_CATEGORY, new ListFilterBuilder(FieldConstants.SUB_CATEGORY, StaticDataDataType.SUB_CATEGORY));
+		
+		registerFieldFilter(TransactionFilterFields.UNCATEGORIZED, new UncategorizedFilterBuilder(TransactionFilterFields.UNCATEGORIZED));
+		
+		registerFieldFilter(TransactionFilterFields.STATEMENT_SOURCE, new ListFilterBuilder(FieldConstants.SOURCE, TransactionDataType.STATEMENT_SOURCE));
 	}
 	
 	@Programmatic
 	public List<Transaction> all() {
 		return search(NamedQueryConstants.QUERY_ALL);
-	}
-	
-	/**
-	 * DO NOT USE THIS INSTEAD USE COMBINATION OF {@link #buildFilter(String, Date, Date, BigDecimal, BigDecimal, TransactionType, StatementSource, Category, SubCategory, Map)} and {@link #search(String, Object...)}
-	 */
-	@Programmatic
-	public List<Transaction> search(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, List<StatementSource> source, TransactionType type, Category category, SubCategory subCategory, Boolean uncategorized) {
-		Map<String, Object> parameters = new HashMap<>();		
-		String filter = buildFilter(narration, transactionDateStart, transactionDateEnd, amountMin, amountMax, type, source, category, subCategory, uncategorized, parameters);
-		OrderBy orderBy = new OrderBy();
-		orderBy.add("transactionDate", true);
-		return filter(filter.toString(), orderBy, parameters);
-	}
-
-	public static final Pattern CSV_REGEX_PATTERN = Pattern.compile("(\"(?:[^\"]|\"\")*\"|[^,\"\\n\\r]*)(,|\\r?\\n|\\r)");
-	
-	/**
-	 * Remove enclosing quotes and ending delimiter.<br>
-	 * "Paid For Order", => Paid For Order<br>
-	 * 
-	 * @param text
-	 * @return
-	 */
-	private static final String sanitizeCsvValue(String text) {
-		if (text == null) {
-			return null;
-		}
-		text = text.trim();
-		if (text.charAt(0) == '"' && text.endsWith("\",")) {
-			return text.substring(1, text.length() - 2).trim();
-		} else if (text.charAt(text.length() - 1) == ',') {
-			return text.substring(0, text.length() - 1).trim();
-		}
-		return text.trim();
-	}
-	
-	/**
-	 * This API is useful for ViewModel where filter string is used as ID of view model
-	 * 
-	 * @param narration
-	 * @param transactionDateStart
-	 * @param transactionDateEnd
-	 * @param amountMin
-	 * @param amountMax
-	 * @param source
-	 * @param type
-	 * @param parameters
-	 * @return
-	 */
-	@Programmatic
-	public String buildFilter(String narration, Date transactionDateStart, Date transactionDateEnd, BigDecimal amountMin, BigDecimal amountMax, 
-			TransactionType type, List<StatementSource> sources, Category category, SubCategory subCategory, Boolean uncategorized,
-			Map<String, Object> parameters) {
-		StringBuilder filter = new StringBuilder();
-		boolean addAnd = false;
-		if (narration != null && !narration.isEmpty()) {
-			Matcher matcher = CSV_REGEX_PATTERN.matcher(narration + ",");
-			boolean prefixOr = false;
-			filter.append("(");
-			while (matcher.find()) {
-				if (prefixOr) {
-					filter.append(" || ");
-				}
-				String narration2 = sanitizeCsvValue(matcher.group(0));
-				filter.append("narration.indexOf('" + narration2 + "') >= 0");
-				prefixOr = true;
-			}
-			filter.append(")");
-			addAnd = true;
-		}
-		if (transactionDateStart != null) {
-			ensureAndPrefixed(filter, addAnd);
-			filter.append("transactionDate >= :transactionDateStart");
-			parameters.put("transactionDateStart", transactionDateStart);
-			addAnd = true;
-		}
-		if (transactionDateEnd != null) {
-			ensureAndPrefixed(filter, addAnd);
-			filter.append("transactionDate <= :transactionDateEnd");
-			parameters.put("transactionDateEnd", transactionDateEnd);
-			addAnd = true;
-		}
-		if (amountMin != null) {
-			ensureAndPrefixed(filter, addAnd);
-			filter.append("amount >= :amountMin");
-			parameters.put("amountMin", amountMin);
-			addAnd = true;
-		}
-		if (amountMax != null) {
-			ensureAndPrefixed(filter, addAnd);
-			filter.append("amount <= :amountMax");
-			parameters.put("amountMax", amountMax);
-			addAnd = true;
-		}
-		if (sources != null && !sources.isEmpty()) {
-			ensureAndPrefixed(filter, addAnd);
-			filter.append(":statementSource.contains(source)");
-			parameters.put("statementSource", sources);
-			addAnd = true;
-		}
-		if (type != null) {
-			ensureAndPrefixed(filter, addAnd);
-			filter.append("type == :type");
-			parameters.put("type", type);
-			addAnd = true;
-		}
-		if ((uncategorized == null || uncategorized == false)) {
-			if (category != null) {
-				ensureAndPrefixed(filter, addAnd);
-				filter.append("category == :category");
-				parameters.put("category", category);
-				addAnd = true;
-			}
-			if (subCategory != null) {
-				ensureAndPrefixed(filter, addAnd);
-				filter.append("subCategory == :subCategory");
-				parameters.put("subCategory", subCategory);
-				addAnd = true;
-			}
-		} 
-		if (uncategorized != null && uncategorized == true) {
-			ensureAndPrefixed(filter, addAnd);
-			filter.append("(");
-			filter.append("(category == null && subCategory == null) ");
-			addAnd = true;
-			if (category != null || subCategory != null) {
-				filter.append(" || (");
-			}
-			if (category != null) {
-				filter.append("category == :category");
-				parameters.put("category", category);
-				addAnd = true;
-			}
-			if (subCategory != null) {
-				if (category != null) {
-					ensureAndPrefixed(filter, true);
-				}
-				filter.append("subCategory == :subCategory");
-				parameters.put("subCategory", subCategory);
-				addAnd = true;
-			}
-			if (category != null || subCategory != null) {
-				filter.append(" ) ");
-			}
-			filter.append(")");
-		}
-		return filter.toString();
-	}
-
-	private void ensureAndPrefixed(StringBuilder filter, boolean addAnd) {
-		if (addAnd) {
-			filter.append(" && ");
-		}
 	}
 
 	@Programmatic

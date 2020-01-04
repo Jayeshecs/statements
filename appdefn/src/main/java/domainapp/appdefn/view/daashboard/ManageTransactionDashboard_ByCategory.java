@@ -80,7 +80,7 @@ public class ManageTransactionDashboard_ByCategory {
 		// 1. Get requried transactions
 		GenericFilter originalFilter = dashboard.getFilter();
 		List<Transaction> transactions = dashboard
-			.internalFilter(null, TransactionType.DEBIT, null, dateStart, dateEnd, amountFloor, amountCap, null, null, null)
+			.internalFilter(null, Arrays.asList(TransactionType.DEBIT), null, dateStart, dateEnd, amountFloor, amountCap, null, null, null)
 			.getTransactions();
 		dashboard.setFilter(originalFilter);
 		

@@ -79,9 +79,8 @@ public class ManageTransactionDashboard_ByCategory {
 			) {
 		// 1. Get requried transactions
 		GenericFilter originalFilter = dashboard.getFilter();
-		List<Transaction> transactions = dashboard
-			.internalFilter(null, Arrays.asList(TransactionType.DEBIT), null, dateStart, dateEnd, amountFloor, amountCap, null, null, null)
-			.getTransactions();
+		dashboard.internalFilter(null, Arrays.asList(TransactionType.DEBIT), null, dateStart, dateEnd, amountFloor, amountCap, null, null, null);
+		List<Transaction> transactions = dashboard.getTransactions();
 		dashboard.setFilter(originalFilter);
 		
 		// 2. Apply necessary grouping

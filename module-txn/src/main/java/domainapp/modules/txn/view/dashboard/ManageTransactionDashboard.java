@@ -15,9 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,7 +27,6 @@ import java.util.zip.ZipInputStream;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.ActionLayout.Position;
@@ -48,14 +45,9 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.hint.HintStore;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Blob;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import domainapp.modules.addon.service.AddonService;
 import domainapp.modules.base.datatype.DataTypeUtil;
@@ -63,9 +55,9 @@ import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
 import domainapp.modules.base.service.OrderBy;
-import domainapp.modules.base.service.SessionStoreFactory;
 import domainapp.modules.base.view.GenericFilter;
 import domainapp.modules.base.view.Value;
+import domainapp.modules.base.view.dashboard.AbstractFilterableDashboard;
 import domainapp.modules.rdr.addon.IStatementReaderContext;
 import domainapp.modules.rdr.addon.StatementReaderContext;
 import domainapp.modules.rdr.api.IStatementReader;
@@ -83,8 +75,6 @@ import domainapp.modules.txn.rdr.TransactionReaderCallback;
 import domainapp.modules.txn.service.StatementSourceService;
 import domainapp.modules.txn.service.TransactionService;
 import domainapp.modules.txn.service.TransactionService.TransactionFilterFields;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -96,13 +86,7 @@ import lombok.extern.slf4j.Slf4j;
 		objectType = "stmt.ManageTransactionDashboard"
 )
 @Slf4j
-public class ManageTransactionDashboard implements HintStore.HintIdProvider, ViewModel {
-
-	private static final String SESSION_ATTRIBUTE_FILTER = "filter";
-
-	@PropertyLayout(hidden = Where.EVERYWHERE)
-	@Getter @Setter
-	protected GenericFilter filter;
+public class ManageTransactionDashboard extends AbstractFilterableDashboard {
 	
 	/**
 	 * @return
@@ -116,72 +100,11 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	 * 
 	 */
 	@Programmatic
-	private GenericFilter defaultFilter() {
+	protected GenericFilter defaultFilter() {
 		GenericFilter filter = new GenericFilter();
 		filter.setFilter(FieldConstants.CATEGORY + " == null && " + FieldConstants.SUB_CATEGORY + " == null");
 		filter.setExclude(new HashSet<String>(Arrays.asList(TransactionService.TransactionFilterFields.UNCATEGORIZED, TransactionService.TransactionFilterFields.NARRATION)));
 		return filter;
-	}
-
-	/**
-	 * @return
-	 */
-	@Programmatic
-	private String filterToJson() {
-		if (getFilter() == null) {
-			setFilter(defaultFilter());
-		}
-		String json = createGsonBuilder().toJson(getFilter());
-		return Base64.getUrlEncoder().encodeToString(json.getBytes());
-	}
-
-	/**
-	 * @return
-	 */
-	private Gson createGsonBuilder() {
-		GsonBuilder builder = new GsonBuilder();
-		builder.setPrettyPrinting();
-		return builder.create();
-	}
-
-	/**
-	 * @param jsonUrlEncoded
-	 * @return 
-	 */
-	@Programmatic
-	private GenericFilter jsonToFilter(String jsonUrlEncoded) {
-		String json = new String(Base64.getUrlDecoder().decode(jsonUrlEncoded.getBytes()));
-		GenericFilter genericFilter = createGsonBuilder().fromJson(json, GenericFilter.class);
-		return genericFilter;
-	}
-	
-	@Override
-	public String hintId() {
-		String filter = SessionStoreFactory.INSTANCE.getSessionStore().get(SESSION_ATTRIBUTE_FILTER);
-		if (filter != null) {
-			setFilter(jsonToFilter(filter));
-			return filter;
-		}
-		return filterToJson();
-	}
-
-	@Override
-	public String viewModelMemento() {
-		String filter = SessionStoreFactory.INSTANCE.getSessionStore().get(SESSION_ATTRIBUTE_FILTER);
-		if (filter != null) {
-			return filter;
-		}
-		String json = filterToJson();
-		return json;
-	}
-
-	@Override
-	public void viewModelInit(String memento) {
-		String filter = SessionStoreFactory.INSTANCE.getSessionStore().get(SESSION_ATTRIBUTE_FILTER);
-		if (filter == null) {
-			filter = memento;
-		}
-		setFilter(jsonToFilter(filter));
 	}
 	
 	@Property(editing = Editing.DISABLED, editingDisabledReason = "This is read-only field")
@@ -449,12 +372,11 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 		GenericFilter filter = new GenericFilter();
 		filter.setExclude(new HashSet<String>(Arrays.asList(TransactionService.TransactionFilterFields.UNCATEGORIZED, TransactionService.TransactionFilterFields.NARRATION)));
 		Map<String, Value> parameters = filter.getParameters();
-		Map<String, Object> criteria = new HashMap<String, Object>();
-		criteria.put("uncategorized", Boolean.FALSE);
+		Map<String, Object> criteria = new LinkedHashMap<String, Object>();
+		criteria.put(TransactionService.TransactionFilterFields.UNCATEGORIZED, Boolean.FALSE);
 		filter.setFilter(transactionService.buildFilter(criteria, parameters));
-//		filter.setFilter(transactionService.buildFilter(null, null, null, null, null, null, null, null, null, Boolean.FALSE, parameters));
 		setFilter(filter);
-		SessionStoreFactory.INSTANCE.getSessionStore().set(SESSION_ATTRIBUTE_FILTER, filterToJson());
+		saveFilter();
 		return this;
 	}
 	
@@ -500,7 +422,7 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 			Boolean uncategorized
 			) {
 		internalFilter(narration, transactionTypes, source, dateStart, dateEnd, amountFloor, amountCap, categories, subCategories, uncategorized);
-		SessionStoreFactory.INSTANCE.getSessionStore().set(SESSION_ATTRIBUTE_FILTER, filterToJson());
+		saveFilter();
 		return this;
 	}
 
@@ -516,9 +438,10 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 	 * @param subCategories
 	 * @param uncategorized
 	 * @return 
+	 * TODO: Move this method in abstract class
 	 */
 	@Programmatic
-	public ManageTransactionDashboard internalFilter(String narration, List<TransactionType> transactionTypes, List<StatementSource> source, Date dateStart,
+	public void internalFilter(String narration, List<TransactionType> transactionTypes, List<StatementSource> source, Date dateStart,
 			Date dateEnd, BigDecimal amountFloor, BigDecimal amountCap, List<Category> categories, List<SubCategory> subCategories,
 			Boolean uncategorized) {
 		GenericFilter filter = new GenericFilter();
@@ -537,40 +460,6 @@ public class ManageTransactionDashboard implements HintStore.HintIdProvider, Vie
 		criteria.put(TransactionFilterFields.UNCATEGORIZED, uncategorized);
 		filter.setFilter(transactionService.buildFilter(criteria, parameters));
 		setFilter(filter);
-		return this;
-	}
-
-	/**
-	 * @param key
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private <T> List<T> getUserInputValueAsList(String key) {
-		GenericFilter filter = getFilter();
-		if (filter != null) {
-			Value value = filter.getParameters().get(key);
-			if (value != null) {
-				Object object = DataTypeUtil.valueToObject(value);
-				if (object instanceof List) {
-					return (List<T>)object;
-				}
-				return Arrays.asList((T)object);
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @param key
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private <T> T getUserInputValue(String key) {
-		List<Object> userInputValueAsList = getUserInputValueAsList(key);
-		if (userInputValueAsList == null || userInputValueAsList.isEmpty()) {
-			return null;
-		}
-		return (T)userInputValueAsList.get(0);
 	}
 	
 	public String default0Filter() {

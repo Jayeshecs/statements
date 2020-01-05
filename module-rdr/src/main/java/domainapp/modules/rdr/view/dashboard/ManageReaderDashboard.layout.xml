@@ -17,6 +17,10 @@
                 <cpt:action id="createStatementReaderType"/>
                 <cpt:action id="deleteStatementReaderTypes"/>
             </cpt:collection>
+            <cpt:collection id="mailConnectionProfiles">
+                <cpt:action id="createMailConnectionProfile"/>
+                <cpt:action id="deleteMailConnectionProfiles"/>
+            </cpt:collection>
         </bs3:col>
         <bs3:col span="8" unreferencedCollections="true">
             <cpt:collection id="statementReaders">

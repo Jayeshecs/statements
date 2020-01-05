@@ -54,6 +54,7 @@ import domainapp.modules.base.datatype.DataTypeUtil;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
+import domainapp.modules.base.service.AbstractFilterableService;
 import domainapp.modules.base.service.OrderBy;
 import domainapp.modules.base.view.GenericFilter;
 import domainapp.modules.base.view.Value;
@@ -86,7 +87,7 @@ import lombok.extern.slf4j.Slf4j;
 		objectType = "stmt.ManageTransactionDashboard"
 )
 @Slf4j
-public class ManageTransactionDashboard extends AbstractFilterableDashboard {
+public class ManageTransactionDashboard extends AbstractFilterableDashboard<Transaction> {
 	
 	/**
 	 * @return
@@ -100,10 +101,11 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard {
 	 * 
 	 */
 	@Programmatic
+	@Override
 	protected GenericFilter defaultFilter() {
 		GenericFilter filter = new GenericFilter();
 		filter.setFilter(FieldConstants.CATEGORY + " == null && " + FieldConstants.SUB_CATEGORY + " == null");
-		filter.setExclude(new HashSet<String>(Arrays.asList(TransactionService.TransactionFilterFields.UNCATEGORIZED, TransactionService.TransactionFilterFields.NARRATION)));
+		filter.setExclude(new HashSet<String>(getFilterFieldsToExcludeFromQueryParameter()));
 		return filter;
 	}
 	
@@ -369,14 +371,9 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard {
 			position = Position.RIGHT, 
 			promptStyle = PromptStyle.INLINE)
 	public ManageTransactionDashboard reset() {
-		GenericFilter filter = new GenericFilter();
-		filter.setExclude(new HashSet<String>(Arrays.asList(TransactionService.TransactionFilterFields.UNCATEGORIZED, TransactionService.TransactionFilterFields.NARRATION)));
-		Map<String, Value> parameters = filter.getParameters();
 		Map<String, Object> criteria = new LinkedHashMap<String, Object>();
 		criteria.put(TransactionService.TransactionFilterFields.UNCATEGORIZED, Boolean.FALSE);
-		filter.setFilter(transactionService.buildFilter(criteria, parameters));
-		setFilter(filter);
-		saveFilter();
+		prepareFilter(criteria);
 		return this;
 	}
 	
@@ -422,7 +419,6 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard {
 			Boolean uncategorized
 			) {
 		internalFilter(narration, transactionTypes, source, dateStart, dateEnd, amountFloor, amountCap, categories, subCategories, uncategorized);
-		saveFilter();
 		return this;
 	}
 
@@ -438,15 +434,11 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard {
 	 * @param subCategories
 	 * @param uncategorized
 	 * @return 
-	 * TODO: Move this method in abstract class
 	 */
 	@Programmatic
 	public void internalFilter(String narration, List<TransactionType> transactionTypes, List<StatementSource> source, Date dateStart,
 			Date dateEnd, BigDecimal amountFloor, BigDecimal amountCap, List<Category> categories, List<SubCategory> subCategories,
 			Boolean uncategorized) {
-		GenericFilter filter = new GenericFilter();
-		filter.setExclude(new HashSet<String>(Arrays.asList(TransactionService.TransactionFilterFields.UNCATEGORIZED, TransactionService.TransactionFilterFields.NARRATION)));
-		Map<String, Value> parameters = filter.getParameters();
 		Map<String, Object> criteria = new LinkedHashMap<String, Object>();
 		criteria.put(TransactionFilterFields.NARRATION, narration);
 		criteria.put(TransactionFilterFields.TRANSACTION_DATE_MIN, dateStart);
@@ -458,8 +450,26 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard {
 		criteria.put(TransactionFilterFields.CATEGORY, categories);
 		criteria.put(TransactionFilterFields.SUB_CATEGORY, subCategories);
 		criteria.put(TransactionFilterFields.UNCATEGORIZED, uncategorized);
-		filter.setFilter(transactionService.buildFilter(criteria, parameters));
-		setFilter(filter);
+		
+		prepareFilter(criteria);
+	}
+
+	/**
+	 * @return
+	 */
+	@Programmatic
+	@Override
+	protected AbstractFilterableService<Transaction> getFilterableService() {
+		return transactionService;
+	}
+
+	/**
+	 * @return
+	 */
+	@Programmatic
+	@Override
+	protected List<String> getFilterFieldsToExcludeFromQueryParameter() {
+		return Arrays.asList(TransactionService.TransactionFilterFields.UNCATEGORIZED, TransactionService.TransactionFilterFields.NARRATION);
 	}
 	
 	public String default0Filter() {

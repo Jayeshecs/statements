@@ -34,7 +34,6 @@ import com.googlecode.wickedcharts.highcharts.options.Title;
 import com.googlecode.wickedcharts.highcharts.options.VerticalAlignment;
 import com.googlecode.wickedcharts.highcharts.options.series.SimpleSeries;
 
-import domainapp.modules.base.view.GenericFilter;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.TransactionType;
 import domainapp.modules.txn.dom.StatementSource;
@@ -78,10 +77,10 @@ public class ManageTransactionDashboard_ByCategory {
 			BigDecimal amountCap
 			) {
 		// 1. Get requried transactions
-		GenericFilter originalFilter = dashboard.getFilter();
+		dashboard.backupFilter();
 		dashboard.internalFilter(null, Arrays.asList(TransactionType.DEBIT), null, dateStart, dateEnd, amountFloor, amountCap, null, null, null);
 		List<Transaction> transactions = dashboard.getTransactions();
-		dashboard.setFilter(originalFilter);
+		dashboard.restoreFilter();
 		
 		// 2. Apply necessary grouping
 		final Map<String, Map<Integer, BigDecimal>> groupedData = new HashMap<>();

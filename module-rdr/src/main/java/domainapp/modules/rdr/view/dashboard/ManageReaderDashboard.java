@@ -31,8 +31,10 @@ import domainapp.modules.addon.service.AddonTypeService;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
+import domainapp.modules.rdr.dom.MailConnectionProfile;
 import domainapp.modules.rdr.dom.StatementReader;
 import domainapp.modules.rdr.dom.StatementReaderType;
+import domainapp.modules.rdr.service.MailConnectionProfileService;
 import domainapp.modules.rdr.service.StatementReaderService;
 import domainapp.modules.rdr.service.StatementReaderTypeService;
 
@@ -49,6 +51,11 @@ public class ManageReaderDashboard {
 
 	public String title() {
 		return "Manage Statement Reader";
+	}
+
+	@CollectionLayout(defaultView = "table")
+	public List<MailConnectionProfile> getMailConnectionProfiles() {
+		return mailConnectionProfileService.all();
 	}
 
 	@CollectionLayout(defaultView = "table")
@@ -72,6 +79,13 @@ public class ManageReaderDashboard {
 	@ActionLayout(named = "Delete")
 	public ManageReaderDashboard deleteStatementReaders(List<StatementReader> statementReaders) {
 		statementReaderService.delete(statementReaders);
+		return this;
+	}
+	
+	@Action(associateWith = "mailConnectionProfiles", semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE, typeOf = MailConnectionProfile.class)
+	@ActionLayout(named = "Delete")
+	public ManageReaderDashboard deleteMailConnectionProfiles(List<MailConnectionProfile> mailConnectionProfiles) {
+		mailConnectionProfileService.delete(mailConnectionProfiles);
 		return this;
 	}
     
@@ -162,6 +176,55 @@ public class ManageReaderDashboard {
     public String default3CreateStatementReader() {
     	return "#dateFormat=dd/MM/yyyy";
     }
+    
+    @Action(
+    		domainEvent = MailConnectionProfile.CreateEvent.class,
+    		semantics = SemanticsOf.SAFE,
+    		typeOf = StatementReaderType.class,
+    		associateWith = "mailConnectionProfiles"
+    )
+    @ActionLayout(
+    		named = "Create",
+    		position = Position.RIGHT,
+    		promptStyle = PromptStyle.DIALOG,
+    		describedAs = "Create new mail connection profile"
+    )
+    public ManageReaderDashboard createMailConnectionProfile(
+    		@Parameter(maxLength = WithName.MAX_LEN, optionality = Optionality.MANDATORY)
+    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Name", describedAs = "Enter name of new reader type to be created")
+    		final String name,
+    		@Parameter(optionality = Optionality.OPTIONAL)
+    		@ParameterLayout(labelPosition = LabelPosition.TOP, named = "Description", multiLine = 4, describedAs = "Enter description of new reader type that will be created")
+    		final String description,
+    		@Parameter(optionality = Optionality.MANDATORY)
+    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Hostname", describedAs = "Enter hostname of mail server e.g. imap.gmail.com")
+    		final String hostname,
+    		@Parameter(optionality = Optionality.MANDATORY)
+    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Port", describedAs = "Enter port of mail server e.g. 993")
+    		final String port,
+    		@Parameter(optionality = Optionality.MANDATORY)
+    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Username", describedAs = "Enter username of mail account")
+    		final String username,
+    		@Parameter(optionality = Optionality.MANDATORY)
+    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Password", describedAs = "Enter password of mail account")
+    		final String password,
+    		@Parameter(optionality = Optionality.MANDATORY)
+    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Secure connection", describedAs = "Check this if mail connection is secure")
+    		final Boolean secure,
+    		@Parameter(optionality = Optionality.MANDATORY)
+    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Enable starttls", describedAs = "Check this if mail connection need starttls enabled")
+    		final Boolean starttls,
+    		@Parameter(optionality = Optionality.MANDATORY)
+    		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Enable debug logging", describedAs = "Check this to enable mail debug logging")
+    		final Boolean debug
+    		) {
+    	MailConnectionProfile mailConnectionProfile = mailConnectionProfileService.create(name, description, hostname, port, username, password, secure, starttls, debug);
+    	Objects.requireNonNull(mailConnectionProfile, "Mail connection profile could not be created, check log for more detail");
+    	return this;
+    }
+	
+	@Inject
+	MailConnectionProfileService mailConnectionProfileService;
 	
 	@Inject
 	StatementReaderTypeService statementReaderTypeService;

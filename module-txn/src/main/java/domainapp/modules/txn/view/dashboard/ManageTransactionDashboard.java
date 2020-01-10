@@ -26,6 +26,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.inject.Inject;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.Part;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -62,7 +66,10 @@ import domainapp.modules.base.view.dashboard.AbstractFilterableDashboard;
 import domainapp.modules.rdr.addon.IStatementReaderContext;
 import domainapp.modules.rdr.addon.StatementReaderContext;
 import domainapp.modules.rdr.api.IStatementReader;
+import domainapp.modules.rdr.dom.MailConnectionProfile;
 import domainapp.modules.rdr.dom.StatementReader;
+import domainapp.modules.rdr.service.MailConnection;
+import domainapp.modules.rdr.service.MailConnectionProfileService;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.StatementSourceType;
 import domainapp.modules.ref.dom.SubCategory;
@@ -600,7 +607,88 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 		transactionService.credit(statementSource, transactionDate, amount, narration, reference, rawdata);
 		return this;
 	}
-
+	
+	@Action(
+    		domainEvent = Transaction.CreateEvent.class,
+			semantics = SemanticsOf.SAFE
+	)
+	@ActionLayout(
+			named = "Fetch Statements From Mail",
+			describedAs = "Fetch Statements From Mail and load them",
+			position = Position.PANEL, 
+			promptStyle = PromptStyle.DIALOG)
+	public ManageTransactionDashboard loadStatementFromMail(
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Statement Source", describedAs = "Select the statement source for which you are uploading zip file containing more than one statements")
+			StatementSource source,
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Statement Reader", describedAs = "Select statement reader for reading statement files present inside zip file")
+			StatementReader statementReader,
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Mail Connection Profile")
+			MailConnectionProfile mailConnectionProfile, 
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Folder", describedAs = "Mailbox folder in which mails will be searched")
+			String folder, 
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Subject has words", describedAs = "Comma or space separated words that are present in the mail subject")
+			String subject, 
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "From Address")
+			String sender,
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Statement filename pattern")
+			String filenamePattern
+			) {
+		final StringBuilder tracker = new StringBuilder();
+		MailConnection connection = null;
+		try {
+			
+			tracker.append("Connecting mailbox...");
+			connection = mailConnectionProfileService.getMailConnection(mailConnectionProfile);
+			
+			tracker.append("Searching mail...");
+			Message[] messages = connection.search(folder, subject, sender, true);
+			
+			tracker.append("Messages found - " + messages.length);
+			tracker.append("Iterating messages...");
+			for (Message message : messages) {
+				tracker.append("Checking message - " + message.getMessageNumber() + " (" + message.getHeader("Message-ID") + ")");
+				Object content = message.getContent();
+				if (!(content instanceof Multipart)) {
+					tracker.append("Skipping message " + message.getSubject() + " because it does not have attachment");
+					continue;
+				}
+				Multipart partMessage = (Multipart)content;
+				for (int i = 0; i < partMessage.getCount(); ++i) {
+					BodyPart bodyPart = partMessage.getBodyPart(i);
+					if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition()) || !bodyPart.getFileName().matches(filenamePattern)) {
+						tracker.append("Skipping attachment " + bodyPart.getFileName() + " because it's not matching with filename pattern - " + filenamePattern);
+						continue ;
+					}
+					Path path = Files.createTempFile(null, bodyPart.getFileName());
+					
+					tracker.append("Saving attachment at " + path.toFile().getPath());
+					Files.copy(bodyPart.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+					
+					tracker.append("Loading saved attachment as statement... ");
+					loadStatement(source, statementReader, path.toFile().getName(), new FileInputStream(path.toFile()));
+				}
+			}
+		} catch (Exception e) {
+			log.error("Exception occurred - " + e.getMessage() + ". Below is tracker:\n" + tracker.toString(), e);
+			messageService.raiseError("Exception occurred - " + e.getMessage() + ". Below is tracker:\n" + tracker.toString());
+		} finally {
+			if (connection != null) {
+				connection.closeAll();
+			}
+		}
+		return this;
+	}
+	
+	@Inject
+	MailConnectionProfileService mailConnectionProfileService;
+	
 	@Inject
 	CategoryService categoryService;
 

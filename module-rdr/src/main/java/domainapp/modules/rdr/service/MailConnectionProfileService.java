@@ -5,6 +5,8 @@ package domainapp.modules.rdr.service;
 
 import java.util.List;
 
+import javax.mail.Message;
+
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -38,5 +40,11 @@ public class MailConnectionProfileService extends AbstractService<MailConnection
 		MailConnectionProfile newMailConnectionProfile = MailConnectionProfile.builder().name(name).description(description).hostname(hostname).port(port).username(username).password(password).secure(secure).starttls(starttls).debug(debug).build();
 		MailConnectionProfile mailConnectionProfile = repositoryService.persistAndFlush(newMailConnectionProfile);
     	return mailConnectionProfile;
+	}
+	
+	@Programmatic
+	public MailConnection getMailConnection(MailConnectionProfile mailConnectionProfile) {
+		MailConnection connection = new MailConnection(mailConnectionProfile);
+		return connection;
 	}
 }

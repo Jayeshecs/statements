@@ -94,7 +94,7 @@ public class TransactionReaderCallback implements IStatementReaderCallback {
 			log.error(e.getMessage() + "\n" + transactionToSave.toString());
 			context.addErrorCount(transactionToSave.size());
 		}
-		log.info(String.format("Inserted %d of %d transactions", (records.size() - existingCount), records.size()));
+		log.info(String.format("Inserted %d of %d transactions", (records.size() - existingCount - context.getFilteredCount() - context.getErrorCount()), records.size()));
 	}
 	
 	@Inject

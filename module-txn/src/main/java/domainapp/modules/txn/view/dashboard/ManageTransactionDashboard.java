@@ -5,6 +5,7 @@ package domainapp.modules.txn.view.dashboard;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,10 +77,12 @@ import domainapp.modules.ref.dom.SubCategory;
 import domainapp.modules.ref.dom.TransactionType;
 import domainapp.modules.ref.service.CategoryService;
 import domainapp.modules.ref.service.SubCategoryService;
+import domainapp.modules.txn.dom.MailStatementProfile;
 import domainapp.modules.txn.dom.StatementSource;
 import domainapp.modules.txn.dom.Transaction;
 import domainapp.modules.txn.dom.Transaction.FieldConstants;
 import domainapp.modules.txn.rdr.TransactionReaderCallback;
+import domainapp.modules.txn.service.MailStatementProfileService;
 import domainapp.modules.txn.service.StatementSourceService;
 import domainapp.modules.txn.service.TransactionService;
 import domainapp.modules.txn.service.TransactionService.TransactionFilterFields;
@@ -282,9 +285,9 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 	 * @return
 	 */
 	@Programmatic
-	private boolean loadStatement(StatementSource source, StatementReader statementReader, String fileName, InputStream inputStream) {
+	private boolean loadStatement(StatementSource source, StatementReader statementReader, String fileName, File file) {
 		boolean success = false;
-		try (InputStream is = new BufferedInputStream(inputStream)) {
+		try {
 			/**
 			 * Load custom properties/config associated with given StatementReader
 			 */
@@ -294,14 +297,9 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 				config.load(new StringReader(properties));
 			}
 			/**
-			 * Save file to temporary location for reading
-			 */
-			Path tempFile = Files.createTempFile("", fileName);
-			Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
-			/**
 			 * Create statement reader context
 			 */
-			StatementReaderContext readerContext = StatementReaderContext.builder().id(1L).name(source.getName()).config(config).file(tempFile.toFile()).build();
+			StatementReaderContext readerContext = StatementReaderContext.builder().id(1L).name(source.getName()).config(config).file(file).build();
 			// specify the target source of statement reader
 			readerContext.set(IStatementReaderContext.PARAM_STATEMENT_SOURCE, source);
 			/**
@@ -310,6 +308,29 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 			IStatementReader reader = addonService.get(statementReader.getReaderType().getAddon().getName());
 			reader.read(readerContext, transactionReaderCallback);
 			success = true;
+		} catch (Exception e) {
+			log.error("Error occurred while uploading statement - " + e.getMessage(), e);
+			success = false;
+		}
+		return success;
+	}
+
+	/**
+	 * @param source
+	 * @param statementReader
+	 * @param statementFile
+	 * @return
+	 */
+	@Programmatic
+	private boolean loadStatement(StatementSource source, StatementReader statementReader, String fileName, InputStream inputStream) {
+		boolean success = false;
+		try (InputStream is = new BufferedInputStream(inputStream)) {
+			/**
+			 * Save file to temporary location for reading
+			 */
+			Path tempFile = Files.createTempFile("", fileName);
+			Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
+			success = loadStatement(source, statementReader, fileName, tempFile.toFile());
 		} catch (Exception e) {
 			log.error("Error occurred while uploading statement - " + e.getMessage(), e);
 			success = false;
@@ -619,6 +640,89 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 			promptStyle = PromptStyle.DIALOG)
 	public ManageTransactionDashboard loadStatementFromMail(
 			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Mail Statement Profile", describedAs = "Select the mail statement profile for which statement must be searched and loaded")
+			MailStatementProfile mailStatementProfile
+			) {
+		final StringBuilder tracker = new StringBuilder();
+		MailConnection connection = null;
+		try {
+			MailConnectionProfile mailConnectionProfile = mailStatementProfile.getMailConnectionProfile();
+			
+			tracker.append("Connecting mailbox...");
+			connection = mailConnectionProfileService.getMailConnection(mailConnectionProfile);
+			
+			tracker.append("Searching mail...");
+			Message[] messages = connection.search(mailStatementProfile.getFolderName(), mailStatementProfile.getSubjectWords(), mailStatementProfile.getFromAddress(), true);
+			
+			tracker.append("Messages found - " + messages.length);
+			tracker.append("Iterating messages...");
+			for (Message message : messages) {
+				
+				tracker.append("Checking message - " + message.getMessageNumber() + " (" + message.getHeader("Message-ID") + ")");
+				Object content = message.getContent();
+				if (!(content instanceof Multipart)) {
+					
+					tracker.append("Skipping message " + message.getSubject() + " because it does not have attachment");
+					continue;
+				}
+				Multipart partMessage = (Multipart)content;
+				for (int i = 0; i < partMessage.getCount(); ++i) {
+					BodyPart bodyPart = partMessage.getBodyPart(i);
+					if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition()) || !bodyPart.getFileName().matches(mailStatementProfile.getFileNamePattern())) {
+						
+						tracker.append("Skipping attachment " + bodyPart.getFileName() + " because it's not matching with filename pattern - " + mailStatementProfile.getFileNamePattern());
+						continue ;
+					}
+					Path path = Files.createTempFile(null, bodyPart.getFileName());
+					
+					tracker.append("Saving attachment at " + path.toFile().getPath());
+					Files.copy(bodyPart.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+					
+					tracker.append("Loading saved attachment as statement... ");
+					loadStatement(mailStatementProfile.getSource(), mailStatementProfile.getReader(), path.toFile().getName(), new FileInputStream(path.toFile()));
+				}
+			}
+		} catch (Exception e) {
+			log.error("Exception occurred - " + e.getMessage() + ". Below is tracker:\n" + tracker.toString(), e);
+			messageService.raiseError("Exception occurred - " + e.getMessage() + ". Below is tracker:\n" + tracker.toString());
+		} finally {
+			if (connection != null) {
+				connection.closeAll();
+			}
+		}
+		return this;
+	}
+	
+	/**
+	 * @return 
+	 */
+	@Collection(typeOf = MailStatementProfile.class)
+	@CollectionLayout(defaultView = "table")
+	@MemberOrder(sequence = "3")
+	public List<MailStatementProfile> getMailStatementProfiles() {
+		return mailStatementProfileService.all();
+	}
+	
+	@Action(
+    		domainEvent = MailStatementProfile.CreateEvent.class,
+			associateWith = "mailStatementProfiles", 
+			associateWithSequence = "1", 
+			semantics = SemanticsOf.SAFE, 
+			typeOf = MailStatementProfile.class
+	)
+	@ActionLayout(
+			named = "Create",
+			describedAs = "Create new mail statement profile",
+			position = Position.PANEL, 
+			promptStyle = PromptStyle.DIALOG)
+	public ManageTransactionDashboard createMailStatementProfile(
+			@Parameter(optionality = Optionality.MANDATORY, maxLength = WithName.MAX_LEN)
+			@ParameterLayout(named = WithName.FIELD_NAME, describedAs = "Unique name of statement source to be created")
+			String name,
+			@Parameter(optionality = Optionality.OPTIONAL, maxLength = WithDescription.MAX_LEN)
+			@ParameterLayout(named = "Description", multiLine = 4, labelPosition = LabelPosition.TOP, describedAs = "Description of statement source to be created")
+			String description,
+			@Parameter(optionality = Optionality.MANDATORY)
 			@ParameterLayout(named = "Statement Source", describedAs = "Select the statement source for which you are uploading zip file containing more than one statements")
 			StatementSource source,
 			@Parameter(optionality = Optionality.MANDATORY)
@@ -640,48 +744,23 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 			@ParameterLayout(named = "Statement filename pattern")
 			String filenamePattern
 			) {
-		final StringBuilder tracker = new StringBuilder();
-		MailConnection connection = null;
-		try {
-			
-			tracker.append("Connecting mailbox...");
-			connection = mailConnectionProfileService.getMailConnection(mailConnectionProfile);
-			
-			tracker.append("Searching mail...");
-			Message[] messages = connection.search(folder, subject, sender, true);
-			
-			tracker.append("Messages found - " + messages.length);
-			tracker.append("Iterating messages...");
-			for (Message message : messages) {
-				tracker.append("Checking message - " + message.getMessageNumber() + " (" + message.getHeader("Message-ID") + ")");
-				Object content = message.getContent();
-				if (!(content instanceof Multipart)) {
-					tracker.append("Skipping message " + message.getSubject() + " because it does not have attachment");
-					continue;
-				}
-				Multipart partMessage = (Multipart)content;
-				for (int i = 0; i < partMessage.getCount(); ++i) {
-					BodyPart bodyPart = partMessage.getBodyPart(i);
-					if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition()) || !bodyPart.getFileName().matches(filenamePattern)) {
-						tracker.append("Skipping attachment " + bodyPart.getFileName() + " because it's not matching with filename pattern - " + filenamePattern);
-						continue ;
-					}
-					Path path = Files.createTempFile(null, bodyPart.getFileName());
-					
-					tracker.append("Saving attachment at " + path.toFile().getPath());
-					Files.copy(bodyPart.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-					
-					tracker.append("Loading saved attachment as statement... ");
-					loadStatement(source, statementReader, path.toFile().getName(), new FileInputStream(path.toFile()));
+		MailStatementProfile mailStatementProfile = null;
+		List<MailStatementProfile> list = mailStatementProfileService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, WithName.FIELD_NAME, name);
+		if (list != null && !list.isEmpty()) {
+			for (MailStatementProfile msp : list) {
+				if (msp.getName().equals(name)) {
+					mailStatementProfile = msp;
+					break;
 				}
 			}
-		} catch (Exception e) {
-			log.error("Exception occurred - " + e.getMessage() + ". Below is tracker:\n" + tracker.toString(), e);
-			messageService.raiseError("Exception occurred - " + e.getMessage() + ". Below is tracker:\n" + tracker.toString());
-		} finally {
-			if (connection != null) {
-				connection.closeAll();
-			}
+		}
+		if (mailStatementProfile != null) {
+			messageService.warnUser(TranslatableString.tr("A mail statement source with same name '${name}' already exists", "name", name), getClass(), "createMailStatementProfile");
+			return this;
+		}
+		mailStatementProfile = mailStatementProfileService.create(name, description, mailConnectionProfile, source, statementReader, folder, subject, sender, filenamePattern);
+		if (mailStatementProfile == null) {
+			messageService.warnUser(TranslatableString.tr("MailStatementProfile source could not be created with detail provided"), getClass(), "createMailStatementProfile");
 		}
 		return this;
 	}
@@ -697,6 +776,9 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 
 	@Inject
 	TransactionService transactionService;
+	
+	@Inject
+	MailStatementProfileService mailStatementProfileService;
 
 	@Inject
 	StatementSourceService statementSourceService;

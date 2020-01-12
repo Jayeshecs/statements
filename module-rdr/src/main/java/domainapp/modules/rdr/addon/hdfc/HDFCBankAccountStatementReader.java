@@ -57,7 +57,7 @@ public class HDFCBankAccountStatementReader extends AbstractStatementReader {
 					log.error(String.format("Parsing failed for record : %s", record));
 					log.error(String.format("Error: %s", e.getMessage() == null ? e.getClass().getName() : e.getMessage()));
 					context.addErrorCount(1);
-					e.printStackTrace();
+					e.printStackTrace(); // TODO: [JP] Find better way to capture stack trace efficiently! No point in logging same trace for all records.
 					continue ;
 				}
 				batch.add(transaction);

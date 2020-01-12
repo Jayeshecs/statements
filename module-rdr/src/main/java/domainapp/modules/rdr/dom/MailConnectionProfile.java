@@ -10,11 +10,12 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Property;
+import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.schema.utils.jaxbadapters.PersistentEntityAdapter;
 
-import domainapp.modules.addon.dom.Addon;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
@@ -41,11 +42,16 @@ import lombok.ToString;
             name = NamedQueryConstants.QUERY_ALL,
             value = "SELECT "
                     + "FROM domainapp.modules.rdr.dom.MailConnectionProfile "),
-        @javax.jdo.annotations.Query(
-                name = NamedQueryConstants.QUERY_FIND_BY_NAME,
-                value = "SELECT "
-                        + "FROM domainapp.modules.rdr.dom.MailConnectionProfile "
-                        + "WHERE name.indexOf(:name) >= 0 ")
+    @javax.jdo.annotations.Query(
+            name = NamedQueryConstants.QUERY_FIND_BY_NAME,
+            value = "SELECT "
+                    + "FROM domainapp.modules.rdr.dom.MailConnectionProfile "
+                    + "WHERE name.indexOf(:name) >= 0 "),
+    @javax.jdo.annotations.Query(
+            name = NamedQueryConstants.QUERY_FIND_BY_ID,
+            value = "SELECT "
+                    + "FROM domainapp.modules.rdr.dom.MailConnectionProfile "
+                    + "WHERE id = 0 ")
 })
 @javax.jdo.annotations.Unique(name="MailConnectionProfile_name_UNQ", members = {"name"})
 @DomainObject(
@@ -102,12 +108,13 @@ public class MailConnectionProfile implements Comparable<MailConnectionProfile>,
     @MemberOrder(sequence = "5")
     private String username;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = 40)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = 1024)
     @Property(
-    		editing = Editing.ENABLED,
+    		editing = Editing.DISABLED,
     		command = CommandReification.ENABLED,
     		publishing = Publishing.ENABLED
     )
+    @PropertyLayout(hidden = Where.EVERYWHERE)
     @Getter @Setter
     @MemberOrder(sequence = "6")
     private String password;
@@ -155,7 +162,25 @@ public class MailConnectionProfile implements Comparable<MailConnectionProfile>,
     	setDebug(debug);
     }
     
-    public static class CreateEvent extends ActionDomainEvent<MailConnectionProfile> {
+    public MailConnectionProfile(MailConnectionProfile mailConnectionProfile) {
+		this(
+				mailConnectionProfile.getName(), 
+				mailConnectionProfile.getDescription(), 
+				mailConnectionProfile.getHostname(), 
+				mailConnectionProfile.getPort(), 
+				mailConnectionProfile.getUsername(),
+				mailConnectionProfile.getPassword(),
+				mailConnectionProfile.getSecure(),
+				mailConnectionProfile.getStarttls(),
+				mailConnectionProfile.getDebug()
+		);	
+	}
+
+	public static class CreateEvent extends ActionDomainEvent<MailConnectionProfile> {
+		private static final long serialVersionUID = 1L;
+    }
+    
+    public static class UpdateEvent extends ActionDomainEvent<MailConnectionProfile> {
 		private static final long serialVersionUID = 1L;
     }
 

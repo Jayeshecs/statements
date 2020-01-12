@@ -18,6 +18,9 @@
             <cpt:collection id="statementSources">
                 <cpt:action id="createStatementSource" />
             </cpt:collection>
+            <cpt:collection id="mailStatementProfiles">
+                <cpt:action id="createMailStatementProfile" />
+            </cpt:collection>
         </bs3:col>
         <bs3:col span="9" unreferencedCollections="true">
 		    <bs3:row>

@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.message.MessageService;
+import org.apache.isis.applib.value.Password;
 
 import domainapp.modules.addon.dom.Addon;
 import domainapp.modules.addon.dom.AddonType;
@@ -180,8 +181,9 @@ public class ManageReaderDashboard {
     @Action(
     		domainEvent = MailConnectionProfile.CreateEvent.class,
     		semantics = SemanticsOf.SAFE,
-    		typeOf = StatementReaderType.class,
-    		associateWith = "mailConnectionProfiles"
+    		typeOf = MailConnectionProfile.class,
+    		associateWith = "mailConnectionProfiles",
+			associateWithSequence = "1" 
     )
     @ActionLayout(
     		named = "Create",
@@ -207,7 +209,7 @@ public class ManageReaderDashboard {
     		final String username,
     		@Parameter(optionality = Optionality.MANDATORY)
     		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Password", describedAs = "Enter password of mail account")
-    		final String password,
+    		final Password password,
     		@Parameter(optionality = Optionality.MANDATORY)
     		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Secure connection", describedAs = "Check this if mail connection is secure")
     		final Boolean secure,
@@ -218,8 +220,30 @@ public class ManageReaderDashboard {
     		@ParameterLayout(labelPosition = LabelPosition.LEFT, named = "Enable debug logging", describedAs = "Check this to enable mail debug logging")
     		final Boolean debug
     		) {
-    	MailConnectionProfile mailConnectionProfile = mailConnectionProfileService.create(name, description, hostname, port, username, password, secure, starttls, debug);
+    	MailConnectionProfile mailConnectionProfile = mailConnectionProfileService.create(name, description, hostname, port, username, password.getPassword(), secure, starttls, debug);
     	Objects.requireNonNull(mailConnectionProfile, "Mail connection profile could not be created, check log for more detail");
+    	return this;
+    }
+    
+	@Action(
+    		domainEvent = MailConnectionProfile.UpdateEvent.class,
+			associateWith = "mailConnectionProfiles", 
+			associateWithSequence = "1", 
+			semantics = SemanticsOf.SAFE, 
+			typeOf = MailConnectionProfile.class)
+	@ActionLayout(
+			named = "Change Password", 
+    		describedAs = "Change password of given mail connection profile",
+			position = Position.RIGHT, 
+			promptStyle = PromptStyle.DIALOG)
+    public ManageReaderDashboard changePassword(
+    		@Parameter(optionality = Optionality.MANDATORY)
+    		@ParameterLayout(named = "Mail Connection Profile")
+    		MailConnectionProfile mailConnectionProfile,
+    		@Parameter(optionality = Optionality.MANDATORY)
+    		@ParameterLayout(named = "Password")
+    		Password password) {
+    	mailConnectionProfileService.changePassword(mailConnectionProfile, password.getPassword());
     	return this;
     }
 	

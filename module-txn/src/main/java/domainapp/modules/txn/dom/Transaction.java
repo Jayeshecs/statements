@@ -41,7 +41,7 @@ import lombok.ToString;
 			+ "FROM domainapp.modules.txn.dom.Transaction "),
 	@javax.jdo.annotations.Query(name = Transaction.QUERY_FIND_BY_RAWDATA, value = "SELECT "
 			+ "FROM domainapp.modules.txn.dom.Transaction "
-			+ "WHERE rawdata == :rawdata && (rawdataSequence == null || rawdataSequence == :rawdataSequence)")
+			+ "WHERE source = :source && rawdata == :rawdata && (rawdataSequence == null || rawdataSequence == :rawdataSequence)")
 })
 @javax.jdo.annotations.Unique(name="Transaction_hash_UNQ", members = {"source", "rawdata", "rawdataSequence"})
 @DomainObject(

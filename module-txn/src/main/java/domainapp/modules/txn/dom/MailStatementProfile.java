@@ -52,6 +52,7 @@ import lombok.ToString;
 @javax.jdo.annotations.Unique(name="MailStatementProfile_name_UNQ", members = {"name"})
 @DomainObject(
         auditing = Auditing.ENABLED,
+        objectType = "txn.MailStatementProfile",
         bounded = true
 ) // objectType inferred from @PersistenceCapable#schema
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)

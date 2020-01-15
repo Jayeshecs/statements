@@ -129,7 +129,8 @@ public class ManageTransactionDashboard_ByCategory {
 	
 	public Date default1$$() {
 		Date date = new Date();
-		date = DateUtils.setMonths(date, Calendar.JANUARY);
+		date = DateUtils.setYears(date, -1);
+		date = DateUtils.setMonths(date, Calendar.APRIL);
 		date = DateUtils.setDays(date, 1);
 		date = DateUtils.setHours(date, 0);
 		date = DateUtils.setMinutes(date, 0);
@@ -140,7 +141,7 @@ public class ManageTransactionDashboard_ByCategory {
 	
 	public Date default2$$() {
 		Date date = new Date();
-		date = DateUtils.setMonths(date, Calendar.DECEMBER);
+		date = DateUtils.setMonths(date, Calendar.MARCH);
 		date = DateUtils.setDays(date, 31);
 		date = DateUtils.setHours(date, 23);
 		date = DateUtils.setMinutes(date, 59);

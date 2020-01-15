@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.i18n.TranslatableString;
@@ -56,6 +57,9 @@ public class ManageReaderDashboard {
 
 	@CollectionLayout(defaultView = "table")
 	public List<MailConnectionProfile> getMailConnectionProfiles() {
+		if (mailConnectionProfileService == null) {
+			return Collections.EMPTY_LIST;
+		}
 		return mailConnectionProfileService.all();
 	}
 
@@ -119,6 +123,7 @@ public class ManageReaderDashboard {
     }
     
     @SuppressWarnings("unchecked")
+    @Programmatic
 	public List<Addon> choice2CreateStatementReaderType() {
     	List<AddonType> list = addonTypeService.search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", StatementReaderType.ADDON_TYPE_NAME);
     	if (list == null || list.isEmpty()) {

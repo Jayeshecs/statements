@@ -17,7 +17,6 @@ import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.service.AbstractService;
 import domainapp.modules.base.service.EncryptionService;
 import domainapp.modules.rdr.dom.MailConnectionProfile;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author jayeshecs
@@ -27,13 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 		nature = NatureOfService.DOMAIN,
 		repositoryFor = MailConnectionProfile.class
 )
-@Slf4j
 public class MailConnectionProfileService extends AbstractService<MailConnectionProfile> {
 
 	public MailConnectionProfileService() {
 		super(MailConnectionProfile.class);
 	}
-
 	
 	@Programmatic
 	public List<MailConnectionProfile> all() {
@@ -43,7 +40,6 @@ public class MailConnectionProfileService extends AbstractService<MailConnection
 	@Programmatic
 	public MailConnectionProfile create(String name, String description, String hostname, String port, String username, String password, Boolean secure, Boolean starttls, Boolean debug) {
 		password = encryptionService.encrypt(password);
-		log.info("Encrypted password = " + password);
 		MailConnectionProfile newMailConnectionProfile = MailConnectionProfile.builder().name(name).description(description).hostname(hostname).port(port).username(username).password(password).secure(secure).starttls(starttls).debug(debug).build();
 		MailConnectionProfile mailConnectionProfile = repositoryService.persistAndFlush(newMailConnectionProfile);
     	return mailConnectionProfile;
@@ -52,7 +48,6 @@ public class MailConnectionProfileService extends AbstractService<MailConnection
 	@Programmatic
 	public void changePassword(MailConnectionProfile mailConnectionProfile, String password) {
 		password = encryptionService.encrypt(password);
-		log.info("Encrypted password = " + password);
 		List<MailConnectionProfile> list = search(NamedQueryConstants.QUERY_FIND_BY_NAME, "name", mailConnectionProfile.getName());
 		MailConnectionProfile mailConnectionProfilePersisted = null;
 		if (list != null && !list.isEmpty()) {
@@ -79,5 +74,5 @@ public class MailConnectionProfileService extends AbstractService<MailConnection
 	}
 	
 	@Inject
-	protected EncryptionService encryptionService;
+	EncryptionService encryptionService;
 }

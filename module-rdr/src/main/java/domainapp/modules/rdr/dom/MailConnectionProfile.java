@@ -56,6 +56,8 @@ import lombok.ToString;
 @javax.jdo.annotations.Unique(name="MailConnectionProfile_name_UNQ", members = {"name"})
 @DomainObject(
         auditing = Auditing.ENABLED,
+        publishing = Publishing.ENABLED,
+        objectType = "reader.MailConnectionProfile",
         bounded = true
 ) // objectType inferred from @PersistenceCapable#schema
 @XmlJavaTypeAdapter(PersistentEntityAdapter.class)
@@ -64,7 +66,7 @@ import lombok.ToString;
 public class MailConnectionProfile implements Comparable<MailConnectionProfile>, WithNameAndDescription {
 
 	@javax.jdo.annotations.Column(allowsNull = "false", length = WithName.MAX_LEN)
-    @Title(prepend = "MAIL ")
+    @Title(prepend = "IMAP ")
     @Property(editing = Editing.DISABLED)
     @Getter @Setter
     private String name;

@@ -3,14 +3,11 @@
  */
 package domainapp.modules.rdr.service;
 
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Folder;
-import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -22,12 +19,6 @@ import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
 import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanRegistrationException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
-import javax.management.ObjectName;
 
 import domainapp.modules.rdr.dom.MailConnectionProfile;
 
@@ -36,95 +27,6 @@ import domainapp.modules.rdr.dom.MailConnectionProfile;
  *
  */
 public class MailConnection {
-	
-	public static interface MailConnectionStatsMBean {
-		
-		void connectionTime(long timeInMillis);
-		
-		Long getAverageConnectionTime();
-		
-		void folderOpenTime(long timeInMillis);
-		
-		Long getAverageFolderOpenTime();
-
-		void searchTime(long timeInMillis);
-		
-		Long getAverageSearchTime();
-	}
-	
-	public static class MailConnectionStats implements MailConnectionStatsMBean {
-
-		private List<Long> connectionTime = new ArrayList<Long>();
-
-		private List<Long> folderOpenTime = new ArrayList<Long>();
-
-		private List<Long> searchTime = new ArrayList<Long>();
-		
-		public void connectionTime(long timeInMillis) {
-			connectionTime.add(timeInMillis);
-		}
-
-		public void folderOpenTime(long timeInMillis) {
-			folderOpenTime.add(timeInMillis);
-		}
-
-		public void searchTime(long timeInMillis) {
-			searchTime.add(timeInMillis);
-		}
-
-		public Long getAverageConnectionTime() {
-			if (connectionTime.isEmpty()) {
-				return -1l;
-			}
-			long totalTime = 0l;
-			for (long time : connectionTime) {
-				totalTime += time;
-			}
-			return totalTime / connectionTime.size();
-		}
-
-		public Long getAverageFolderOpenTime() {
-			if (folderOpenTime.isEmpty()) {
-				return -1l;
-			}
-			long totalTime = 0l;
-			for (long time : folderOpenTime) {
-				totalTime += time;
-			}
-			return totalTime / folderOpenTime.size();
-		}
-
-		public Long getAverageSearchTime() {
-			if (searchTime.isEmpty()) {
-				return -1l;
-			}
-			long totalTime = 0l;
-			for (long time : searchTime) {
-				totalTime += time;
-			}
-			return totalTime / searchTime.size();
-		}
-		
-	}
-	
-	static MailConnectionStatsMBean stats = new MailConnectionStats();
-	
-	static {
-		MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-		ObjectName objectName = null;
-		try {
-		    objectName = new ObjectName("outil.rnd.mail.imap:type=MailConnectionStats");
-		    server.registerMBean(stats, objectName);
-		} catch (MalformedObjectNameException e) {
-		    e.printStackTrace();
-		} catch (InstanceAlreadyExistsException e) {
-			e.printStackTrace();
-		} catch (MBeanRegistrationException e) {
-			e.printStackTrace();
-		} catch (NotCompliantMBeanException e) {
-			e.printStackTrace();
-		}
-	}
 
 	private MailConnectionProfile configuration;
 	
@@ -154,7 +56,6 @@ public class MailConnection {
 		});
 		emailSession.setDebug(configuration.getDebug());
 
-		long start = System.currentTimeMillis();
 		try {
 			Store store = emailSession.getStore(protocol);
 			store.connect();
@@ -164,13 +65,10 @@ public class MailConnection {
 			throw new IllegalStateException("Failed to connect - " + e.getMessage(), e);
 		} catch (MessagingException e) {
 			throw new IllegalStateException("Failed to connect - " + e.getMessage(), e);
-		} finally {
-			stats.connectionTime(System.currentTimeMillis() - start);
 		}
 	}
 	
 	public Folder getFolder(Store store, String folderName) {
-		long start = System.currentTimeMillis();
 		try {
 			Folder folder = store.getFolder(folderName);
 			folder.open(Folder.READ_ONLY);
@@ -178,8 +76,6 @@ public class MailConnection {
 			return folder;
 		} catch (MessagingException e) {
 			throw new IllegalStateException("Failed to get folder - " + e.getMessage(), e);
-		} finally {
-			stats.folderOpenTime(System.currentTimeMillis() - start);
 		}
 	}
 	
@@ -247,32 +143,10 @@ public class MailConnection {
 					criteria.add(new OrTerm(senderTerms.toArray(new SearchTerm[] {})));
 				}
 			}
-			long start = System.currentTimeMillis();
 			Message[] messages = folder.search(new AndTerm(criteria.toArray(new SearchTerm[] {})));
-			stats.searchTime(System.currentTimeMillis() - start);
 			return messages;
 		} catch (MessagingException e) {
 			throw new IllegalStateException("Fail to access mailbox - " + e.getMessage(), e);
 		}
-	}
-
-	/**
-	 * @param message
-	 * @throws MessagingException
-	 */
-	private void messageHeaders(Message message) throws MessagingException {
-		Enumeration<Header> headers = message.getAllHeaders();
-		while (headers.hasMoreElements()) {
-			Header header = headers.nextElement();
-			System.out.println(header.getName() + " = " + header.getValue());
-		}
-	}
-
-	public void dumpStats() {
-		System.out.println("========================================================================");
-		System.out.println("Average connection time (ms): " + stats.getAverageConnectionTime());
-		System.out.println("Average folder open time (ms): " + stats.getAverageFolderOpenTime());
-		System.out.println("Average search time (ms): " + stats.getAverageSearchTime());
-		System.out.println("========================================================================");
 	}
 }

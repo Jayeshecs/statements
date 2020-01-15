@@ -42,7 +42,8 @@ import com.google.gson.GsonBuilder;
  * Ref: https://stackoverflow.com/questions/24338108/java-encrypt-string-with-existing-public-key-file
  */
 @DomainService(
-		nature = NatureOfService.DOMAIN
+		nature = NatureOfService.DOMAIN,
+		objectType = "base.EncryptionService"
 )
 public class EncryptionService {
 

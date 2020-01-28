@@ -40,12 +40,21 @@
 
         <jaxb-impl.version>2.2.11</jaxb-impl.version>
         <jquery-selectors.version>0.2.4</jquery-selectors.version>
+        
+        <hsqldb.version>2.5.0</hsqldb.version>
     </properties>
 
     <packaging>pom</packaging>
 
     <dependencyManagement>
         <dependencies>
+
+	        <dependency>
+	            <groupId>org.hsqldb</groupId>
+	            <artifactId>hsqldb</artifactId>
+	            <version>${hsqldb.version}</version>
+	        </dependency>
+	        
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>statements-appdefn</artifactId>

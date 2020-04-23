@@ -58,11 +58,12 @@ public class TransactionReaderCallback implements IStatementReaderCallback {
 				context.addFilteredCount(1);
 				continue;
 			}
-			Integer rawdataSequenceCount = 1;
+			int rawdataSequenceCount = 1;
 			String rawdata = record.get(Field.RAWDATA);
 			String rawdataKey = statementSource.getName() + rawdata + rawdataSequenceCount;
 			while (transactionByRawdataKey.get(rawdataKey) != null) {
 				rawdataSequenceCount++;
+				rawdataKey = statementSource.getName() + rawdata + rawdataSequenceCount;
 			}
 			if (rawdata != null && !rawdata.trim().isEmpty()) {
 				List<Transaction> result = transactionService.search(Transaction.QUERY_FIND_BY_RAWDATA, Transaction.FieldConstants.SOURCE, statementSource,Transaction.FieldConstants.RAWDATA, rawdata, Transaction.FieldConstants.RAWDATA_SEQUENCE, rawdataSequenceCount);

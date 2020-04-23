@@ -68,9 +68,11 @@ import domainapp.modules.rdr.addon.IStatementReaderContext;
 import domainapp.modules.rdr.addon.StatementReaderContext;
 import domainapp.modules.rdr.api.IStatementReader;
 import domainapp.modules.rdr.dom.MailConnectionProfile;
+import domainapp.modules.rdr.dom.MessageIdempotentStore;
 import domainapp.modules.rdr.dom.StatementReader;
 import domainapp.modules.rdr.service.MailConnection;
 import domainapp.modules.rdr.service.MailConnectionProfileService;
+import domainapp.modules.rdr.service.MessageIdempotentStoreService;
 import domainapp.modules.ref.dom.Category;
 import domainapp.modules.ref.dom.StatementSourceType;
 import domainapp.modules.ref.dom.SubCategory;
@@ -645,46 +647,78 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 			) {
 		final StringBuilder tracker = new StringBuilder();
 		MailConnection connection = null;
+		MessageIdempotentStore storeEntry = null;
 		try {
 			MailConnectionProfile mailConnectionProfile = mailStatementProfile.getMailConnectionProfile();
 			
-			tracker.append("Connecting mailbox...");
+			tracker.append("\nConnecting mailbox...");
 			connection = mailConnectionProfileService.getMailConnection(mailConnectionProfile);
 			
-			tracker.append("Searching mail...");
+			tracker.append("\nSearching mail...");
 			Message[] messages = connection.search(mailStatementProfile.getFolderName(), mailStatementProfile.getSubjectWords(), mailStatementProfile.getFromAddress(), true);
 			
-			tracker.append("Messages found - " + messages.length);
-			tracker.append("Iterating messages...");
+			tracker.append("\nMessages found - " + messages.length);
+			tracker.append("\nIterating messages...");
 			for (Message message : messages) {
-				
-				tracker.append("Checking message - " + message.getMessageNumber() + " (" + message.getHeader("Message-ID") + ")");
+				storeEntry = null;
+				String messageId = Arrays.asList(message.getHeader("Message-ID")).toString();
+				tracker.append("\nChecking message - " + message.getMessageNumber() + " (" + messageId + ")");
+				log.info("Checking message - " + message.getMessageNumber() + " (" + messageId + ")");
+				storeEntry = messageIdempotentStoreService.find(messageId);
+				if (storeEntry != null && storeEntry.getError() == null) {
+					tracker.append("\nAlready processed previously without any error and hence skipping");
+					continue ;
+				}
+				if (storeEntry != null) {
+					// clear error and process again
+					tracker.append("\nAlready processed previously with any error and hence trying to process again");
+					messageIdempotentStoreService.clear(messageId);
+				}
 				Object content = message.getContent();
 				if (!(content instanceof Multipart)) {
-					
-					tracker.append("Skipping message " + message.getSubject() + " because it does not have attachment");
+					// Create new entry for message without attachment
+					log.info("Created new store entry for message without attachment. Message ID: " + storeEntry.getMessageId());
+					storeEntry = messageIdempotentStoreService.create(messageId, null);
+					tracker.append("\nSkipping message " + message.getSubject() + " because it does not have attachment");
 					continue;
 				}
+				boolean attachmentFound = false;
 				Multipart partMessage = (Multipart)content;
 				for (int i = 0; i < partMessage.getCount(); ++i) {
 					BodyPart bodyPart = partMessage.getBodyPart(i);
-					if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition()) || !bodyPart.getFileName().matches(mailStatementProfile.getFileNamePattern())) {
-						
-						tracker.append("Skipping attachment " + bodyPart.getFileName() + " because it's not matching with filename pattern - " + mailStatementProfile.getFileNamePattern());
+					if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
+						log.info("Skipping attachment " + bodyPart.getFileName() + " because it's not matching with filename pattern - " + mailStatementProfile.getFileNamePattern());
 						continue ;
 					}
+					if (!bodyPart.getFileName().matches(mailStatementProfile.getFileNamePattern())) {
+						log.info("Attachment filename '" + bodyPart.getFileName() + "' does not match with filename pattern '" + mailStatementProfile.getFileNamePattern() + "'");
+						continue ;
+					}
+					attachmentFound = true;
 					Path path = Files.createTempFile(null, bodyPart.getFileName());
 					
-					tracker.append("Saving attachment at " + path.toFile().getPath());
+					tracker.append("\nSaving attachment at " + path.toFile().getPath());
+					log.info("Saving attachment at " + path.toFile().getPath());
 					Files.copy(bodyPart.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 					
-					tracker.append("Loading saved attachment as statement... ");
+					tracker.append("\nLoading saved attachment as statement... ");
+					log.info("Loading saved attachment as statement... ");
 					loadStatement(mailStatementProfile.getSource(), mailStatementProfile.getReader(), path.toFile().getName(), new FileInputStream(path.toFile()));
+				}
+				if (attachmentFound) {
+					// Create new entry
+					log.info("Created new store entry for message processed correctly. Message ID: " + messageId);
+					storeEntry = messageIdempotentStoreService.create(messageId, null);
 				}
 			}
 		} catch (Exception e) {
 			log.error("Exception occurred - " + e.getMessage() + ". Below is tracker:\n" + tracker.toString(), e);
 			messageService.raiseError("Exception occurred - " + e.getMessage() + ". Below is tracker:\n" + tracker.toString());
+			if (storeEntry != null) {
+				// update entry with error
+				storeEntry.setError("Exception occurred - " + e.getMessage());
+				messageIdempotentStoreService.save(Arrays.asList(storeEntry));
+			}
 		} finally {
 			if (connection != null) {
 				connection.closeAll();
@@ -764,6 +798,9 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 		}
 		return this;
 	}
+	
+	@Inject
+	MessageIdempotentStoreService messageIdempotentStoreService;
 	
 	@Inject
 	MailConnectionProfileService mailConnectionProfileService;

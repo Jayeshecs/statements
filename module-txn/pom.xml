@@ -172,7 +172,9 @@
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
+            <!-- 
             <scope>test</scope>
+             -->
         </dependency>
 
         <dependency>

@@ -111,6 +111,18 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>statements-module-dl4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>statements-module-dl4j</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>statements-module-static</artifactId>
         </dependency>
 

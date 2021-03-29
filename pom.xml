@@ -83,6 +83,20 @@
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>statements-module-dl4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>statements-module-dl4j</artifactId>
+                <scope>test</scope>
+                <type>test-jar</type>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>statements-module-static</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -175,6 +189,7 @@
             </activation>
             <modules>
                 <module>module-addon</module>
+                <module>module-dl4j</module>
                 <module>module-static</module>
                 <module>module-rdr</module>
                 <module>module-txn</module>
@@ -191,6 +206,7 @@
             <modules>
                 <module>module-base</module>
                 <module>module-addon</module>
+                <module>module-dl4j</module>
                 <module>module-static</module>
                 <module>module-rdr</module>
                 <module>module-txn</module>

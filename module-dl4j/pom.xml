@@ -8,12 +8,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>statements-module-static</artifactId>
-    <name>Outil Finance Static Module</name>
+    <artifactId>statements-module-dl4j</artifactId>
+    <name>Outil Finance DL4J Module</name>
 
     <properties>
         <isis-maven-plugin.validate.appManifest>
-            domainapp.modules.ref.StaticModuleManifest
+            domainapp.modules.dl4j.DL4JModuleManifest
         </isis-maven-plugin.validate.appManifest>
 
         <maven-checkstyle-plugin.configLocation>${project.parent.basedir}/_checks/checkstyle.xml</maven-checkstyle-plugin.configLocation>
@@ -96,11 +96,30 @@
     </build>
 
     <dependencies>
+    	<!--  DL4J dependencies -->
+		<dependency>
+		    <groupId>org.deeplearning4j</groupId>
+		    <artifactId>deeplearning4j-nlp</artifactId>
+		    <version>1.0.0-beta6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.deeplearning4j</groupId>
+			<artifactId>deeplearning4j-core</artifactId>
+			<version>1.0.0-beta6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.nd4j</groupId>
+			<artifactId>nd4j-native-platform</artifactId>
+			<version>1.0.0-beta6</version>
+		</dependency>
+        
+        <!-- Apache ISIS dependencies -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-applib</artifactId>
         </dependency>
 
+		<!-- Application module dependencies -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>statements-module-base</artifactId>
@@ -110,14 +129,6 @@
             <groupId>org.incode.module.fixturesupport</groupId>
             <artifactId>incode-module-fixturesupport-dom</artifactId>
         </dependency>
-
-	<!-- TODO: REMOVEME
-        <dependency>
-            <groupId>org.isisaddons.module.fakedata</groupId>
-            <artifactId>isis-module-fakedata-dom</artifactId>
-            <scope>test</scope>
-        </dependency>
-	-->
 
         <!-- test -->
         <dependency>
@@ -136,9 +147,7 @@
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
-            <!-- 
             <scope>test</scope>
-             -->
         </dependency>
 
         <dependency>

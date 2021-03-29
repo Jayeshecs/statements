@@ -129,7 +129,7 @@ public class ManageTransactionDashboard_ByCategory {
 	
 	public Date default1$$() {
 		Date date = new Date();
-		date = DateUtils.setYears(date, -1);
+		date = DateUtils.addYears(date, -1);
 		date = DateUtils.setMonths(date, Calendar.APRIL);
 		date = DateUtils.setDays(date, 1);
 		date = DateUtils.setHours(date, 0);

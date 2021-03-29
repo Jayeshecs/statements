@@ -67,17 +67,15 @@ public class HDFCCreditcardStatementReader extends AbstractStatementReader {
 			 */
 			String regexTransaction = "(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\d\\d.*";
 			int indexStartOfTransactions = content.indexOf("Date  Transaction Description Amount");
+			log.info("content.indexOf(\"Date  Transaction Description Amount\") = " + indexStartOfTransactions);
+			log.info("content.substring(indexStartOfTransactions).length() = " + content.substring(indexStartOfTransactions).length());
 			BufferedReader reader = new BufferedReader(new StringReader(content.substring(indexStartOfTransactions)));
 			Collection<IStatementRecord> batch = new ArrayList<>();
-			int attemptToReadCount = 3;
 			while (reader.ready()) {
 				String record = reader.readLine();
-				if (record == null || record.trim().isEmpty()) {
-					if (attemptToReadCount-- < 0) {
-						log.warn("Looks like StringReader stream is stuck and hence breaking");
-						break;
-					}
-					continue;
+				if (record == null) {
+					// string reader is empty
+					break;
 				}
 				record = record.trim();
 				if (record.matches(regexTransaction)) {

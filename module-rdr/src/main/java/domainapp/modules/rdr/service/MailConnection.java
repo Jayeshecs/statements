@@ -4,9 +4,11 @@
 package domainapp.modules.rdr.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -68,10 +70,24 @@ public class MailConnection {
 		}
 	}
 	
+	public Folder getOrCreateFolder(Store store, String folderName) {
+		try {
+			Folder folder = store.getFolder(folderName);
+			if (!folder.exists()) {
+				if (!folder.create(Folder.HOLDS_MESSAGES)) {
+					throw new IllegalStateException("Unable to create IMAP folder - " + folderName);
+				}
+			}
+			return getFolder(store, folderName);
+		} catch (MessagingException e) {
+			throw new IllegalStateException("Failed to get folder - " + e.getMessage(), e);
+		}
+	}
+	
 	public Folder getFolder(Store store, String folderName) {
 		try {
 			Folder folder = store.getFolder(folderName);
-			folder.open(Folder.READ_ONLY);
+			folder.open(Folder.READ_WRITE);
 			openedFolder.add(folder);
 			return folder;
 		} catch (MessagingException e) {
@@ -147,6 +163,35 @@ public class MailConnection {
 			return messages;
 		} catch (MessagingException e) {
 			throw new IllegalStateException("Fail to access mailbox - " + e.getMessage(), e);
+		}
+	}
+	
+	public void move(String uniqueId, String fromFolder, String toFolder) {
+		try {
+			Store store = connectStore();
+			Folder from = getFolder(store, fromFolder);
+			Folder to = getOrCreateFolder(store, toFolder);
+			for (Message message : from.getMessages())
+			{
+				String messageId = Arrays.asList(message.getHeader("Message-ID")).toString();
+				if (messageId.equals(uniqueId))
+				{
+					move(message, from, to);
+					break;
+				}
+			}
+		} catch (MessagingException e) {
+			throw new IllegalStateException("Fail to move message - " + e.getMessage(), e);
+		}
+	}
+	
+	public void move(Message message, Folder fromFolder, Folder toFolder) {
+		try {
+			fromFolder.copyMessages(new Message[]{message}, toFolder);
+			message.setFlag(Flags.Flag.DELETED, true);
+			fromFolder.expunge();
+		} catch (MessagingException e) {
+			throw new IllegalStateException("Fail to move message - " + e.getMessage(), e);
 		}
 	}
 }

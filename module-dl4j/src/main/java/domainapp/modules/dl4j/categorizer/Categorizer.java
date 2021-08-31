@@ -50,7 +50,7 @@ public class Categorizer<R, L> {
 		
 		// initialize tokenizer factory
 		tokenizerFactory = new DefaultTokenizerFactory();
-		tokenizerFactory.setTokenPreProcessor(tokenPreProcessor);
+		tokenizerFactory.setTokenPreProcessor(this.tokenPreProcessor);
 	}
 	
 	public Word2Vec train(Collection<R> listAllCategorized) {

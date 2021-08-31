@@ -18,11 +18,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -53,12 +55,22 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Blob;
+import org.deeplearning4j.models.embeddings.learning.impl.elements.SkipGram;
+import org.deeplearning4j.models.paragraphvectors.ParagraphVectors;
+import org.deeplearning4j.models.word2vec.VocabWord;
+import org.deeplearning4j.text.documentiterator.LabelAwareIterator;
+import org.deeplearning4j.text.documentiterator.LabelledDocument;
+import org.deeplearning4j.text.documentiterator.LabelsSource;
+import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
+import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
 
 import domainapp.modules.addon.service.AddonService;
 import domainapp.modules.base.datatype.DataTypeUtil;
 import domainapp.modules.base.entity.NamedQueryConstants;
 import domainapp.modules.base.entity.WithDescription;
 import domainapp.modules.base.entity.WithName;
+import domainapp.modules.base.result.BooleanResult;
+import domainapp.modules.base.result.BooleanResult.BooleanResultBuilder;
 import domainapp.modules.base.service.AbstractFilterableService;
 import domainapp.modules.base.service.OrderBy;
 import domainapp.modules.base.view.GenericFilter;
@@ -233,8 +245,8 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
                 String fileName = ze.getName();
                 Path tempFile = Files.createTempFile("", fileName);
                 Files.copy(zis, tempFile, StandardCopyOption.REPLACE_EXISTING);
-                boolean result = loadStatement(source, statementReader, fileName, new FileInputStream(tempFile.toFile()));
-                if (!result) {
+                BooleanResult result = loadStatement(source, statementReader, fileName, new FileInputStream(tempFile.toFile()));
+                if (!result.getSuccess()) {
                 	failureCount++;
                 	sb.append(failureCount + ") " + fileName + "\n");
                 }
@@ -271,8 +283,8 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 			@ParameterLayout(named = "Statement File", describedAs = "Select statement file (*.csv, *.pdf)")
 			Blob statementFile
 			) {
-		boolean success = loadStatement(source, statementReader, statementFile.getName(), new ByteArrayInputStream(statementFile.getBytes()));
-		if (success) {
+		BooleanResult success = loadStatement(source, statementReader, statementFile.getName(), new ByteArrayInputStream(statementFile.getBytes()));
+		if (success.getSuccess()) {
 			messageService.informUser(TranslatableString.tr("Statement upload completed successfully"), getClass(), "uploadStatement");
 		} else {
 			messageService.warnUser(TranslatableString.tr("Unexpected error has occurred while uploading statement"), getClass(), "uploadStatement");
@@ -287,8 +299,8 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 	 * @return
 	 */
 	@Programmatic
-	private boolean loadStatement(StatementSource source, StatementReader statementReader, String fileName, File file) {
-		boolean success = false;
+	private BooleanResult loadStatement(StatementSource source, StatementReader statementReader, String fileName, File file) {
+		BooleanResultBuilder booleanResultBuilder = BooleanResult.builder();
 		try {
 			/**
 			 * Load custom properties/config associated with given StatementReader
@@ -309,12 +321,12 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 			 */
 			IStatementReader reader = addonService.get(statementReader.getReaderType().getAddon().getName());
 			reader.read(readerContext, transactionReaderCallback);
-			success = true;
+			booleanResultBuilder.success(true);
 		} catch (Exception e) {
 			log.error("Error occurred while uploading statement - " + e.getMessage(), e);
-			success = false;
+			booleanResultBuilder.success(false).error("Error occurred while uploading statement - " + e.getMessage());
 		}
-		return success;
+		return booleanResultBuilder.build();
 	}
 
 	/**
@@ -324,20 +336,21 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 	 * @return
 	 */
 	@Programmatic
-	private boolean loadStatement(StatementSource source, StatementReader statementReader, String fileName, InputStream inputStream) {
-		boolean success = false;
+	private BooleanResult loadStatement(StatementSource source, StatementReader statementReader, String fileName, InputStream inputStream) {
+		BooleanResultBuilder booleanResultBuilder = BooleanResult.builder();
 		try (InputStream is = new BufferedInputStream(inputStream)) {
 			/**
 			 * Save file to temporary location for reading
 			 */
 			Path tempFile = Files.createTempFile("", fileName);
 			Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
-			success = loadStatement(source, statementReader, fileName, tempFile.toFile());
+			return loadStatement(source, statementReader, fileName, tempFile.toFile());
 		} catch (Exception e) {
 			log.error("Error occurred while uploading statement - " + e.getMessage(), e);
-			success = false;
+			booleanResultBuilder.success(false);
+			booleanResultBuilder.error("Error occurred while uploading statement - " + e.getMessage());
 		}
-		return success;
+		return booleanResultBuilder.build();
 	}
 	
 	/**
@@ -671,7 +684,7 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 				}
 				if (storeEntry != null) {
 					// clear error and process again
-					tracker.append("\nAlready processed previously with any error and hence trying to process again");
+					tracker.append("\nAlready processed previously with an error and hence trying to process again");
 					messageIdempotentStoreService.clear(messageId);
 				}
 				Object content = message.getContent();
@@ -683,6 +696,7 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 					continue;
 				}
 				boolean attachmentFound = false;
+				BooleanResult result = null;
 				Multipart partMessage = (Multipart)content;
 				for (int i = 0; i < partMessage.getCount(); ++i) {
 					BodyPart bodyPart = partMessage.getBodyPart(i);
@@ -703,12 +717,17 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 					
 					tracker.append("\nLoading saved attachment as statement... ");
 					log.info("Loading saved attachment as statement... ");
-					loadStatement(mailStatementProfile.getSource(), mailStatementProfile.getReader(), path.toFile().getName(), new FileInputStream(path.toFile()));
+					result = loadStatement(mailStatementProfile.getSource(), mailStatementProfile.getReader(), path.toFile().getName(), new FileInputStream(path.toFile()));
 				}
 				if (attachmentFound) {
 					// Create new entry
 					log.info("Created new store entry for message processed correctly. Message ID: " + messageId);
-					storeEntry = messageIdempotentStoreService.create(messageId, null);
+					storeEntry = messageIdempotentStoreService.create(messageId, (result != null && result.getSuccess() == false) ? result.getError() : null);
+				}
+				if (result != null && result.getSuccess())
+				{
+					// move successfully processed message to done folder
+					connection.move(messageId, mailStatementProfile.getFolderName(), mailStatementProfile.getFolderName() + "_done");
 				}
 			}
 		} catch (Exception e) {
@@ -799,6 +818,116 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 		return this;
 	}
 	
+	@Action(
+    		domainEvent = Transaction.CreateEvent.class,
+			semantics = SemanticsOf.SAFE
+	)
+	@ActionLayout(
+			named = "Categorize",
+			describedAs = "AI to categorize transactions",
+			position = Position.PANEL, 
+			promptStyle = PromptStyle.DIALOG)
+	public ManageTransactionDashboard categorize(
+			@Parameter(optionality = Optionality.MANDATORY)
+			@ParameterLayout(named = "Train Model", describedAs = "Should train model only")
+			Boolean train
+			) {
+//		Categorizer<Transaction, Category> categorizer = new Categorizer<>(transactionCategoryDataHandler, new CommonPreprocessor());
+//		Word2Vec model = categorizer.train(transactionService.all().stream().filter(txn -> {
+//			return txn.getCategory() != null;
+//		}).collect(Collectors.toList()));
+//		model.
+		
+		log.info("Fetching all transactions ...");
+		List<Transaction> all = transactionService.all();
+		log.info("Total transactions - " + (all != null ? all.size() : 0));
+		final List<Transaction> list = all.stream().filter(txn -> {
+			return txn.getCategory() != null;
+		}).collect(Collectors.toList()).subList(0, 100);
+		
+		log.info("Total categorized transactions - " + list.size());
+		LabelAwareIterator iterator = new LabelAwareIterator() {
+			
+			private Iterator<Transaction> txnListIterator = list.iterator();
+		    private LabelsSource labels = new LabelsSource();
+			
+			@Override
+			public LabelledDocument next() {
+				Transaction transaction = txnListIterator.next();
+				LabelledDocument labelledDocument = toLabelledDocument(transaction);
+				labels.storeLabel(transaction.getCategory().getName());
+				log.info("ManageTransactionDashboard.categorize(...).new LabelAwareIterator() {...}.next() - " + labelledDocument.getContent() + " ==> " + labelledDocument.getLabels());
+				return labelledDocument;
+			}
+			
+			@Override
+			public boolean hasNext() {
+				return txnListIterator.hasNext();
+			}
+			
+			@Override
+			public void shutdown() {
+				// do nothing
+			}
+			
+			@Override
+			public void reset() {
+				txnListIterator = list.iterator();
+			}
+			
+			@Override
+			public LabelledDocument nextDocument() {
+				return next();
+			}
+			
+			@Override
+			public boolean hasNextDocument() {
+				return hasNext();
+			}
+			
+			@Override
+			public LabelsSource getLabelsSource() {
+				return labels;
+			}
+		};
+		
+		DefaultTokenizerFactory tokenizerFactory = new DefaultTokenizerFactory();
+        tokenizerFactory.setTokenPreProcessor(new CommonPreprocessor());
+        
+        log.info("Initializing paragraph vector");
+		ParagraphVectors paragraphVectors = new ParagraphVectors.Builder()
+			.allowParallelTokenization(true)
+			.learningRate(0.025)
+	        .minLearningRate(0.001)
+	        .elementsLearningAlgorithm(new SkipGram<VocabWord>())
+	        .batchSize(100)
+	        .epochs(10)
+	        .iterate(iterator)
+	        .trainWordVectors(true)
+	        .tokenizerFactory(tokenizerFactory)
+	        .minWordFrequency(3)
+	        .seed(123)
+	        .layerSize(100)
+	        .build();
+		
+        log.info("Training model...");
+		paragraphVectors.fit();
+		
+		log.info("Labels  = " + paragraphVectors.getLabelsSource().getLabels());
+		final List<Transaction> uncategorized = all.stream().filter(txn -> {
+			return txn.getCategory() == null;
+		}).collect(Collectors.toList());
+        log.info("Total uncategorized transactions - " + uncategorized.size());
+        log.info("Predicting labels for uncategorized transactions...");
+        log.info(getFilterDescription());
+        uncategorized.forEach(txn -> {
+			LabelledDocument labelledDocument = toLabelledDocument(txn);
+			String label = paragraphVectors.predict(labelledDocument);
+			log.info(labelledDocument.getContent() + " ==> " + label);
+		});
+		return this;
+	}
+	
 	@Inject
 	MessageIdempotentStoreService messageIdempotentStoreService;
 	
@@ -828,5 +957,14 @@ public class ManageTransactionDashboard extends AbstractFilterableDashboard<Tran
 
 	@Inject
 	AddonService addonService;
+
+	private LabelledDocument toLabelledDocument(Transaction transaction) {
+		LabelledDocument labelledDocument = new LabelledDocument();
+		if (transaction.getCategory() != null) {
+			labelledDocument.addLabel(transaction.getCategory().getName());
+		}
+		labelledDocument.setContent(transaction.getType().name() + " " + transaction.getNarration() + " " + transaction.getReference());
+		return labelledDocument;
+	}
 
 }
